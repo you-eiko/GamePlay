@@ -16,7 +16,7 @@ window.PUZZLES = {
     "k": 2,
     "states": {
       "initial": "..........\n..........\n..........\n..........\n..........\n..........\n..........\n..........\n..........\n..........",
-      "fixpoint": "*x*xxxxxxx\nxxxxxx..x*\nx*x*xxxxxx\nxxxxx*x..x\n....xxxxx.\n...x......\n...x.x....\n.xx.......\n...x.x..x.\n.x........",
+      "fixpoint": "*x*xxxxxxx\nxxxxxx..x*\nx*x*xxxxxx\nxxxxx*x..x\n....xxxxx.\n...x......\n...xxx....\n.xx.......\n...xxx..x.\n.x........",
       "solution": "*.*.......\n......*..*\n.*.*......\n.....*.*..\n...*.....*\n.....*.*..\n*.*.......\n....*...*.\n.*....*...\n....*...*."
     }
   },
@@ -45,15 +45,6 @@ window.PUZZLES = {
       "initial": "..........\n..........\n..........\n..........\n..........\n..........\n..........\n..........\n..........\n..........",
       "fixpoint": ".x......x*\n.x.x....xx\n.x......x*\n........xx\n....xx..xx\n.x.....x.x\n...x.x.x.x\n.......x.x\n.......x.x\n........xx",
       "solution": "..*......*\n*......*..\n...*.....*\n.*...*....\n...*...*..\n*....*....\n..*.....*.\n....*.*...\n.*......*.\n....*.*..."
-    }
-  },
-  "10x10_k2_06": {
-    "region": "AAIIDDDEEE\nAAIDDDDEEE\nAAIIDDEEEE\nJJIIDDEEGG\nJJJDDBEEGG\nJJJJDBBHGG\nJJCCCCBHGG\nJJJCCBBHHH\nJJJCCCCHFH\nJJJCCCFFFF",
-    "k": 2,
-    "states": {
-      "initial": "..........\n..........\n..........\n..........\n..........\n..........\n..........\n..........\n..........\n..........",
-      "fixpoint": "*x.x.xx...\nxx.x.xx...\n*x.x.x.x..\nxx.x.x.xx.\nx.xxx.x...\nx.xxx.x.x.\nx.x*xxx.x.\nxxxxx*x...\nx*x*xxxxxx\nxxxxxx*x..",
-      "solution": "*.*.......\n....*...*.\n*.*.......\n....*.*...\n.*.......*\n.....*.*..\n...*.....*\n.....*.*..\n.*.*......\n......*.*."
     }
   },
   "10x10_k2_07": {
@@ -128,18 +119,8 @@ window.PUZZLES = {
     "states": {
       "initial": "........\n........\n........\n........\n........\n........\n........\n........",
       "fixpoint": "........\n....x.x.\n........\n........\n....x...\n........\nx.xx..x.\n........",
-      "forcing": "xxxx....\n.x.xxxxx\nxxxx.x..\n.x.xxxxx\nxxxxx.x.\nx.x*xxxx\nxxxxx.x*\nx.x*xxxx",
+      "forcing": "xxxx....\n.x.xxxxx\nxxxx.x.x\n.x.xxxxx\nxxxxx*x.\nx.x*xxxx\nxxxxx.x*\nx.x*xxxx",
       "solution": "....*.*.\n*.*.....\n....*.*.\n*.*.....\n.....*.*\n.*.*....\n.....*.*\n.*.*...."
-    }
-  },
-  "8x8_k2_02": {
-    "region": "GGGGGAAA\nHGGHAAAA\nHHHHHAAD\nHHFHHDDD\nCCFFHBBB\nCFFFBBBE\nCCFFBBEE\nCFFFEEEE",
-    "k": 2,
-    "states": {
-      "initial": "........\n........\n........\n........\n........\n........\n........\n........",
-      "fixpoint": "....x...\nx..x....\n....xxx.\n..x.x*x.\n....xxx.\n.x.....x\n...xxx.x\n.x......",
-      "forcing": "x.x*xxxx\nxxxxx*x.\nx.x*xxxx\nxxxxx*x*\n.x.xxxxx\nxxxx*x*x\n*x*xxxxx\nxxxx*x*x",
-      "solution": ".*.*....\n.....*.*\n.*.*....\n.....*.*\n*.*.....\n....*.*.\n*.*.....\n....*.*."
     }
   },
   "8x8_k2_03": {
@@ -148,7 +129,7 @@ window.PUZZLES = {
     "states": {
       "initial": "........\n........\n........\n........\n........\n........\n........\n........",
       "fixpoint": "...x....\n....x...\n.x......\n........\n........\n....x.x.\n.x.x....\n........",
-      "forcing": "xxxx*x.x\n.x.xxxxx\nxxxx.x.x\n.x.xxxxx\nxxxxx*x*\n..x.xxxx\nxxxxx.x.\nx.x.xxxx",
+      "forcing": "xxxx*x.x\n.x.xxxxx\nxxxx.x.x\n.x.xxxxx\nxxxxx*x*\n..x*xxxx\nxxxxx.x.\nx.x*xxxx",
       "solution": "....*.*.\n*.*.....\n....*.*.\n*.*.....\n.....*.*\n.*.*....\n.....*.*\n.*.*...."
     }
   },
@@ -158,7 +139,7 @@ window.PUZZLES = {
     "states": {
       "initial": "........\n........\n........\n........\n........\n........\n........\n........",
       "fixpoint": "........\n.x.x.xx.\n........\n......x.\n...xx.x.\n........\n...xx...\n..x.....",
-      "forcing": "xxxx.x*x\n*x*xxxxx\nxxxx.x*x\n.x.xxxxx\nxxxxx.x*\nx.x*xxxx\nxxxxx.x.\nx.x*xxxx",
+      "forcing": "xxxx.x*x\n*x*xxxxx\nxxxx.x*x\n.x.xxxxx\nxxxxx*x*\nx.x*xxxx\nxxxxx*x*\nx*x*xxxx",
       "solution": "....*.*.\n*.*.....\n....*.*.\n*.*.....\n.....*.*\n.*.*....\n.....*.*\n.*.*...."
     }
   },
@@ -168,7 +149,7 @@ window.PUZZLES = {
     "states": {
       "initial": "........\n........\n........\n........\n........\n........\n........\n........",
       "fixpoint": "........\n........\n..x.....\n.x..x...\n.x......\n..x.....\n...x....\n........",
-      "forcing": "xxxx*x..\n.x.xxxx.\nxxxx.x..\n*x*xxxxx\nxxxxx.x.\nx*x*xxxx\nxxxxx.x.\nx.x.xxxx",
+      "forcing": "xxxx*x..\n.x.xxxxx\nxxxx.x.x\n*x*xxxxx\nxxxxx.x.\nx*x*xxxx\nxxxxx.x.\nx.x.xxxx",
       "solution": "....*.*.\n*.*.....\n....*.*.\n*.*.....\n.....*.*\n.*.*....\n.....*.*\n.*.*...."
     }
   },
@@ -178,7 +159,7 @@ window.PUZZLES = {
     "states": {
       "initial": "........\n........\n........\n........\n........\n........\n........\n........",
       "fixpoint": "........\n......x.\n........\n....x...\n.x......\n...x....\n.x...xx.\n........",
-      "forcing": "x.x.xxx.\nxxxxx.x.\nx.x.xxxx\nxxxxx.x.\n*x.xxxxx\nxxxx.x.x\n.x.xxxxx\n.xxx.x*x",
+      "forcing": "x.x.xxx.\nxxxxx.x.\nx.x.xxxx\nxxxxx*x.\n*x.xxxxx\nxxxx*x.x\n.x.xxxxx\n.xxx.x*x",
       "solution": ".*.*....\n.....*.*\n.*.*....\n.....*.*\n*.*.....\n....*.*.\n*.*.....\n....*.*."
     }
   },
@@ -188,18 +169,8 @@ window.PUZZLES = {
     "states": {
       "initial": "........\n........\n........\n........\n........\n........\n........\n........",
       "fixpoint": "........\n......x.\n........\n..x.....\n.....x..\n........\n.x......\n........",
-      "forcing": "x...x.x.\nxxxxx.x.\nx.x.xxxx\nxxxxx.x.\n.x.xxxxx\nxxxx.x.x\n.x.xxxxx\nxxxx.x.x",
+      "forcing": "x...x.x.\nxxxxx.x.\nx.x.xxxx\nxxxxx*x.\n.x*xxxxx\nxxxx*x.x\n.x.xxxxx\nxxxx.x.x",
       "solution": ".*.*....\n.....*.*\n.*.*....\n.....*.*\n*.*.....\n....*.*.\n*.*.....\n....*.*."
-    }
-  },
-  "8x8_k2_08": {
-    "region": "HCCCCCFF\nHCAACFFF\nHAACCCFF\nHHADCBFF\nHEEDDBBB\nEEEDBBGG\nEEDDDGGG\nEEEDDGGG",
-    "k": 2,
-    "states": {
-      "initial": "........\n........\n........\n........\n........\n........\n........\n........",
-      "fixpoint": "..xx....\n.x......\n..xx....\n.x....x.\n..x.x...\nx.......\nx.x...x.\nx.......",
-      "forcing": "xxxx.x.x\n.x*xxxxx\nxxxx.x.x\n.x*xxxxx\nxxxxx.x*\nx*x*xxxx\nxxxxx.x*\nx*x.xxxx",
-      "solution": "....*.*.\n*.*.....\n....*.*.\n*.*.....\n.....*.*\n.*.*....\n.....*.*\n.*.*...."
     }
   },
   "8x8_k2_09": {
@@ -207,19 +178,9 @@ window.PUZZLES = {
     "k": 2,
     "states": {
       "initial": "........\n........\n........\n........\n........\n........\n........\n........",
-      "fixpoint": "........\n.xx.x...\nx.....xx\n.xx.x...\n......x.\n........\n.x......\n........",
-      "forcing": "x*x.xxxx\nxxxxx.x*\nx*x.xxxx\nxxxxx.x*\n.x.xxxxx\nxxxx.x.x\n.x.xxxxx\nxxxx.x.x",
+      "fixpoint": "........\n.xx.x...\nx.....xx\n.xx.x...\n......xx\n........\n.x....xx\n........",
+      "forcing": "x*x.xxxx\nxxxxx.x*\nx*x*xxxx\nxxxxx*x*\n.x*xxxxx\nxxxx.x*x\n*x*xxxxx\nxxxx.x*x",
       "solution": ".*.*....\n.....*.*\n.*.*....\n.....*.*\n*.*.....\n....*.*.\n*.*.....\n....*.*."
-    }
-  },
-  "8x8_k2_10": {
-    "region": "CCEEEEEH\nCCCCEHEH\nCFFHHHHH\nFFFHBHAA\nFGGBBAAA\nFGGBBAAA\nGGBBBDDD\nGGBBDDDD",
-    "k": 2,
-    "states": {
-      "initial": "........\n........\n........\n........\n........\n........\n........\n........",
-      "fixpoint": "..x.....\n.x.x.xx.\n.x.x....\n...x....\n.x.x..x.\n........\n..x.x...\n..x.....",
-      "forcing": "xxxx.x*x\n*x*xxxxx\nxxxx*x.x\n*x*xxxxx\nxxxxx.x*\nx*x*xxxx\nxxxxx.x.\nx*x*xxxx",
-      "solution": "....*.*.\n*.*.....\n....*.*.\n*.*.....\n.....*.*\n.*.*....\n.....*.*\n.*.*...."
     }
   },
   "8x8_k2_11": {
@@ -228,7 +189,7 @@ window.PUZZLES = {
     "states": {
       "initial": "........\n........\n........\n........\n........\n........\n........\n........",
       "fixpoint": "........\n...x..x.\n........\n.x.x....\n.x.x....\nx.......\n......x.\n........",
-      "forcing": "x.x.xxxx\nxxxxx.x.\nx.x.xxxx\nxxxxx.x.\n*x*xxxxx\nxxxx.x.x\n.x.xxxxx\nxxxx.x..",
+      "forcing": "x.x*xxxx\nxxxxx.x.\nx.x.xxxx\nxxxxx.x.\n*x*xxxxx\nxxxx.x.x\n.x.xxxxx\nxxxx.x..",
       "solution": ".*.*....\n.....*.*\n.*.*....\n.....*.*\n*.*.....\n....*.*.\n*.*.....\n....*.*."
     }
   },
@@ -238,7 +199,7 @@ window.PUZZLES = {
     "states": {
       "initial": "........\n........\n........\n........\n........\n........\n........\n........",
       "fixpoint": ".....x..\n.x......\n........\n........\nx.....x.\n......x.\n..x.x...\n......x.",
-      "forcing": ".x.x.x.x\n.x.xxxxx\nxxxx.x.x\n.x.xxxxx\nxxxxx*x*\nx.x.xxxx\nxxxxx.x.\nx.x.xxxx",
+      "forcing": ".xxx*x*x\n.x.xxxxx\nxxxx.x.x\n*x.xxxxx\nxxxxx*x*\nx.x.xxxx\nxxxxx.x.\nx.x.xxxx",
       "solution": "....*.*.\n*.*.....\n....*.*.\n*.*.....\n.....*.*\n.*.*....\n.....*.*\n.*.*...."
     }
   },
@@ -248,7 +209,7 @@ window.PUZZLES = {
     "states": {
       "initial": "........\n........\n........\n........\n........\n........\n........\n........",
       "fixpoint": ".x.x....\n........\n.x.x.x.x\n.x.x.x.x\nx...x.x.\n....x.x.\nx.xx....\n........",
-      "forcing": "xxxx.x.x\n.x.xxxxx\nxxxx*x*x\n*x*xxxxx\nxxxxx*x*\nx.x*xxxx\nxxxxx.x*\nx*x*xxxx",
+      "forcing": "xxxx*x.x\n.x.xxxxx\nxxxx*x*x\n*x*xxxxx\nxxxxx*x*\nx.x*xxxx\nxxxxx.x*\nx*x*xxxx",
       "solution": "....*.*.\n*.*.....\n....*.*.\n*.*.....\n.....*.*\n.*.*....\n.....*.*\n.*.*...."
     }
   },
@@ -258,7 +219,7 @@ window.PUZZLES = {
     "states": {
       "initial": "........\n........\n........\n........\n........\n........\n........\n........",
       "fixpoint": "........\n.x..x.x.\n........\n....x.x.\n..x.....\n........\n........\n........",
-      "forcing": "xxxx.x.x\n*x.xxxxx\nxxxx.x.x\n.x*xxxxx\nxxxxx.x.\nx.x.xxxx\nxxxxx.x.\n..x.xx.x",
+      "forcing": "xxxx.x.x\n*x.xxxxx\nxxxx.x.x\n.x*xxxxx\nxxxxx.x.\nx.x.xxxx\nxxxxx.x.\n..x.xxxx",
       "solution": "....*.*.\n*.*.....\n....*.*.\n*.*.....\n.....*.*\n.*.*....\n.....*.*\n.*.*...."
     }
   },
@@ -268,7 +229,7 @@ window.PUZZLES = {
     "states": {
       "initial": "........\n........\n........\n........\n........\n........\n........\n........",
       "fixpoint": "........\n........\n........\n........\n.x......\n........\n.x.x.xx.\n........",
-      "forcing": "x.x.xx.x\nxxxxx.x.\nx.x.xxxx\nxxxxx.x.\n.x.xxxxx\nxxxx.x.x\n*x.xxxxx\nxxxx.x*x",
+      "forcing": "x.x.xxxx\nxxxxx.x.\nx.x.xxxx\nxxxxx.x.\n*x.xxxxx\nxxxx.x.x\n*x.xxxxx\nxxxx.x*x",
       "solution": ".*.*....\n.....*.*\n.*.*....\n.....*.*\n*.*.....\n....*.*.\n*.*.....\n....*.*."
     }
   },
@@ -278,7 +239,7 @@ window.PUZZLES = {
     "states": {
       "initial": "........\n........\n........\n........\n........\n........\n........\n........",
       "fixpoint": "........\n.x......\n........\n.x......\nx.......\n..x.....\n........\n........",
-      "forcing": "xxxx.x.x\n.x.xxxxx\nxx.x.x.x\n*x.xxxxx\nxxxxx.x.\nx.x.xxxx\nxxxxx.x.\nx.x.xx..",
+      "forcing": "xxxx.x.x\n.x.xxxxx\nxxxx.x.x\n*x.xxxxx\nxxxxx.x.\nx.x.xxxx\nxxxxx.x.\nx.x.xxx.",
       "solution": "....*.*.\n*.*.....\n....*.*.\n*.*.....\n.....*.*\n.*.*....\n.....*.*\n.*.*...."
     }
   },
@@ -288,7 +249,7 @@ window.PUZZLES = {
     "states": {
       "initial": "........\n........\n........\n........\n........\n........\n........\n........",
       "fixpoint": "........\n........\n........\n........\n........\n....x.x.\n......x.\n........",
-      "forcing": "x.xx.x..\n.x.xxxxx\nxxxx.x..\n.x.xxxxx\nxxxxx.x.\nx.x.xxx.\n.xxxx*x.\n..x.xxxx",
+      "forcing": "xxxx.x..\n.x.xxxxx\nxxxx.x.x\n.x.xxxxx\nxxxxx.x.\nx.x.xxx.\nxxxxx*x.\n..x.xxxx",
       "solution": "....*.*.\n*.*.....\n....*.*.\n*.*.....\n.....*.*\n.*.*....\n.....*.*\n.*.*...."
     }
   },
@@ -298,7 +259,7 @@ window.PUZZLES = {
     "states": {
       "initial": "........\n........\n........\n........\n........\n........\n........\n........",
       "fixpoint": "........\n.xx.....\n........\n.xx.x...\n........\n..x.....\n........\n..x.....",
-      "forcing": "x*x.xxxx\nxxxxx.x.\nx*x.xxxx\nxxxxx.x.\n*x*xxxxx\nxxxx.x..\n.x.xxxxx\nxxxx*x..",
+      "forcing": "x*x.xxxx\nxxxxx.x.\nx*x.xxxx\nxxxxx.x.\n*x*xxxxx\nxxxx.x.x\n.x*xxxxx\nxxxx*x.x",
       "solution": ".*.*....\n.....*.*\n.*.*....\n.....*.*\n*.*.....\n....*.*.\n*.*.....\n....*.*."
     }
   },
@@ -308,7 +269,7 @@ window.PUZZLES = {
     "states": {
       "initial": "........\n........\n........\n........\n........\n........\n........\n........",
       "fixpoint": "........\n....x...\n...x....\n.x....x.\n......x.\n........\n......x.\n........",
-      "forcing": "xxxx*x.x\n.x.xxxxx\nxxxx.x.x\n.x.xxxxx\nxxxxx.x*\nx.x.xxxx\nxxxxx.x.\nx.x.xx.x",
+      "forcing": "xxxx*x.x\n.x.xxxxx\nxxxx*x.x\n.x.xxxxx\nxxxxx.x*\nx.x.xxxx\nxxxxx.x.\nx.x.xxxx",
       "solution": "....*.*.\n*.*.....\n....*.*.\n*.*.....\n.....*.*\n.*.*....\n.....*.*\n.*.*...."
     }
   },
@@ -318,7 +279,7 @@ window.PUZZLES = {
     "states": {
       "initial": "........\n........\n........\n........\n........\n........\n........\n........",
       "fixpoint": "........\n........\n........\n....x...\n......x.\n..x.....\n.x.x..x.\n........",
-      "forcing": "xx.x.x.x\n.x.xxxxx\nxxxx.x.x\n.x.xxxxx\nxxxxx.x.\nx.x*xxxx\nxxxxx.x*\nx.x*xxxx",
+      "forcing": "xxxx.x.x\n.x.xxxxx\nxxxx*x.x\n.x.xxxxx\nxxxxx.x*\nx.x*xxxx\nxxxxx.x*\nx.x*xxxx",
       "solution": "....*.*.\n*.*.....\n....*.*.\n*.*.....\n.....*.*\n.*.*....\n.....*.*\n.*.*...."
     }
   },
@@ -338,7 +299,7 @@ window.PUZZLES = {
     "states": {
       "initial": "........\n........\n........\n........\n........\n........\n........\n........",
       "fixpoint": "........\n...xx...\n........\n......x.\n....xx..\n...x....\n.x..xxx.\n..x.....",
-      "forcing": "x.x*xxxx\nxxxxx.x.\nx.x.xxxx\nxxxxx*x.\n.x.xxxxx\nxxxx*x.x\n*x*xxxxx\nxxxx*x*x",
+      "forcing": "x.x*xxxx\nxxxxx*x*\nx*x*xxxx\nxxxxx*x*\n*x.xxxxx\nxxxx*x.x\n*x*xxxxx\nxxxx*x*x",
       "solution": ".*.*....\n.....*.*\n.*.*....\n.....*.*\n*.*.....\n....*.*.\n*.*.....\n....*.*."
     }
   },
@@ -348,7 +309,7 @@ window.PUZZLES = {
     "states": {
       "initial": "........\n........\n........\n........\n........\n........\n........\n........",
       "fixpoint": "........\n.x....x.\n........\n.x.x..x.\n......x.\n........\n.x.x..x.\n........",
-      "forcing": ".xxx.x*x\n.x.xxxxx\nxxxx.x*x\n.x.xxxxx\nxxxxx*x*\nx*x.xxxx\nxxxxx.x*\nx*x.xxxx",
+      "forcing": "xxxx.x*x\n.x.xxxxx\nxxxx.x*x\n*x*xxxxx\nxxxxx*x*\nx*x*xxxx\nxxxxx.x*\nx*x*xxxx",
       "solution": "....*.*.\n*.*.....\n....*.*.\n*.*.....\n.....*.*\n.*.*....\n.....*.*\n.*.*...."
     }
   },
@@ -359,16 +320,6 @@ window.PUZZLES = {
       "initial": "........\n........\n........\n........\n........\n........\n........\n........",
       "fixpoint": "........\n......x.\n........\n.x......\n.x....x.\n......x.\n.xxx....\n........",
       "forcing": "xxxx.x*x\n.x.xxxxx\nxxxx.x.x\n*x.xxxxx\nxxxxx*x*\nx.x*xxxx\nxxxxx.x*\nx*x*xxxx",
-      "solution": "....*.*.\n*.*.....\n....*.*.\n*.*.....\n.....*.*\n.*.*....\n.....*.*\n.*.*...."
-    }
-  },
-  "8x8_k2_25": {
-    "region": "AAAACCCC\nGAAECCEE\nGGAEEEEE\nGGAAAAFF\nGBAADDFF\nBBBBBDDF\nBHBHDDDF\nBHHHHDFF",
-    "k": 2,
-    "states": {
-      "initial": "........\n........\n........\n........\n........\n........\n........\n........",
-      "fixpoint": "........\n.x..x.xx\n..x.....\n......x.\n.x......\n....x...\n.xx.x.x.\n........",
-      "forcing": "xxxx.x..\n*x*xxxxx\nxxxx.x.x\n.x.xxxxx\nxxxxx*x.\nx.x.xxxx\nxxxxx*x*\nx*x.xxxx",
       "solution": "....*.*.\n*.*.....\n....*.*.\n*.*.....\n.....*.*\n.*.*....\n.....*.*\n.*.*...."
     }
   },
