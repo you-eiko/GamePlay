@@ -1,6 +1,4 @@
-// 自動生成ファイル — 手で編集しない。
-// 生成元: 非公開リポ tools/export_play.py ＋ tools/play_manifest.txt（盤面データのみ）。
-// アプリ（board_play.html）は window.PUZZLES があればこれを、無ければ内蔵フォールバックを使う。
+// StarBattle 公開問題データ。
 window.PUZZLES = {
   "10x10_k2_01": {
     "region": "CCCCCCCCCA\nCCCCCCECAA\nDDDCEEEEAA\nDHHHHEEEAA\nDGGHHHIAAA\nGGGHIIIIII\nGGGBBIFIII\nGGGGBBFFJJ\nGGGBBBFJJJ\nGGGBBFFFFJ",

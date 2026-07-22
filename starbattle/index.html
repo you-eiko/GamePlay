@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<!-- StarBattle public browser app -->
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StarBattle | GamePlay</title>
+<style>
+  :root { --cell: 38px; }
+  body { font-family: system-ui, sans-serif; margin: 16px; color: #222; }
+  h1 { font-size: 1.2rem; }
+  .row { margin: 8px 0; }
+  textarea { font-family: ui-monospace, monospace; font-size: 13px; width: 100%; max-width: 460px; box-sizing: border-box; }
+  button, select { font-size: 14px; padding: 4px 10px; margin: 2px; cursor: pointer; }
+  .hint { color: #555; font-size: 13px; }
+  #board { border-collapse: collapse; margin-top: 10px; user-select: none; touch-action: manipulation; }
+  #board td { width: var(--cell); height: var(--cell); text-align: center; vertical-align: middle;
+    position: relative; font-weight: 700; cursor: pointer; }
+  #board td.hdr { cursor: default; background: #fff; color: #000; font-weight: 700; width: auto; }
+  .lbl { position: absolute; top: 1px; left: 2px; font-size: 9px; font-weight: 400; color: #555; }
+  .lock { position: absolute; top: 0px; right: 1px; font-size: 10px; line-height: 1; opacity: 0.75; }
+  #board td.locked { cursor: not-allowed; }
+  .star { font-size: calc(var(--cell) * 0.62); color: #000; line-height: 1; }
+  .ex   { font-size: calc(var(--cell) * 0.52); color: #c03030; line-height: 1; }
+  .controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; }
+  .col { display: flex; flex-direction: column; gap: 4px; }
+  .err { color: #c03030; font-weight: 700; }
+  .back { display: inline-block; margin-bottom: 8px; color: #3158b8; text-decoration: none; font-size: 13px; font-weight: 700; }
+  .back:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<a class="back" href="../">← GamePlay トップへ</a>
+<h1>スターバトル 盤面チェック</h1>
+<p class="hint">マスをクリック/タップで <b>空 → ×（×は星でない）→ ★（星）→ 空</b> に変わります。</p>
+
+<div class="controls">
+  <div class="col">
+    <label>サンプル:
+      <select id="sample"></select>
+    </label>
+    <div>
+      プリセット状態（サンプル用）:
+      <button data-preset="initial">空</button>
+      <button data-preset="fixpoint">不動点</button>
+      <button data-preset="forcing">フォーシング後</button>
+      <button data-preset="solution">解</button>
+    </div>
+    <label>ファイルから領域を読込: <input type="file" id="file" accept=".txt"></label>
+  </div>
+  <div class="col">
+    <label>領域グリッド（# 行は無視）:</label>
+    <textarea id="region" rows="7" placeholder="DDDFFF&#10;DDDCCF&#10;..."></textarea>
+  </div>
+  <div class="col">
+    <label>初期状態（任意・*/x/.）:</label>
+    <textarea id="state" rows="7" placeholder="x.....&#10;xx.xx.&#10;..."></textarea>
+  </div>
+</div>
+
+<div class="row">
+  <button id="draw">盤面を描く</button>
+  <button id="clear">手を消す（ロック以外を空に）</button>
+  <button id="copy">現在状態をコピー</button>
+  <label><input type="checkbox" id="lock" checked> ロード済みをロック</label>
+  <label>k=<input type="number" id="k" value="1" min="1" style="width:3.2em"></label>
+  <span id="msg" class="err"></span>
+</div>
+
+<div class="row"><b id="status"></b></div>
+
+<table id="board"></table>
+
+<div class="row">
+  <label class="hint">現在状態（*/x/.）:</label><br>
+  <textarea id="out" rows="7" readonly></textarea>
+</div>
+
+<!-- 公開問題データ。読み込めない場合は内蔵サンプルを使う。 -->
+<script src="puzzles.js"></script>
+<script>
+"use strict";
+// 領域を区別する淡色パレット。
+const PALETTE = [
+  "#ffe08a","#b0ceff","#c6e6c4","#ffb266","#ecdefa","#ffcdd2","#b2ebf2","#dcedc8",
+  "#fff59d","#c5cae9","#f4c7c3","#c8e6c9","#f8bbd0","#b3e5fc","#ffe0b2","#e1bee7"
+];
+const EMPTY=0, STAR=1, EXCL=2;
+const CHAR = {".":EMPTY,"*":STAR,"x":EXCL,"X":EXCL};
+const TO_CHAR = {0:".",1:"*",2:"x"};
+
+// puzzles.js が読み込めない場合のフォールバックサンプル。
+const FALLBACK_SAMPLES = {
+  "6x6_k1_01": {
+    region: "DDDFFF\nDDDCCF\nACCCCE\nCCCCEE\nBCBCEC\nBBBCCC",
+    k: 1,
+    states: {
+      initial:  "......\n......\n......\n......\n......\n......",
+      fixpoint: "x.....\nxx.xx.\n*xxxxx\nxxxx..\nxx..xx\nx.xx..",
+      forcing:  "xxxx*x\nxx*xxx\n*xxxxx\nxxxxx*\nxxx*xx\nx*xxxx",
+      solution: "....*.\n..*...\n*.....\n.....*\n...*..\n.*...."
+    }
+  },
+  "8x8_k2_01": {
+    region: "CCCBBBDD\nCCCCBBBD\nGGCGBBDD\nGGGGAFDD\nGAGAAFFF\nAAAAFFFF\nAEAAHHFH\nEEEEHHHH",
+    k: 2,
+    states: {
+      initial:  "........\n........\n........\n........\n........\n........\n........\n........",
+      fixpoint: "........\n....x.x.\n........\n........\n....x...\n........\nx.xx..x.\n........",
+      forcing:  "xxxx....\n.x.xxxxx\nxxxx.x..\n.x.xxxxx\nxxxxx.x.\nx.x*xxxx\nxxxxx.x*\nx.x*xxxx",
+      solution: "....*.*.\n*.*.....\n....*.*.\n*.*.....\n.....*.*\n.*.*....\n.....*.*\n.*.*...."
+    }
+  }
+};
+
+// 公開データ（puzzles.js の window.PUZZLES）があればそれを使い、無ければ内蔵フォールバック。
+const SAMPLES = (typeof window !== "undefined" && window.PUZZLES
+  && Object.keys(window.PUZZLES).length) ? window.PUZZLES : FALLBACK_SAMPLES;
+
+let GRID = null;    // 2D 領域ラベル
+let STATE = null;   // 2D 状態(0/1/2)
+let LOCKED = null;  // 2D ロード時に確定していた（=ロック対象）マス
+let COLOR = {};     // ラベル -> 色
+const $ = id => document.getElementById(id);
+const lockOn = () => $("lock").checked;
+const currentK = () => Math.max(1, parseInt($("k").value, 10) || 1);
+
+function parseRegion(text) {
+  const rows = []; let k = null;
+  for (const raw of text.split(/\r?\n/)) {
+    const line = raw.trim();
+    if (!line) continue;
+    if (line.startsWith("#")) {                 // # ヘッダから k= を拾う
+      const m = line.match(/\bk\s*=\s*(\d+)/i);
+      if (m) k = parseInt(m[1], 10);
+      continue;
+    }
+    rows.push(line.includes(" ") ? line.split(/\s+/) : line.split(""));
+  }
+  if (!rows.length) throw new Error("領域グリッドが空です");
+  const n = rows.length;
+  if (rows.some(r => r.length !== n)) throw new Error("正方形(n×n)ではありません");
+  return { grid: rows, k };
+}
+
+function parseState(text, n) {
+  const rows = [];
+  for (const raw of text.split(/\r?\n/)) {
+    const line = raw.trim();
+    if (!line || line.startsWith("#")) continue;
+    rows.push(line);
+  }
+  if (!rows.length) return null;
+  if (rows.length !== n || rows.some(r => r.length !== n))
+    throw new Error("初期状態のサイズが領域と一致しません");
+  return rows.map(r => [...r].map(ch => CHAR[ch] ?? EMPTY));
+}
+
+function assignColors(grid) {
+  COLOR = {}; let i = 0;
+  for (const row of grid) for (const lbl of row)
+    if (!(lbl in COLOR)) COLOR[lbl] = PALETTE[(i++) % PALETTE.length];
+}
+
+function render() {
+  const n = GRID.length, b = $("board");
+  b.innerHTML = "";
+  // ヘッダ行（列番号 0..n-1）。
+  let tr = document.createElement("tr");
+  tr.appendChild(cell("hdr", ""));
+  for (let c = 0; c < n; c++) tr.appendChild(cell("hdr", String(c)));
+  b.appendChild(tr);
+  for (let r = 0; r < n; r++) {
+    tr = document.createElement("tr");
+    tr.appendChild(cell("hdr", String(r)));        // 行番号
+    for (let c = 0; c < n; c++) {
+      const td = document.createElement("td");
+      paintCell(td, r, c);
+      td.addEventListener("click", () => {
+        if (lockOn() && LOCKED && LOCKED[r][c]) return;  // ロック中は変更不可
+        STATE[r][c] = STATE[r][c] === EMPTY ? EXCL : STATE[r][c] === EXCL ? STAR : EMPTY;
+        paintCell(td, r, c); dumpState();
+      });
+      tr.appendChild(td);
+    }
+    b.appendChild(tr);
+  }
+  dumpState();
+}
+
+function cell(cls, txt) { const td = document.createElement("td"); td.className = cls; td.textContent = txt; return td; }
+
+function paintCell(td, r, c) {
+  const n = GRID.length, lbl = GRID[r][c], s = STATE[r][c];
+  td.style.background = s === EXCL ? "#d6d6d6" : COLOR[lbl];
+  // 領域境界（隣が別領域なら太線）。
+  const th = "3px solid #000", thin = "1px solid #999";
+  td.style.borderTop    = (r === 0     || GRID[r-1][c] !== lbl) ? th : thin;
+  td.style.borderBottom = (r === n-1   || GRID[r+1][c] !== lbl) ? th : thin;
+  td.style.borderLeft   = (c === 0     || GRID[r][c-1] !== lbl) ? th : thin;
+  td.style.borderRight  = (c === n-1   || GRID[r][c+1] !== lbl) ? th : thin;
+  const locked = LOCKED && LOCKED[r][c] && lockOn();
+  td.classList.toggle("locked", !!locked);
+  let glyph = "";
+  if (s === STAR) glyph = '<span class="star">★</span>';
+  else if (s === EXCL) glyph = '<span class="ex">✕</span>';
+  const lockMark = locked ? '<span class="lock">🔒</span>' : '';
+  td.innerHTML = '<span class="lbl">' + lbl + '</span>' + lockMark + glyph;
+}
+
+function dumpState() {
+  $("out").value = STATE.map(row => row.map(v => TO_CHAR[v]).join("")).join("\n");
+  updateStatus();
+}
+
+// 軽い「解けた」判定: 各行/列/領域の★がちょうど k 個 ＆ ★が8近傍で非隣接（O(n²)）。
+function isSolved() {
+  if (!GRID) return false;
+  const n = GRID.length, k = currentK();
+  const rowc = Array(n).fill(0), colc = Array(n).fill(0), regc = {}, stars = [];
+  for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (STATE[r][c] === STAR) {
+    rowc[r]++; colc[c]++; regc[GRID[r][c]] = (regc[GRID[r][c]] || 0) + 1; stars.push([r, c]);
+  }
+  if (rowc.some(v => v !== k) || colc.some(v => v !== k)) return false;
+  for (const lbl in COLOR) if ((regc[lbl] || 0) !== k) return false;
+  for (const [r, c] of stars)
+    for (let dr = -1; dr <= 1; dr++) for (let dc = -1; dc <= 1; dc++) {
+      if (dr === 0 && dc === 0) continue;
+      const nr = r + dr, nc = c + dc;
+      if (nr >= 0 && nr < n && nc >= 0 && nc < n && STATE[nr][nc] === STAR) return false;
+    }
+  return true;
+}
+
+function updateStatus() {
+  const el = $("status");
+  if (!GRID) { el.textContent = ""; return; }
+  if (isSolved()) { el.textContent = "✅ 解けました！"; el.style.color = "#1a7f1a"; }
+  else { el.textContent = "まだ"; el.style.color = "#777"; }
+}
+
+function buildBoard(regionText, stateText) {
+  $("msg").textContent = "";
+  try {
+    const parsed = parseRegion(regionText);
+    GRID = parsed.grid;
+    const n = GRID.length;
+    if (parsed.k) $("k").value = parsed.k;       // # k= ヘッダがあれば反映
+    assignColors(GRID);
+    const st = stateText ? parseState(stateText, n) : null;
+    STATE = st ? st.map(row => row.slice()) : Array.from({length:n}, () => Array(n).fill(EMPTY));
+    // ロード時に確定（非空）だったマスをロック対象にする。
+    LOCKED = st ? st.map(row => row.map(v => v !== EMPTY))
+                : Array.from({length:n}, () => Array(n).fill(false));
+    render();
+  } catch (e) { $("msg").textContent = e.message; }
+}
+
+// ---- イベント結線 ----
+function loadSample(name) {
+  const s = SAMPLES[name];
+  $("k").value = s.k;
+  $("region").value = s.region;
+  $("state").value = "";
+  buildBoard(s.region, "");
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  const sel = $("sample");
+  for (const name of Object.keys(SAMPLES)) {
+    const o = document.createElement("option"); o.value = name; o.textContent = name; sel.appendChild(o);
+  }
+  sel.addEventListener("change", () => loadSample(sel.value));
+
+  $("draw").addEventListener("click", () => buildBoard($("region").value, $("state").value));
+  $("clear").addEventListener("click", () => {        // ロック以外（自分の手）を空に
+    if (!STATE) return;
+    const n = GRID.length;
+    for (let r = 0; r < n; r++) for (let c = 0; c < n; c++)
+      if (!(lockOn() && LOCKED[r][c])) STATE[r][c] = EMPTY;
+    render();
+  });
+  $("copy").addEventListener("click", () => { $("out").select(); document.execCommand && document.execCommand("copy"); });
+  $("lock").addEventListener("change", () => { if (GRID) render(); });   // ロック中/解除を切替
+  $("k").addEventListener("input", updateStatus);                       // k 変更で再判定
+
+  // プリセット状態（内蔵サンプル用）。
+  document.querySelectorAll("[data-preset]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const s = SAMPLES[$("sample").value];
+      const stext = s && s.states[btn.dataset.preset];
+      if (!stext) { $("msg").textContent = "このプリセットはサンプルにのみ適用できます"; return; }
+      $("state").value = stext;
+      buildBoard($("region").value, stext);
+    });
+  });
+
+  $("file").addEventListener("change", ev => {
+    const f = ev.target.files[0]; if (!f) return;
+    const rd = new FileReader();
+    rd.onload = () => { $("region").value = rd.result; $("state").value = ""; buildBoard(rd.result, ""); };
+    rd.readAsText(f);
+  });
+
+  loadSample(Object.keys(SAMPLES)[0]);  // 起動時に1つ表示（先頭サンプル）
+});
+</script>
+</body>
+</html>

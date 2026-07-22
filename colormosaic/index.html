@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#19333f">
+  <title>ColorMosaic | GamePlay</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div>
+      <a class="back-link" href="../">← GamePlay トップへ</a>
+      <p class="eyebrow">BASIC RULE PUZZLE</p>
+      <h1>ColorMosaic</h1>
+      <p class="lead">数字と色の関係を、候補メモを置きながら確かめる。</p>
+    </div>
+    <div class="header-mark" aria-hidden="true">
+      <span></span><span></span><span></span><span></span>
+    </div>
+  </header>
+
+  <main class="app-shell">
+    <aside class="control-panel" aria-label="ゲーム設定と操作">
+      <section class="panel-section setup-section">
+        <label class="field-label" for="puzzle-select">問題</label>
+        <select id="puzzle-select"></select>
+        <div id="puzzle-meta" class="puzzle-meta"></div>
+      </section>
+
+      <section class="panel-section">
+        <p class="field-label">使う色</p>
+        <div id="palette" class="palette" role="radiogroup" aria-label="操作する色"></div>
+      </section>
+
+      <section class="panel-section">
+        <p class="field-label">操作</p>
+        <div class="tool-switch" role="radiogroup" aria-label="操作モード">
+          <button id="paint-tool" class="tool-button is-active" type="button" aria-pressed="true">
+            <span class="tool-icon paint-icon" aria-hidden="true"></span>
+            色を塗る
+          </button>
+          <button id="x-tool" class="tool-button" type="button" aria-pressed="false">
+            <span class="tool-icon x-icon" aria-hidden="true">×</span>
+            Xを置く
+          </button>
+        </div>
+        <label class="auto-option">
+          <input id="auto-fill" type="checkbox" checked>
+          <span>
+            <strong>残り一色を自動で塗る</strong>
+            <small>n−1色のXが付いたとき</small>
+          </span>
+        </label>
+      </section>
+
+      <section class="panel-section action-row" aria-label="履歴操作">
+        <button id="undo-button" class="secondary-button" type="button" disabled>↶ 一手戻す</button>
+        <button id="reset-button" class="secondary-button" type="button">盤面を戻す</button>
+      </section>
+
+      <details class="help-box">
+        <summary>操作とルール</summary>
+        <div class="help-content">
+          <p>数字は、周囲8マスにある「数字マス自身と同じ色」の数です。数字マス自身は数えません。</p>
+          <ul>
+            <li>色と操作を選び、マスを押します。</li>
+            <li>右クリックは、選択中の色のXを直接切り替えます。</li>
+            <li><kbd>Ctrl</kbd>＋<kbd>Z</kbd> でも一手戻せます。</li>
+          </ul>
+        </div>
+      </details>
+    </aside>
+
+    <section class="play-area" aria-label="ColorMosaic盤面">
+      <div class="board-toolbar">
+        <div id="status" class="status-card" aria-live="polite"></div>
+        <div class="legend" aria-label="盤面記号">
+          <span><i class="fixed-sample"></i>固定色</span>
+          <span><i class="clue-sample">2</i>数字</span>
+        </div>
+      </div>
+      <div class="board-frame">
+        <div id="board" class="board" role="grid" aria-label="パズル盤面"></div>
+      </div>
+      <div id="hint" class="hint-card"></div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="puzzles.js"></script>
+  <script src="model.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
