@@ -459,9 +459,10 @@ body:not([data-mode="wall"]) [data-wall-controls] { display: none; }
   .mobile-mode-row { display: grid; min-width: 0; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
   .mobile-mode-row .mode-switch { min-width: 0; }
   .mobile-mode-row .mode-button { min-width: 0; min-height: 37px; padding: 3px; font-size: .78rem; }
-  .mobile-history { display: grid; grid-template-columns: repeat(2, 42px); gap: 5px; }
+  .mobile-history { display: grid; grid-template-columns: repeat(2, 42px) 50px; gap: 5px; }
   .mobile-history button { border: 1px solid #bccbcd; border-radius: 10px; background: white; font-size: 1.15rem; }
   .mobile-history button:disabled { opacity: .35; }
+  .mobile-history .mobile-reset { color: #9e3540; font-size: .68rem; font-weight: 850; }
   .mobile-color-row { display: grid; min-width: 0; grid-template-columns: minmax(0, 1fr) 48px; gap: 7px; }
   .mobile-palette { min-width: 0; grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .mobile-palette .color-button { min-width: 0; min-height: 49px; padding: 3px; }
