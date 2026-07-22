@@ -64,7 +64,7 @@
 
     .games {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 20px;
       margin-top: 48px;
     }
@@ -107,6 +107,7 @@
 
     .starbattle::after { background: var(--gold); }
     .colormosaic::after { background: var(--coral); }
+    .colorrooms::after { background: linear-gradient(135deg, var(--teal), var(--blue)); }
 
     .game-label {
       color: var(--muted);
@@ -145,6 +146,10 @@
       font-size: .8rem;
     }
 
+    @media (max-width: 880px) {
+      .games { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
     @media (max-width: 680px) {
       .shell { width: min(100% - 24px, 520px); }
       .games { grid-template-columns: 1fr; margin-top: 34px; }
@@ -172,6 +177,13 @@
         <span class="game-label">COLOR LOGIC PUZZLE</span>
         <h2>ColorMosaic</h2>
         <p>数字と周囲の色の関係を読み、色ごとの候補を消しながら盤面を完成させます。</p>
+        <span class="open">ゲームを開く <span aria-hidden="true">→</span></span>
+      </a>
+
+      <a class="game-card colorrooms" href="colorrooms/">
+        <span class="game-label">ROOM &amp; COLOR LOGIC</span>
+        <h2>ColorRooms</h2>
+        <p>数字の面積を手がかりに、同じ色のマスをつないで部屋を完成させます。</p>
         <span class="open">ゲームを開く <span aria-hidden="true">→</span></span>
       </a>
     </section>
