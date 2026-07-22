@@ -30,17 +30,17 @@
 
       <section class="panel-section">
         <p class="field-label">使う色</p>
-        <div id="palette" class="palette" role="radiogroup" aria-label="操作する色"></div>
+        <div id="palette" class="palette" data-palette role="radiogroup" aria-label="操作する色"></div>
       </section>
 
       <section class="panel-section">
         <p class="field-label">操作</p>
         <div class="tool-switch" role="radiogroup" aria-label="操作モード">
-          <button id="paint-tool" class="tool-button is-active" type="button" aria-pressed="true">
+          <button id="paint-tool" class="tool-button is-active" data-tool="paint" type="button" aria-pressed="true">
             <span class="tool-icon paint-icon" aria-hidden="true"></span>
             色を塗る
           </button>
-          <button id="x-tool" class="tool-button" type="button" aria-pressed="false">
+          <button id="x-tool" class="tool-button" data-tool="x" type="button" aria-pressed="false">
             <span class="tool-icon x-icon" aria-hidden="true">×</span>
             Xを置く
           </button>
@@ -55,7 +55,7 @@
       </section>
 
       <section class="panel-section action-row" aria-label="履歴操作">
-        <button id="undo-button" class="secondary-button" type="button" disabled>↶ 一手戻す</button>
+        <button id="undo-button" class="secondary-button" data-undo type="button" disabled>↶ 一手戻す</button>
         <button id="reset-button" class="secondary-button" type="button">盤面を戻す</button>
       </section>
 
@@ -83,6 +83,21 @@
       <div class="board-frame">
         <div id="board" class="board" role="grid" aria-label="パズル盤面"></div>
       </div>
+      <section class="mobile-controls" aria-label="盤面操作">
+        <p class="mobile-control-label">色と操作</p>
+        <div id="mobile-palette" class="palette mobile-palette" data-palette role="radiogroup" aria-label="操作する色"></div>
+        <div class="mobile-action-row" role="group" aria-label="操作モードと履歴">
+          <button class="tool-button is-active" data-tool="paint" type="button" aria-pressed="true">
+            <span class="tool-icon paint-icon" aria-hidden="true"></span>
+            色を塗る
+          </button>
+          <button class="tool-button" data-tool="x" type="button" aria-pressed="false">
+            <span class="tool-icon x-icon" aria-hidden="true">×</span>
+            Xを置く
+          </button>
+          <button class="secondary-button mobile-undo" data-undo type="button" disabled>↶ Undo</button>
+        </div>
+      </section>
       <div id="hint" class="hint-card"></div>
     </section>
   </main>

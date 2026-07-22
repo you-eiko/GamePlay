@@ -20,11 +20,11 @@
   const elements = {
     puzzleSelect: document.querySelector("#puzzle-select"),
     puzzleMeta: document.querySelector("#puzzle-meta"),
-    palette: document.querySelector("#palette"),
-    paintTool: document.querySelector("#paint-tool"),
-    xTool: document.querySelector("#x-tool"),
+    palettes: [...document.querySelectorAll("[data-palette]")],
+    paintTools: [...document.querySelectorAll('[data-tool="paint"]')],
+    xTools: [...document.querySelectorAll('[data-tool="x"]')],
     autoFill: document.querySelector("#auto-fill"),
-    undo: document.querySelector("#undo-button"),
+    undoButtons: [...document.querySelectorAll("[data-undo]")],
     reset: document.querySelector("#reset-button"),
     board: document.querySelector("#board"),
     status: document.querySelector("#status"),
@@ -55,36 +55,44 @@
   function selectTool(nextTool) {
     tool = nextTool;
     const painting = tool === "paint";
-    elements.paintTool.classList.toggle("is-active", painting);
-    elements.paintTool.setAttribute("aria-pressed", String(painting));
-    elements.xTool.classList.toggle("is-active", !painting);
-    elements.xTool.setAttribute("aria-pressed", String(!painting));
+    elements.paintTools.forEach((button) => {
+      button.classList.toggle("is-active", painting);
+      button.setAttribute("aria-pressed", String(painting));
+    });
+    elements.xTools.forEach((button) => {
+      button.classList.toggle("is-active", !painting);
+      button.setAttribute("aria-pressed", String(!painting));
+    });
   }
 
   function selectColor(color) {
     selectedColor = color;
-    elements.palette.querySelectorAll(".color-button").forEach((button) => {
-      const active = button.dataset.color === color;
-      button.classList.toggle("is-active", active);
-      button.setAttribute("aria-checked", String(active));
+    elements.palettes.forEach((palette) => {
+      palette.querySelectorAll(".color-button").forEach((button) => {
+        const active = button.dataset.color === color;
+        button.classList.toggle("is-active", active);
+        button.setAttribute("aria-checked", String(active));
+      });
     });
   }
 
   function renderPalette() {
-    elements.palette.replaceChildren();
-    for (const color of game.puzzle.colors) {
-      const meta = colorMeta(color);
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "color-button";
-      button.dataset.color = color;
-      button.setAttribute("role", "radio");
-      button.setAttribute("aria-label", `${meta.name}を選択`);
-      button.style.setProperty("--cell-color", meta.hex);
-      button.innerHTML = `<span class="color-dot">${color}</span>`;
-      button.addEventListener("click", () => selectColor(color));
-      elements.palette.append(button);
-    }
+    elements.palettes.forEach((palette) => {
+      palette.replaceChildren();
+      for (const color of game.puzzle.colors) {
+        const meta = colorMeta(color);
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "color-button";
+        button.dataset.color = color;
+        button.setAttribute("role", "radio");
+        button.setAttribute("aria-label", `${meta.name}を選択`);
+        button.style.setProperty("--cell-color", meta.hex);
+        button.innerHTML = `<span class="color-dot">${color}</span>`;
+        button.addEventListener("click", () => selectColor(color));
+        palette.append(button);
+      }
+    });
     selectColor(game.puzzle.colors.includes(selectedColor) ? selectedColor : game.puzzle.colors[0]);
   }
 
@@ -219,7 +227,9 @@
     const evaluation = Model.evaluateGame(game);
     renderBoard(evaluation);
     renderStatus(evaluation);
-    elements.undo.disabled = game.history.length === 0;
+    elements.undoButtons.forEach((button) => {
+      button.disabled = game.history.length === 0;
+    });
     elements.autoFill.checked = game.autoFill;
   }
 
@@ -240,15 +250,21 @@
     }
 
     elements.puzzleSelect.addEventListener("change", () => loadPuzzle(elements.puzzleSelect.value));
-    elements.paintTool.addEventListener("click", () => selectTool("paint"));
-    elements.xTool.addEventListener("click", () => selectTool("x"));
+    elements.paintTools.forEach((button) => {
+      button.addEventListener("click", () => selectTool("paint"));
+    });
+    elements.xTools.forEach((button) => {
+      button.addEventListener("click", () => selectTool("x"));
+    });
     elements.autoFill.addEventListener("change", () => {
       const filled = Model.setAutoFill(game, elements.autoFill.checked);
       if (filled.length) showToast(`${filled.length}マスを残りの色で塗りました。`);
       render();
     });
-    elements.undo.addEventListener("click", () => {
-      if (Model.undo(game)) render();
+    elements.undoButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        if (Model.undo(game)) render();
+      });
     });
     elements.reset.addEventListener("click", () => {
       if (Model.reset(game)) {
