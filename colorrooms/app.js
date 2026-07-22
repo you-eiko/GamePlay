@@ -28,6 +28,7 @@
     closeRoomButtons: [...document.querySelectorAll("[data-close-room]")],
     syncRooms: [...document.querySelectorAll("[data-sync-rooms]")],
     wallCounts: [...document.querySelectorAll("[data-wall-count]")],
+    boardFrame: document.querySelector(".board-frame"),
     board: document.querySelector("#board"),
     status: document.querySelector("#status"),
     roomFocus: document.querySelector("#room-focus"),
@@ -216,7 +217,15 @@
     elements.board.style.setProperty("--rows", game.puzzle.rows);
     elements.board.style.setProperty("--cols", game.puzzle.cols);
     if (window.innerWidth <= 820) {
-      const cellSize = Math.min(74, Math.floor((window.innerWidth - 44) / game.puzzle.cols));
+      const frameStyle = window.getComputedStyle(elements.boardFrame);
+      const boardStyle = window.getComputedStyle(elements.board);
+      const horizontalPadding = parseFloat(frameStyle.paddingLeft) + parseFloat(frameStyle.paddingRight);
+      const horizontalBorder = parseFloat(boardStyle.borderLeftWidth) + parseFloat(boardStyle.borderRightWidth);
+      const fallbackWidth = window.innerWidth - 60;
+      const availableWidth = elements.boardFrame.clientWidth > 0
+        ? elements.boardFrame.clientWidth - horizontalPadding - horizontalBorder
+        : fallbackWidth;
+      const cellSize = Math.max(42, Math.min(74, Math.floor(availableWidth / game.puzzle.cols)));
       elements.board.style.setProperty("--cell-size", `${cellSize}px`);
     } else {
       elements.board.style.removeProperty("--cell-size");
@@ -528,6 +537,14 @@
         const color = game.puzzle.colors[Number(event.key) - 1];
         if (color) selectColor(color);
       }
+    });
+
+    let resizeFrame = null;
+    window.addEventListener("resize", () => {
+      window.cancelAnimationFrame(resizeFrame);
+      resizeFrame = window.requestAnimationFrame(() => {
+        if (game) renderBoard(Model.evaluateGame(game));
+      });
     });
 
     let lastPuzzle = null;
