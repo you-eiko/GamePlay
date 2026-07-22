@@ -27,6 +27,7 @@
     resetButtons: [...document.querySelectorAll("[data-reset]")],
     closeRoomButtons: [...document.querySelectorAll("[data-close-room]")],
     syncRooms: [...document.querySelectorAll("[data-sync-rooms]")],
+    wallCounts: [...document.querySelectorAll("[data-wall-count]")],
     board: document.querySelector("#board"),
     status: document.querySelector("#status"),
     roomFocus: document.querySelector("#room-focus"),
@@ -41,7 +42,6 @@
   let selectedColor = null;
   let mode = "color";
   let colorTool = "paint";
-  let stroke = null;
   let toastTimer = null;
   let wasSolved = false;
 
@@ -89,7 +89,7 @@
   }
 
   function selectMode(nextMode) {
-    mode = nextMode === "room" ? "room" : "color";
+    mode = ["color", "room", "wall"].includes(nextMode) ? nextMode : "color";
     document.body.dataset.mode = mode;
     elements.modeButtons.forEach((button) => {
       const active = button.dataset.modeButton === mode;
@@ -165,6 +165,52 @@
     return parts.join("、");
   }
 
+  function createWallEdge(index, direction, orientation, row, col, label) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `wall-edge is-${orientation}`;
+    button.dataset.wallIndex = String(index);
+    button.dataset.wallDirection = direction;
+    button.style.setProperty("--edge-row", row);
+    button.style.setProperty("--edge-col", col);
+    button.setAttribute("aria-label", `${label}の壁メモを切り替え`);
+    button.setAttribute("aria-pressed", String(Model.hasWall(game, index, direction)));
+    button.setAttribute("aria-hidden", String(mode !== "wall"));
+    button.tabIndex = mode === "wall" ? 0 : -1;
+    button.classList.toggle("is-active", Model.hasWall(game, index, direction));
+    return button;
+  }
+
+  function renderWallEdges() {
+    const { rows, cols } = game.puzzle;
+    for (let row = 0; row < rows; row += 1) {
+      for (let col = 1; col < cols; col += 1) {
+        const index = row * cols + col - 1;
+        elements.board.append(createWallEdge(
+          index,
+          "right",
+          "vertical",
+          row,
+          col,
+          `${row + 1}行${col}列と${col + 1}列の間`,
+        ));
+      }
+    }
+    for (let row = 1; row < rows; row += 1) {
+      for (let col = 0; col < cols; col += 1) {
+        const index = (row - 1) * cols + col;
+        elements.board.append(createWallEdge(
+          index,
+          "bottom",
+          "horizontal",
+          row,
+          col,
+          `${row}行と${row + 1}行の${col + 1}列`,
+        ));
+      }
+    }
+  }
+
   function renderBoard(evaluation) {
     const clues = clueMap(game.puzzle);
     elements.board.style.setProperty("--rows", game.puzzle.rows);
@@ -176,6 +222,7 @@
       elements.board.style.removeProperty("--cell-size");
     }
     elements.board.classList.toggle("is-room-mode", mode === "room");
+    elements.board.classList.toggle("is-wall-mode", mode === "wall");
     elements.board.classList.toggle("has-focus", Boolean(game.focusedRoomId));
     elements.board.replaceChildren();
 
@@ -186,6 +233,7 @@
       button.type = "button";
       button.className = "cell";
       button.dataset.index = String(index);
+      button.tabIndex = mode === "wall" ? -1 : 0;
       button.setAttribute("role", "gridcell");
       button.setAttribute("aria-label", cellDescription(index, clue, room));
 
@@ -247,6 +295,7 @@
       }
       elements.board.append(button);
     });
+    renderWallEdges();
   }
 
   function renderStatus(evaluation) {
@@ -273,7 +322,7 @@
 
   function renderRoomFocus() {
     const room = game.focusedRoomId ? Model.roomById(game, game.focusedRoomId) : null;
-    elements.roomFocus.hidden = !room;
+    elements.roomFocus.hidden = !room || mode !== "room";
     elements.closeRoomButtons.forEach((button) => { button.disabled = !room; });
     if (!room) {
       elements.mobileRoomMessage.textContent = "数字をタップして部屋を選択";
@@ -304,6 +353,9 @@
     elements.undoButtons.forEach((button) => { button.disabled = game.history.length === 0; });
     elements.redoButtons.forEach((button) => { button.disabled = game.future.length === 0; });
     elements.syncRooms.forEach((input) => { input.checked = game.syncCompleteRooms; });
+    elements.wallCounts.forEach((element) => {
+      element.textContent = `壁 ${game.walls.size}本・辺をタップして切替`;
+    });
     updateToolControls();
     if (options.persist !== false) saveProgress();
   }
@@ -320,40 +372,18 @@
     renderRoomFocus();
   }
 
-  function cellFromPoint(clientX, clientY) {
-    const target = document.elementFromPoint(clientX, clientY);
-    const cell = target && target.closest ? target.closest(".cell") : null;
-    if (!cell || !elements.board.contains(cell)) return null;
-    return Number(cell.dataset.index);
+  function handleWallTap(index, direction) {
+    const before = Model.startEdit(game);
+    if (!Model.toggleWall(game, index, direction)) return;
+    const result = Model.finishEdit(game, before);
+    if (result.changed) render();
   }
 
-  function applyStrokeIndex(index) {
-    if (!stroke || stroke.visited.has(index)) return;
-    stroke.visited.add(index);
-    let changed = false;
-    if (stroke.kind === "color") {
-      changed = stroke.operation === "erase"
-        ? Model.eraseCell(game, index)
-        : Model.paintCell(game, index, selectedColor);
-      if (!changed && game.cells[index]?.fixed && !stroke.notified) {
-        stroke.notified = true;
-        showToast("白い角印は固定色です。");
-      }
-    } else {
-      const result = Model.editRoomCell(game, stroke.roomId, index, stroke.operation);
-      changed = result.changed;
-      if (result.conflict && !stroke.notified) {
-        stroke.notified = true;
-        showToast(result.conflict === "assigned"
-          ? "別の数字部屋に登録済みです。先にその部屋を選んで解除してください。"
-          : "数字マスは別の部屋へ追加できません。");
-      }
+  function handleCellTap(index) {
+    if (mode === "wall") {
+      showToast("マスの中心ではなく、内側の辺をタップします。");
+      return;
     }
-    if (changed) render({ persist: false });
-  }
-
-  function beginStroke(event, index) {
-    if (stroke || event.button !== 0) return;
     if (mode === "room") {
       const assigned = Model.roomForCell(game, index);
       if (!game.focusedRoomId) {
@@ -372,37 +402,34 @@
         showToast("数字マスは部屋メモから外せません。");
         return;
       }
-      stroke = {
-        pointerId: event.pointerId,
-        kind: "room",
-        roomId: room.id,
-        operation,
-        before: Model.startEdit(game),
-        visited: new Set(),
-        notified: false,
-      };
-    } else {
-      stroke = {
-        pointerId: event.pointerId,
-        kind: "color",
-        operation: colorTool,
-        before: Model.startEdit(game),
-        visited: new Set(),
-        notified: false,
-      };
+      const before = Model.startEdit(game);
+      const edit = Model.editRoomCell(game, room.id, index, operation);
+      if (edit.conflict) {
+        showToast(edit.conflict === "assigned"
+          ? "別の数字部屋に登録済みです。先にその部屋を選んで解除してください。"
+          : "数字マスは別の部屋へ追加できません。");
+        return;
+      }
+      const result = Model.finishEdit(game, before);
+      if (result.changed) {
+        render();
+        const syncedCount = result.synced.reduce((sum, item) => sum + item.indices.length, 0);
+        if (syncedCount) showToast(`完成した部屋を${syncedCount}マス一括着色しました。`);
+      }
+      return;
     }
-    elements.board.setPointerCapture?.(event.pointerId);
-    applyStrokeIndex(index);
-  }
 
-  function finishStroke(event) {
-    if (!stroke || (event && event.pointerId !== stroke.pointerId)) return;
-    const result = Model.finishEdit(game, stroke.before);
-    stroke = null;
+    const before = Model.startEdit(game);
+    const changed = colorTool === "erase"
+      ? Model.eraseCell(game, index)
+      : Model.paintCell(game, index, selectedColor);
+    if (!changed && game.cells[index]?.fixed) {
+      showToast("白い角印は固定色です。");
+      return;
+    }
+    const result = Model.finishEdit(game, before);
     if (result.changed) {
       render();
-      const syncedCount = result.synced.reduce((sum, item) => sum + item.indices.length, 0);
-      if (syncedCount) showToast(`完成した部屋を${syncedCount}マス一括着色しました。`);
     }
   }
 
@@ -455,21 +482,20 @@
       });
     });
 
-    elements.board.addEventListener("pointerdown", (event) => {
+    elements.board.addEventListener("click", (event) => {
+      const wallEdge = event.target.closest(".wall-edge");
+      if (wallEdge) {
+        if (mode === "wall") {
+          handleWallTap(Number(wallEdge.dataset.wallIndex), wallEdge.dataset.wallDirection);
+        }
+        return;
+      }
       const cell = event.target.closest(".cell");
       if (!cell) return;
-      event.preventDefault();
-      beginStroke(event, Number(cell.dataset.index));
+      handleCellTap(Number(cell.dataset.index));
     });
-    elements.board.addEventListener("pointermove", (event) => {
-      if (!stroke || event.pointerId !== stroke.pointerId) return;
-      event.preventDefault();
-      const index = cellFromPoint(event.clientX, event.clientY);
-      if (index !== null) applyStrokeIndex(index);
-    });
-    elements.board.addEventListener("pointerup", finishStroke);
-    elements.board.addEventListener("pointercancel", finishStroke);
     elements.board.addEventListener("contextmenu", (event) => {
+      if (mode === "wall") return;
       const cell = event.target.closest(".cell");
       if (!cell) return;
       event.preventDefault();
@@ -494,6 +520,8 @@
         selectMode("color");
       } else if (event.key.toLowerCase() === "m") {
         selectMode("room");
+      } else if (event.key.toLowerCase() === "w") {
+        selectMode("wall");
       } else if (event.key.toLowerCase() === "e") {
         selectEraser();
       } else if (/^[1-4]$/.test(event.key)) {

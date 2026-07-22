@@ -31,6 +31,9 @@
           <button class="mode-button" data-mode-button="room" type="button" aria-pressed="false">
             <span aria-hidden="true">⌂</span> 部屋
           </button>
+          <button class="mode-button" data-mode-button="wall" type="button" aria-pressed="false">
+            <span aria-hidden="true">┃</span> 壁
+          </button>
         </div>
       </section>
 
@@ -44,8 +47,14 @@
 
       <section class="panel-section room-controls" data-room-controls>
         <p class="field-label">同室メモ</p>
-        <p class="panel-copy">数字を選び、その部屋に入るマスをタップまたは指でなぞります。</p>
+        <p class="panel-copy">数字を選び、その部屋に入るマスを1マスずつタップします。</p>
         <button class="secondary-button" data-close-room type="button" disabled>フォーカス解除</button>
+      </section>
+
+      <section class="panel-section wall-controls" data-wall-controls>
+        <p class="field-label">壁メモ</p>
+        <p class="panel-copy">マスとマスの間をタップして壁を置きます。もう一度タップすると外せます。</p>
+        <p class="wall-count" data-wall-count>壁 0本・辺をタップして切替</p>
       </section>
 
       <section class="panel-section history-row" aria-label="履歴操作">
@@ -69,9 +78,10 @@
         <div class="help-content">
           <p>縦横につながった同色マスが一つの部屋です。各部屋には数字が一つだけ入り、数字は部屋のマス数を表します。</p>
           <ul>
-            <li>色モードでは、タップ／スワイプで連続着色します。</li>
-            <li>部屋モードでは数字を選び、同室だと思うマスを登録します。</li>
-            <li>同室メモや壁を全部入力しなくても、色盤面が正しければ完成です。</li>
+            <li>色モードでは、タップで1マスずつ着色します。</li>
+            <li>部屋モードでは数字を選び、同室だと思うマスを1マスずつ登録します。</li>
+            <li>壁モードでは、部屋の境だと思う内側の辺をタップします。</li>
+            <li>壁と同室メモは自分用です。入力しなくても、色盤面が正しければ完成です。</li>
           </ul>
         </div>
       </details>
@@ -89,6 +99,7 @@
         <div class="legend" aria-label="盤面記号">
           <span><i class="fixed-sample"></i>固定色</span>
           <span><i class="room-sample">A</i>同室メモ</span>
+          <span><i class="wall-sample"></i>壁メモ</span>
         </div>
       </div>
 
@@ -108,7 +119,7 @@
 
       <details class="mobile-help">
         <summary>ルールと操作</summary>
-        <p>同色の縦横連結が一部屋です。各部屋には数字が一つ入り、数字は部屋の広さを表します。色モードは着色、部屋モードは同室メモです。</p>
+        <p>同色の縦横連結が一部屋です。各部屋には数字が一つ入り、数字は部屋の広さを表します。色はマス、部屋は同室メモ、壁は内側の辺をタップします。</p>
       </details>
     </section>
   </main>
@@ -118,6 +129,7 @@
       <div class="mode-switch" role="radiogroup" aria-label="操作モード">
         <button class="mode-button is-active" data-mode-button="color" type="button" aria-pressed="true">● 色</button>
         <button class="mode-button" data-mode-button="room" type="button" aria-pressed="false">⌂ 部屋</button>
+        <button class="mode-button" data-mode-button="wall" type="button" aria-pressed="false">┃ 壁</button>
       </div>
       <div class="mobile-history">
         <button data-undo type="button" aria-label="一手戻す" disabled>↶</button>
@@ -131,6 +143,10 @@
     <div class="mobile-room-row" data-room-controls>
       <span id="mobile-room-message">数字をタップして部屋を選択</span>
       <button class="secondary-button" data-close-room type="button" disabled>解除</button>
+    </div>
+    <div class="mobile-wall-row" data-wall-controls>
+      <span aria-hidden="true">┃</span>
+      <strong data-wall-count>壁 0本・辺をタップして切替</strong>
     </div>
   </nav>
 

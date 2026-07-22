@@ -26,6 +26,28 @@
     return neighbors;
   }
 
+  function wallKey(puzzle, index, direction) {
+    if (!Number.isInteger(index) || index < 0 || index >= puzzle.rows * puzzle.cols) return null;
+    const { row, col } = coordinates(puzzle, index);
+    if (direction === "right" && col < puzzle.cols) return `v:${row}:${col}`;
+    if (direction === "left" && col > 1) return `v:${row}:${col - 1}`;
+    if (direction === "bottom" && row < puzzle.rows) return `h:${row}:${col}`;
+    if (direction === "top" && row > 1) return `h:${row - 1}:${col}`;
+    return null;
+  }
+
+  function validWallKeys(puzzle) {
+    const keys = new Set();
+    const count = puzzle.rows * puzzle.cols;
+    for (let index = 0; index < count; index += 1) {
+      const right = wallKey(puzzle, index, "right");
+      const bottom = wallKey(puzzle, index, "bottom");
+      if (right) keys.add(right);
+      if (bottom) keys.add(bottom);
+    }
+    return keys;
+  }
+
   function normalizePuzzle(raw) {
     if (!raw || !Number.isInteger(raw.rows) || !Number.isInteger(raw.cols)) {
       throw new Error("盤面サイズが不正です。");
@@ -87,13 +109,14 @@
         cells: [clueIndex],
       };
     });
-    return { cells, rooms };
+    return { cells, rooms, walls: new Set() };
   }
 
   function cloneState(game) {
     return {
       cells: game.cells.map((cell) => ({ color: cell.color, fixed: cell.fixed })),
       rooms: game.rooms.map((room) => ({ ...room, cells: [...room.cells] })),
+      walls: [...game.walls].sort(),
     };
   }
 
@@ -104,12 +127,15 @@
         && room.cells.every((cellIndexValue, cellIndexPosition) => (
           cellIndexValue === state.rooms[index].cells[cellIndexPosition]
         ))
-      ));
+      ))
+      && game.walls.size === state.walls.length
+      && state.walls.every((key) => game.walls.has(key));
   }
 
   function restoreState(game, state) {
     game.cells = state.cells.map((cell) => ({ color: cell.color, fixed: cell.fixed }));
     game.rooms = state.rooms.map((room) => ({ ...room, cells: [...room.cells] }));
+    game.walls = new Set(state.walls);
   }
 
   function createGame(rawPuzzle, options = {}) {
@@ -119,6 +145,7 @@
       puzzle,
       cells: state.cells,
       rooms: state.rooms,
+      walls: state.walls,
       focusedRoomId: null,
       history: [],
       future: [],
@@ -138,6 +165,19 @@
     game.history.push(before);
     game.future = [];
     return { changed: true, synced };
+  }
+
+  function hasWall(game, index, direction) {
+    const key = wallKey(game.puzzle, index, direction);
+    return Boolean(key && game.walls.has(key));
+  }
+
+  function toggleWall(game, index, direction) {
+    const key = wallKey(game.puzzle, index, direction);
+    if (!key) return false;
+    if (game.walls.has(key)) game.walls.delete(key);
+    else game.walls.add(key);
+    return true;
   }
 
   function roomForCell(game, index) {
@@ -351,6 +391,7 @@
     const state = initialState(game.puzzle);
     game.cells = state.cells;
     game.rooms = state.rooms;
+    game.walls = state.walls;
     game.focusedRoomId = null;
     if (sameState(game, before)) return false;
     game.history.push(before);
@@ -373,6 +414,7 @@
       version: 1,
       colors: game.cells.map((cell) => cell.color),
       rooms: game.rooms.map((room) => [...room.cells]),
+      walls: [...game.walls].sort(),
       syncCompleteRooms: game.syncCompleteRooms,
     };
   }
@@ -406,8 +448,14 @@
       used.add(room.clueIndex);
       return { ...room, cells: valid.sort((left, right) => left - right) };
     });
+    const allowedWalls = validWallKeys(game.puzzle);
+    const walls = new Set(
+      (Array.isArray(progress.walls) ? progress.walls : [])
+        .filter((key) => typeof key === "string" && allowedWalls.has(key)),
+    );
     game.cells = cells;
     game.rooms = rooms;
+    game.walls = walls;
     game.syncCompleteRooms = progress.syncCompleteRooms !== false;
     return true;
   }
@@ -416,6 +464,9 @@
     createGame,
     startEdit,
     finishEdit,
+    wallKey,
+    hasWall,
+    toggleWall,
     paintCell,
     eraseCell,
     editRoomCell,
