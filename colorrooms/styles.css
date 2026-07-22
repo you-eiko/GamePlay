@@ -339,6 +339,7 @@ select {
 .wall-edge.is-vertical::after { top: -9px; bottom: -9px; left: 9px; width: 5px; }
 .wall-edge.is-horizontal::after { top: 9px; right: -9px; left: -9px; height: 5px; }
 .wall-edge.is-active::after { opacity: 1; }
+.wall-edge.is-auto::after { box-shadow: 0 0 0 1px rgb(239 168 61 / 88%); }
 .board.is-wall-mode .cell { cursor: default; }
 .board.is-wall-mode .wall-edge { pointer-events: auto; }
 .board.is-wall-mode .wall-edge:not(.is-active)::after { opacity: .18; }

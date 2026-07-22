@@ -162,11 +162,15 @@
     if (cell.color) parts.push(`${colorMeta(cell.color).name}で着色`);
     else parts.push("未着色");
     if (cell.fixed) parts.push("固定色");
-    if (room && room.cells.length > 1) parts.push(`部屋${room.label}の同室メモ`);
+    if (room && (room.temporary || room.cells.length > 1)) {
+      parts.push(`${room.temporary ? "仮部屋" : "部屋"}${room.label}の同室メモ`);
+    }
     return parts.join("、");
   }
 
   function createWallEdge(index, direction, orientation, row, col, label) {
+    const source = Model.wallSource(game, index, direction);
+    const active = source !== null;
     const button = document.createElement("button");
     button.type = "button";
     button.className = `wall-edge is-${orientation}`;
@@ -174,11 +178,15 @@
     button.dataset.wallDirection = direction;
     button.style.setProperty("--edge-row", row);
     button.style.setProperty("--edge-col", col);
-    button.setAttribute("aria-label", `${label}の壁メモを切り替え`);
-    button.setAttribute("aria-pressed", String(Model.hasWall(game, index, direction)));
+    button.setAttribute("aria-label", source === "auto"
+      ? `${label}の自動壁`
+      : `${label}の壁メモを切り替え`);
+    button.setAttribute("aria-pressed", String(active));
+    button.setAttribute("aria-disabled", String(source === "auto"));
     button.setAttribute("aria-hidden", String(mode !== "wall"));
     button.tabIndex = mode === "wall" ? 0 : -1;
-    button.classList.toggle("is-active", Model.hasWall(game, index, direction));
+    button.classList.toggle("is-active", active);
+    button.classList.toggle("is-auto", source === "auto");
     return button;
   }
 
@@ -296,7 +304,7 @@
         button.append(code);
       }
 
-      if (room && (room.cells.length > 1 || room.id === game.focusedRoomId)) {
+      if (room && (room.temporary || room.cells.length > 1 || room.id === game.focusedRoomId)) {
         const label = document.createElement("span");
         label.className = "room-label";
         label.textContent = room.label;
@@ -334,14 +342,16 @@
     elements.roomFocus.hidden = !room || mode !== "room";
     elements.closeRoomButtons.forEach((button) => { button.disabled = !room; });
     if (!room) {
-      elements.mobileRoomMessage.textContent = "数字をタップして部屋を選択";
+      elements.mobileRoomMessage.textContent = "数字か空きマスをタップ";
       return;
     }
     const progress = Model.roomProgress(game, room);
     const state = progress.complete ? "完成" : (progress.connected ? "連結" : "未連結");
-    elements.roomFocusTitle.textContent = `部屋${room.label}　数字${room.clueValue}`;
-    elements.roomFocusProgress.textContent = `登録 ${progress.count}/${progress.target}・${state}`;
-    elements.mobileRoomMessage.textContent = `部屋${room.label}　${progress.count}/${progress.target}・${state}`;
+    const roomName = room.temporary ? `仮部屋${room.label}　数字なし` : `部屋${room.label}　数字${room.clueValue}`;
+    const count = room.temporary ? `${progress.count}マス` : `${progress.count}/${progress.target}`;
+    elements.roomFocusTitle.textContent = roomName;
+    elements.roomFocusProgress.textContent = `登録 ${count}・${state}`;
+    elements.mobileRoomMessage.textContent = `${room.temporary ? "仮部屋" : "部屋"}${room.label}　${count}・${state}`;
   }
 
   function renderMeta() {
@@ -362,8 +372,11 @@
     elements.undoButtons.forEach((button) => { button.disabled = game.history.length === 0; });
     elements.redoButtons.forEach((button) => { button.disabled = game.future.length === 0; });
     elements.syncRooms.forEach((input) => { input.checked = game.syncCompleteRooms; });
+    const automaticWalls = Model.automaticWallKeys(game);
+    const wallCount = new Set([...game.walls, ...automaticWalls]).size;
     elements.wallCounts.forEach((element) => {
-      element.textContent = `壁 ${game.walls.size}本・辺をタップして切替`;
+      const automaticLabel = automaticWalls.size ? `（自動${automaticWalls.size}本）` : "";
+      element.textContent = `壁 ${wallCount}本${automaticLabel}・辺をタップして切替`;
     });
     updateToolControls();
     if (options.persist !== false) saveProgress();
@@ -382,6 +395,10 @@
   }
 
   function handleWallTap(index, direction) {
+    if (Model.wallSource(game, index, direction) === "auto") {
+      showToast("完成した部屋の外周から自動生成された壁です。");
+      return;
+    }
     const before = Model.startEdit(game);
     if (!Model.toggleWall(game, index, direction)) return;
     const result = Model.finishEdit(game, before);
@@ -396,8 +413,19 @@
     if (mode === "room") {
       const assigned = Model.roomForCell(game, index);
       if (!game.focusedRoomId) {
-        if (assigned) focusRoom(assigned.id);
-        else showToast("まず数字マスをタップして部屋を選びます。");
+        if (assigned) {
+          focusRoom(assigned.id);
+          return;
+        }
+        const before = Model.startEdit(game);
+        const temporaryRoom = Model.createTemporaryRoom(game, index);
+        if (!temporaryRoom) return;
+        const result = Model.finishEdit(game, before);
+        if (result.changed) {
+          game.focusedRoomId = temporaryRoom.id;
+          render();
+          showToast(`仮部屋${temporaryRoom.label}を作成しました。`);
+        }
         return;
       }
       if (assigned && assigned.id !== game.focusedRoomId) {
@@ -411,6 +439,7 @@
         showToast("数字マスは部屋メモから外せません。");
         return;
       }
+      const automaticWallsBefore = Model.automaticWallKeys(game);
       const before = Model.startEdit(game);
       const edit = Model.editRoomCell(game, room.id, index, operation);
       if (edit.conflict) {
@@ -421,9 +450,20 @@
       }
       const result = Model.finishEdit(game, before);
       if (result.changed) {
-        render();
+        const automaticWallsAfter = Model.automaticWallKeys(game);
+        const addedWalls = [...automaticWallsAfter]
+          .filter((key) => !automaticWallsBefore.has(key)).length;
         const syncedCount = result.synced.reduce((sum, item) => sum + item.indices.length, 0);
-        if (syncedCount) showToast(`完成した部屋を${syncedCount}マス一括着色しました。`);
+        render();
+        if (edit.removedRoom) {
+          showToast(`仮部屋${room.label}を削除しました。`);
+        } else if (addedWalls && syncedCount) {
+          showToast(`部屋完成：壁${addedWalls}本と着色${syncedCount}マスを反映しました。`);
+        } else if (addedWalls) {
+          showToast(`部屋完成：外周に壁を${addedWalls}本引きました。`);
+        } else if (syncedCount) {
+          showToast(`完成した部屋を${syncedCount}マス一括着色しました。`);
+        }
       }
       return;
     }

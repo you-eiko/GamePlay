@@ -106,10 +106,11 @@
         label: roomLabel(index),
         clueIndex,
         clueValue: clue.value,
+        temporary: false,
         cells: [clueIndex],
       };
     });
-    return { cells, rooms, walls: new Set() };
+    return { cells, rooms, walls: new Set(), nextTemporaryRoomId: 1 };
   }
 
   function cloneState(game) {
@@ -117,25 +118,31 @@
       cells: game.cells.map((cell) => ({ color: cell.color, fixed: cell.fixed })),
       rooms: game.rooms.map((room) => ({ ...room, cells: [...room.cells] })),
       walls: [...game.walls].sort(),
+      nextTemporaryRoomId: game.nextTemporaryRoomId,
     };
   }
 
   function sameState(game, state) {
     return game.cells.every((cell, index) => cell.color === state.cells[index].color)
+      && game.rooms.length === state.rooms.length
       && game.rooms.every((room, index) => (
-        room.cells.length === state.rooms[index].cells.length
+        room.id === state.rooms[index].id
+        && room.cells.length === state.rooms[index].cells.length
         && room.cells.every((cellIndexValue, cellIndexPosition) => (
           cellIndexValue === state.rooms[index].cells[cellIndexPosition]
         ))
       ))
       && game.walls.size === state.walls.length
-      && state.walls.every((key) => game.walls.has(key));
+      && state.walls.every((key) => game.walls.has(key))
+      && game.nextTemporaryRoomId === state.nextTemporaryRoomId;
   }
 
   function restoreState(game, state) {
     game.cells = state.cells.map((cell) => ({ color: cell.color, fixed: cell.fixed }));
     game.rooms = state.rooms.map((room) => ({ ...room, cells: [...room.cells] }));
     game.walls = new Set(state.walls);
+    game.nextTemporaryRoomId = state.nextTemporaryRoomId;
+    if (game.focusedRoomId && !roomById(game, game.focusedRoomId)) game.focusedRoomId = null;
   }
 
   function createGame(rawPuzzle, options = {}) {
@@ -146,6 +153,7 @@
       cells: state.cells,
       rooms: state.rooms,
       walls: state.walls,
+      nextTemporaryRoomId: state.nextTemporaryRoomId,
       focusedRoomId: null,
       history: [],
       future: [],
@@ -167,14 +175,40 @@
     return { changed: true, synced };
   }
 
+  function createTemporaryRoom(game, index) {
+    if (!Number.isInteger(index) || !game.cells[index] || roomForCell(game, index) || clueAt(game, index)) {
+      return null;
+    }
+    const number = game.nextTemporaryRoomId;
+    const room = {
+      id: `temp-${number}`,
+      label: roomLabel(game.puzzle.clues.length + number - 1),
+      clueIndex: null,
+      clueValue: null,
+      temporary: true,
+      cells: [index],
+    };
+    game.nextTemporaryRoomId += 1;
+    game.rooms.push(room);
+    return room;
+  }
+
   function hasWall(game, index, direction) {
+    return wallSource(game, index, direction) !== null;
+  }
+
+  function wallSource(game, index, direction) {
     const key = wallKey(game.puzzle, index, direction);
-    return Boolean(key && game.walls.has(key));
+    if (!key) return null;
+    if (automaticWallKeys(game).has(key)) return "auto";
+    if (game.walls.has(key)) return "player";
+    return null;
   }
 
   function toggleWall(game, index, direction) {
     const key = wallKey(game.puzzle, index, direction);
     if (!key) return false;
+    if (automaticWallKeys(game).has(key)) return false;
     if (game.walls.has(key)) game.walls.delete(key);
     else game.walls.add(key);
     return true;
@@ -217,7 +251,12 @@
         return { changed: false, conflict: index === room.clueIndex ? "clue" : null };
       }
       room.cells = room.cells.filter((item) => item !== index);
-      return { changed: true, conflict: null };
+      if (room.temporary && room.cells.length === 0) {
+        game.rooms = game.rooms.filter((item) => item.id !== room.id);
+        if (game.focusedRoomId === room.id) game.focusedRoomId = null;
+        return { changed: true, conflict: null, removedRoom: true };
+      }
+      return { changed: true, conflict: null, removedRoom: false };
     }
     if (operation !== "add") return { changed: false, conflict: null };
     const assigned = roomForCell(game, index);
@@ -255,12 +294,37 @@
     const connected = isConnected(game.puzzle, room.cells);
     return {
       count: room.cells.length,
-      target: room.clueValue,
+      target: room.temporary ? null : room.clueValue,
       connected,
       color: colors.length === 1 ? colors[0] : null,
       mixedColors: colors.length > 1,
-      complete: room.cells.length === room.clueValue && connected,
+      complete: !room.temporary && room.cells.length === room.clueValue && connected,
     };
+  }
+
+  function automaticWallKeys(game) {
+    const keys = new Set();
+    const { puzzle } = game;
+    for (const room of game.rooms) {
+      const progress = roomProgress(game, room);
+      if (!progress.complete || progress.mixedColors) continue;
+      const roomCells = new Set(room.cells);
+      for (const index of room.cells) {
+        const { row, col } = coordinates(puzzle, index);
+        const edges = [
+          ["right", col < puzzle.cols ? index + 1 : null],
+          ["bottom", row < puzzle.rows ? index + puzzle.cols : null],
+          ["left", col > 1 ? index - 1 : null],
+          ["top", row > 1 ? index - puzzle.cols : null],
+        ];
+        for (const [direction, neighbor] of edges) {
+          if (neighbor === null || roomCells.has(neighbor)) continue;
+          const key = wallKey(puzzle, index, direction);
+          if (key) keys.add(key);
+        }
+      }
+    }
+    return keys;
   }
 
   function syncEligibleRooms(game) {
@@ -332,7 +396,7 @@
     for (const room of game.rooms) {
       const progress = roomProgress(game, room);
       const reasons = [];
-      if (progress.count > progress.target) reasons.push("too-many-cells");
+      if (progress.target !== null && progress.count > progress.target) reasons.push("too-many-cells");
       if (progress.mixedColors) reasons.push("mixed-colors");
       if (reasons.length) {
         roomIssues.set(room.id, reasons);
@@ -392,6 +456,7 @@
     game.cells = state.cells;
     game.rooms = state.rooms;
     game.walls = state.walls;
+    game.nextTemporaryRoomId = state.nextTemporaryRoomId;
     game.focusedRoomId = null;
     if (sameState(game, before)) return false;
     game.history.push(before);
@@ -410,21 +475,27 @@
   }
 
   function serializeProgress(game) {
+    const clueRooms = game.rooms.filter((room) => !room.temporary);
+    const temporaryRooms = game.rooms
+      .filter((room) => room.temporary)
+      .map((room) => ({ id: room.id, cells: [...room.cells] }));
     return {
       version: 1,
       colors: game.cells.map((cell) => cell.color),
-      rooms: game.rooms.map((room) => [...room.cells]),
+      rooms: clueRooms.map((room) => [...room.cells]),
+      temporaryRooms,
+      nextTemporaryRoomId: game.nextTemporaryRoomId,
       walls: [...game.walls].sort(),
       syncCompleteRooms: game.syncCompleteRooms,
     };
   }
 
   function restoreProgress(game, progress) {
+    const initial = initialState(game.puzzle);
     if (!progress || progress.version !== 1 || !Array.isArray(progress.colors)
       || progress.colors.length !== game.cells.length || !Array.isArray(progress.rooms)
-      || progress.rooms.length !== game.rooms.length) return false;
+      || progress.rooms.length !== initial.rooms.length) return false;
 
-    const initial = initialState(game.puzzle);
     const cells = initial.cells.map((cell, index) => ({
       ...cell,
       color: cell.fixed
@@ -448,14 +519,47 @@
       used.add(room.clueIndex);
       return { ...room, cells: valid.sort((left, right) => left - right) };
     });
+    let maxTemporaryRoomId = 0;
+    const temporaryRooms = [];
+    const savedTemporaryRooms = Array.isArray(progress.temporaryRooms) ? progress.temporaryRooms : [];
+    for (const saved of savedTemporaryRooms) {
+      const match = saved && typeof saved.id === "string" ? /^temp-(\d+)$/.exec(saved.id) : null;
+      if (!match || !Array.isArray(saved.cells)) continue;
+      const number = Number(match[1]);
+      if (!Number.isInteger(number) || number < 1 || temporaryRooms.some((room) => room.id === saved.id)) continue;
+      const valid = [];
+      for (const index of saved.cells) {
+        if (!Number.isInteger(index) || index < 0 || index >= cells.length || used.has(index)) continue;
+        const clue = game.puzzle.clues.find(
+          (item) => cellIndex(game.puzzle, item.row, item.col) === index,
+        );
+        if (clue) continue;
+        used.add(index);
+        valid.push(index);
+      }
+      if (!valid.length) continue;
+      maxTemporaryRoomId = Math.max(maxTemporaryRoomId, number);
+      temporaryRooms.push({
+        id: saved.id,
+        label: roomLabel(game.puzzle.clues.length + number - 1),
+        clueIndex: null,
+        clueValue: null,
+        temporary: true,
+        cells: valid.sort((left, right) => left - right),
+      });
+    }
     const allowedWalls = validWallKeys(game.puzzle);
     const walls = new Set(
       (Array.isArray(progress.walls) ? progress.walls : [])
         .filter((key) => typeof key === "string" && allowedWalls.has(key)),
     );
     game.cells = cells;
-    game.rooms = rooms;
+    game.rooms = [...rooms, ...temporaryRooms];
     game.walls = walls;
+    const savedNextId = Number.isInteger(progress.nextTemporaryRoomId)
+      ? progress.nextTemporaryRoomId
+      : 1;
+    game.nextTemporaryRoomId = Math.max(1, savedNextId, maxTemporaryRoomId + 1);
     game.syncCompleteRooms = progress.syncCompleteRooms !== false;
     return true;
   }
@@ -464,8 +568,11 @@
     createGame,
     startEdit,
     finishEdit,
+    createTemporaryRoom,
     wallKey,
     hasWall,
+    wallSource,
+    automaticWallKeys,
     toggleWall,
     paintCell,
     eraseCell,
