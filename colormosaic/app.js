@@ -16,6 +16,13 @@
     P: { name: "紫", hex: "#8d69b5", text: "#ffffff" },
     O: { name: "橙", hex: "#e27a3f", text: "#ffffff" },
   };
+  const X_SLOT_BY_COLOR = Object.freeze({
+    R: "top-left",
+    G: "top-right",
+    B: "bottom-left",
+    Y: "bottom-right",
+  });
+  const X_SLOTS = ["top-left", "top-right", "bottom-left", "bottom-right"];
 
   const elements = {
     puzzleSelect: document.querySelector("#puzzle-select"),
@@ -39,6 +46,11 @@
 
   function colorMeta(color) {
     return COLOR_META[color] || { name: color, hex: "#6f7c85", text: "#ffffff" };
+  }
+
+  function xSlot(color) {
+    if (X_SLOT_BY_COLOR[color]) return X_SLOT_BY_COLOR[color];
+    return X_SLOTS[game.puzzle.colors.indexOf(color)] || "bottom-right";
   }
 
   function clueMap(puzzle) {
@@ -177,10 +189,14 @@
         const list = document.createElement("span");
         list.className = "x-list";
         for (const color of cell.exclusions) {
+          const meta = colorMeta(color);
           const mark = document.createElement("span");
           mark.className = "x-mark";
-          mark.style.setProperty("--x-color", colorMeta(color).hex);
-          mark.textContent = `${color}×`;
+          mark.dataset.slot = xSlot(color);
+          mark.style.setProperty("--x-color", meta.hex);
+          mark.textContent = "×";
+          mark.setAttribute("aria-hidden", "true");
+          mark.title = `${meta.name}を除外`;
           list.append(mark);
         }
         button.append(list);
