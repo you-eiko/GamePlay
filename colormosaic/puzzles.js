@@ -604,13 +604,13 @@
           "value": 1
         }
       ],
-      "first_hint": "緑の0で候補を減らしたあと、同じ二マスに「一個だけ入る」関係を重ねて見ます。"
+      "first_hint": "緑の0で候補を減らしたあと、(2,3)の数字1が作る「二マスのうち一方だけ」という関係を見ます。"
     },
     {
-      "id": "CAL-ADVANCED",
-      "title": "級境界・三色の異色組",
-      "difficulty": "上級",
-      "solver_tier": "ADVANCED",
+      "id": "CAL-INTERMEDIATE-CLIQUE",
+      "title": "再分類・見える三色配置",
+      "difficulty": "中級",
+      "solver_tier": "INTERMEDIATE",
       "calibration": true,
       "rows": 2,
       "cols": 3,
@@ -663,13 +663,13 @@
           "value": 1
         }
       ],
-      "first_hint": "緑の0から始めます。三つの未確定マスが互いに異色になる関係まで追うのが山場です。"
+      "first_hint": "左上の緑0から始めます。残った二色候補に「一個だけ入る」関係を重ねると、三色の位置が決まります。"
     },
     {
-      "id": "CAL-OUT-OF-SCOPE",
-      "title": "検証用・分岐なし範囲外",
-      "difficulty": "人間解答範囲外",
-      "solver_tier": null,
+      "id": "CAL-INTERMEDIATE-RELATION",
+      "title": "再分類・二色関係",
+      "difficulty": "中級",
+      "solver_tier": "INTERMEDIATE",
       "calibration": true,
       "rows": 2,
       "cols": 3,
@@ -717,7 +717,248 @@
           "value": 2
         }
       ],
-      "first_hint": "一意解は確認済みですが、現行の分岐なし手筋では完解できない検証盤です。候補比較用に使ってください。"
+      "first_hint": "右上の赤0から始めます。緑2で候補を絞ったら、同じ二色だけが残る二マスを上段の数字1で比べます。"
+    },
+    {
+      "id": "CAL-INTERMEDIATE-R11",
+      "title": "中級・重なり差分R11",
+      "difficulty": "中級",
+      "solver_tier": "INTERMEDIATE",
+      "calibration": true,
+      "rows": 3,
+      "cols": 3,
+      "colors": [
+        "R",
+        "G",
+        "B"
+      ],
+      "fixed": [
+        {
+          "row": 1,
+          "col": 3,
+          "color": "B"
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "color": "R"
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "color": "R"
+        }
+      ],
+      "clues": [
+        {
+          "row": 1,
+          "col": 2,
+          "value": 0
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "value": 2
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "value": 1
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "value": 2
+        }
+      ],
+      "first_hint": "下段の赤1と赤2は二マスを共通に見ます。共有部を消すと、右だけの(2,3)は左だけの(2,1)より赤が一つ多いと分かります。"
+    },
+    {
+      "id": "CAL-INTERMEDIATE-R17",
+      "title": "中級・重み付き個数R17",
+      "difficulty": "中級",
+      "solver_tier": "INTERMEDIATE",
+      "calibration": true,
+      "rows": 3,
+      "cols": 3,
+      "colors": [
+        "R",
+        "G",
+        "B"
+      ],
+      "fixed": [
+        {
+          "row": 1,
+          "col": 2,
+          "color": "R"
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "color": "G"
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "color": "B"
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "color": "B"
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "color": "G"
+        }
+      ],
+      "clues": [
+        {
+          "row": 1,
+          "col": 3,
+          "value": 0
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "value": 3
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "value": 2
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "value": 2
+        }
+      ],
+      "first_hint": "緑0から始めます。途中で(2,2)と(2,3)が同色になったら、青の個数では0個か2個をまとめて使う一組として数えます。"
+    },
+    {
+      "id": "CAL-ADVANCED",
+      "title": "級境界・差分と重み",
+      "difficulty": "上級",
+      "solver_tier": "ADVANCED",
+      "calibration": true,
+      "rows": 3,
+      "cols": 3,
+      "colors": [
+        "R",
+        "G",
+        "B"
+      ],
+      "fixed": [
+        {
+          "row": 1,
+          "col": 1,
+          "color": "B"
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "color": "R"
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "color": "B"
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "color": "R"
+        }
+      ],
+      "clues": [
+        {
+          "row": 1,
+          "col": 1,
+          "value": 1
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "value": 2
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "value": 1
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "value": 3
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "value": 0
+        }
+      ],
+      "first_hint": "左下の赤0から始めます。同色関係を作ったあと、重なり差分で一対二の個数差を残し、同色ペアを重み2で数えます。"
+    },
+    {
+      "id": "CAL-OUT-OF-SCOPE",
+      "title": "検証用・連立が必要",
+      "difficulty": "人間解答範囲外",
+      "solver_tier": null,
+      "calibration": true,
+      "rows": 3,
+      "cols": 3,
+      "colors": [
+        "R",
+        "G",
+        "B"
+      ],
+      "fixed": [
+        {
+          "row": 1,
+          "col": 1,
+          "color": "G"
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "color": "B"
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "color": "G"
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "color": "R"
+        }
+      ],
+      "clues": [
+        {
+          "row": 2,
+          "col": 1,
+          "value": 2
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "value": 4
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "value": 2
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "value": 2
+        }
+      ],
+      "first_hint": "四つの数字が互いの中心色をまたいで連立します。採用済みの分岐なし手筋だけでは初手がなく、場合分けして追う検証盤です。"
     }
   ]
 };
