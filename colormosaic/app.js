@@ -231,11 +231,12 @@
   function renderMeta() {
     const puzzle = game.puzzle;
     elements.puzzleMeta.innerHTML = [
+      puzzle.difficulty ? `難易度 ${puzzle.difficulty}` : null,
       `${puzzle.rows}×${puzzle.cols}`,
       `${puzzle.colors.length}色`,
       `数字${puzzle.clues.length}`,
       `固定色${puzzle.fixed.length}`,
-    ].map((text) => `<span class="meta-chip">${text}</span>`).join("");
+    ].filter(Boolean).map((text) => `<span class="meta-chip">${text}</span>`).join("");
     elements.hint.innerHTML = `<strong>最初のヒント</strong><br>${puzzle.first_hint || "固定色つきの0と、位置の最大値から探してみましょう。"}`;
   }
 
@@ -261,7 +262,8 @@
     for (const puzzle of puzzleData.puzzles) {
       const option = document.createElement("option");
       option.value = puzzle.id;
-      option.textContent = `${puzzle.id}　${puzzle.title}`;
+      const difficulty = puzzle.difficulty ? `［${puzzle.difficulty}］` : "";
+      option.textContent = `${puzzle.id}　${difficulty}${puzzle.title}`;
       elements.puzzleSelect.append(option);
     }
 
