@@ -71,6 +71,18 @@ function puzzle(overrides = {}) {
     color: "R",
     tentative: true,
   });
+  assert.equal(game.cells[0].color, "R", "仮置きモードの1回目は仮置き");
+  assert.equal(game.cells[0].tentative, true);
+  assert.deepEqual(game.cells[0].exclusions, [], "仮置きモードではXを経由しない");
+
+  Model.applyAction(game, {
+    type: "cycle",
+    index: 0,
+    color: "R",
+    tentative: true,
+  });
+  assert.equal(game.cells[0].color, null, "仮置きモードの2回目は消去");
+
   Model.applyAction(game, {
     type: "cycle",
     index: 0,
@@ -80,6 +92,25 @@ function puzzle(overrides = {}) {
   const tentativeEvaluation = Model.evaluateGame(game);
   assert.equal(tentativeEvaluation.complete, false, "仮置きだけでは完成しない");
   assert.equal(tentativeEvaluation.clueStates.get(0).status, "satisfied", "仮置きは数字検討へ反映");
+}
+
+{
+  const game = Model.createGame(puzzle(), { autoFill: false });
+  Model.applyAction(game, { type: "cycle", index: 0, color: "R" });
+  Model.applyAction(game, { type: "cycle", index: 0, color: "R" });
+  assert.equal(game.cells[0].color, "R");
+
+  assert.equal(Model.undo(game), true);
+  assert.deepEqual(game.cells[0].exclusions, ["R"], "Undoで直前の状態へ戻る");
+  assert.equal(game.future.length, 1);
+
+  assert.equal(Model.redo(game), true);
+  assert.equal(game.cells[0].color, "R", "Redoで取り消した操作を復元");
+  assert.deepEqual(game.cells[0].exclusions, []);
+
+  assert.equal(Model.undo(game), true);
+  Model.applyAction(game, { type: "cycle", index: 1, color: "B" });
+  assert.equal(Model.redo(game), false, "Undo後の新しい操作でRedo履歴を破棄");
 }
 
 {

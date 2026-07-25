@@ -61,6 +61,7 @@
       puzzle,
       cells: createInitialCells(puzzle),
       history: [],
+      future: [],
       autoFill: options.autoFill !== false,
     };
   }
@@ -78,7 +79,10 @@
 
   function pushIfChanged(game, before) {
     const changed = game.cells.some((cell, index) => !sameCellState(cell, before[index]));
-    if (changed) game.history.push(before);
+    if (changed) {
+      game.history.push(before);
+      game.future = [];
+    }
     return changed;
   }
 
@@ -106,13 +110,22 @@
 
     if (action.type === "cycle") {
       const tentative = Boolean(action.tentative);
-      if (cell.exclusions.includes(color)) {
+      if (tentative) {
+        if (cell.color === color && cell.tentative) {
+          cell.color = null;
+          cell.tentative = false;
+        } else {
+          cell.color = color;
+          cell.tentative = true;
+          cell.exclusions = cell.exclusions.filter((item) => item !== color);
+        }
+      } else if (cell.exclusions.includes(color)) {
         cell.exclusions = cell.exclusions.filter((item) => item !== color);
         cell.color = color;
-        cell.tentative = tentative;
+        cell.tentative = false;
       } else if (cell.color === color) {
-        if (cell.tentative !== tentative) {
-          cell.tentative = tentative;
+        if (cell.tentative) {
+          cell.tentative = false;
         } else {
           cell.color = null;
           cell.tentative = false;
@@ -175,7 +188,16 @@
   function undo(game) {
     const previous = game.history.pop();
     if (!previous) return false;
+    game.future.push(snapshot(game));
     game.cells = cloneCells(previous);
+    return true;
+  }
+
+  function redo(game) {
+    const next = game.future.pop();
+    if (!next) return false;
+    game.history.push(snapshot(game));
+    game.cells = cloneCells(next);
     return true;
   }
 
@@ -255,6 +277,7 @@
     applyAction,
     setAutoFill,
     undo,
+    redo,
     reset,
     evaluateClue,
     evaluateGame,

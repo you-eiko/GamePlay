@@ -51,8 +51,9 @@
         </label>
       </section>
 
-      <section class="panel-section action-row" aria-label="履歴操作">
-        <button id="undo-button" class="secondary-button" data-undo type="button" disabled>↶ 一手戻す</button>
+      <section class="panel-section action-row desktop-action-row" aria-label="履歴操作">
+        <button id="undo-button" class="secondary-button" data-undo type="button" disabled>↶ Undo</button>
+        <button class="secondary-button" data-redo type="button" disabled>↷ Redo</button>
         <button id="reset-button" class="secondary-button" type="button">盤面を戻す</button>
       </section>
 
@@ -65,8 +66,9 @@
             <li>マスを長押しすると、途中の×を飛ばしてすぐ着色します。</li>
             <li>仮置きモードの着色には鉛筆マークが付き、完成判定には数えません。</li>
             <li>色別の×は、赤＝左上、緑＝右上、青＝左下、黄＝右下に表示します。</li>
+            <li>仮置きモードでは、タップするたびに「仮置き → 消す」を繰り返します。</li>
             <li><kbd>T</kbd> で仮置きモードを切り替えます。</li>
-            <li><kbd>Ctrl</kbd>＋<kbd>Z</kbd> でも一手戻せます。</li>
+            <li><kbd>Ctrl</kbd>＋<kbd>Z</kbd> でUndo、<kbd>Ctrl</kbd>＋<kbd>Shift</kbd>＋<kbd>Z</kbd> でRedoできます。</li>
           </ul>
         </div>
       </details>
@@ -81,21 +83,25 @@
           <span><i class="tentative-sample">✎</i>仮置き</span>
         </div>
       </div>
+      <div id="board-frame" class="board-frame">
+        <div id="board" class="board" role="grid" aria-label="パズル盤面"></div>
+      </div>
       <section class="mobile-controls" aria-label="盤面操作">
-        <p class="mobile-control-label">使う色</p>
+        <div class="mobile-control-heading">
+          <p class="mobile-control-label">使う色</p>
+          <span class="mobile-selected-label">選択中</span>
+        </div>
         <div id="mobile-palette" class="palette mobile-palette" data-palette role="radiogroup" aria-label="操作する色"></div>
         <div class="mobile-action-row" role="group" aria-label="仮置きと履歴">
           <button class="tool-button tentative-toggle" data-tentative type="button" aria-pressed="false">
             <span class="tool-icon pencil-icon" aria-hidden="true">✎</span>
             仮置き
           </button>
-          <button class="secondary-button mobile-undo" data-undo type="button" disabled>↶ Undo</button>
+          <button class="secondary-button mobile-history-button" data-undo type="button" disabled>↶ Undo</button>
+          <button class="secondary-button mobile-history-button" data-redo type="button" disabled>↷ Redo</button>
         </div>
-        <p class="mobile-operation-help">タップ：× → 着色 → なし　／　長押し：すぐ着色</p>
+        <p class="mobile-operation-help"><span class="normal-cycle-help">通常：× → 着色 → なし</span><span class="tentative-cycle-help">仮置き：仮置き ↔ 消す</span><span>長押し：すぐ着色</span></p>
       </section>
-      <div class="board-frame">
-        <div id="board" class="board" role="grid" aria-label="パズル盤面"></div>
-      </div>
       <div id="hint" class="hint-card"></div>
     </section>
   </main>

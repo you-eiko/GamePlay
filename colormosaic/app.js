@@ -31,9 +31,12 @@
     puzzleMeta: document.querySelector("#puzzle-meta"),
     palettes: [...document.querySelectorAll("[data-palette]")],
     tentativeButtons: [...document.querySelectorAll("[data-tentative]")],
+    mobileSelectedLabel: document.querySelector(".mobile-selected-label"),
     autoFill: document.querySelector("#auto-fill"),
     undoButtons: [...document.querySelectorAll("[data-undo]")],
+    redoButtons: [...document.querySelectorAll("[data-redo]")],
     reset: document.querySelector("#reset-button"),
+    boardFrame: document.querySelector("#board-frame"),
     board: document.querySelector("#board"),
     status: document.querySelector("#status"),
     hint: document.querySelector("#hint"),
@@ -78,6 +81,9 @@
 
   function selectColor(color) {
     selectedColor = color;
+    const meta = colorMeta(color);
+    elements.boardFrame.style.setProperty("--selected-color", meta.hex);
+    elements.mobileSelectedLabel.textContent = `選択中：${meta.name}`;
     elements.palettes.forEach((palette) => {
       palette.querySelectorAll(".color-button").forEach((button) => {
         const active = button.dataset.color === color;
@@ -306,6 +312,9 @@
     elements.undoButtons.forEach((button) => {
       button.disabled = game.history.length === 0;
     });
+    elements.redoButtons.forEach((button) => {
+      button.disabled = game.future.length === 0;
+    });
     elements.autoFill.checked = game.autoFill;
     setTentativeMode(tentativeMode);
   }
@@ -341,6 +350,11 @@
         if (Model.undo(game)) render();
       });
     });
+    elements.redoButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        if (Model.redo(game)) render();
+      });
+    });
     elements.reset.addEventListener("click", () => {
       if (Model.reset(game)) {
         render();
@@ -353,7 +367,14 @@
       if (target instanceof HTMLInputElement || target instanceof HTMLSelectElement) return;
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "z") {
         event.preventDefault();
-        if (Model.undo(game)) render();
+        if (event.shiftKey) {
+          if (Model.redo(game)) render();
+        } else if (Model.undo(game)) {
+          render();
+        }
+      } else if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "y") {
+        event.preventDefault();
+        if (Model.redo(game)) render();
       } else if (event.key.toLowerCase() === "t") {
         setTentativeMode(!tentativeMode, true);
       } else {
