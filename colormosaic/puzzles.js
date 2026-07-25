@@ -3369,6 +3369,423 @@
         }
       ],
       "first_hint": "(6,1) は 緑 の0なので、周囲はすべて緑以外です。"
+    },
+    {
+      "id": "REVIEW-BALANCE-BEGINNER-01",
+      "title": "初期情報バランス案・初級（色付き数字4／色のみ6／数字のみ12／空欄14）",
+      "difficulty": "初級",
+      "solver_tier": "BEGINNER",
+      "balance_review": true,
+      "rows": 6,
+      "cols": 6,
+      "colors": [
+        "R",
+        "G",
+        "B"
+      ],
+      "fixed": [
+        {
+          "row": 1,
+          "col": 5,
+          "color": "G"
+        },
+        {
+          "row": 2,
+          "col": 6,
+          "color": "R"
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "color": "R"
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "color": "G"
+        },
+        {
+          "row": 3,
+          "col": 6,
+          "color": "G"
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "color": "G"
+        },
+        {
+          "row": 4,
+          "col": 5,
+          "color": "G"
+        },
+        {
+          "row": 5,
+          "col": 1,
+          "color": "R"
+        },
+        {
+          "row": 5,
+          "col": 3,
+          "color": "B"
+        },
+        {
+          "row": 6,
+          "col": 6,
+          "color": "B"
+        }
+      ],
+      "clues": [
+        {
+          "row": 1,
+          "col": 1,
+          "value": 2
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "value": 1
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "value": 2
+        },
+        {
+          "row": 1,
+          "col": 5,
+          "value": 2
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "value": 2
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "value": 2
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "value": 1
+        },
+        {
+          "row": 3,
+          "col": 5,
+          "value": 2
+        },
+        {
+          "row": 3,
+          "col": 6,
+          "value": 1
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "value": 1
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "value": 1
+        },
+        {
+          "row": 4,
+          "col": 6,
+          "value": 3
+        },
+        {
+          "row": 5,
+          "col": 3,
+          "value": 1
+        },
+        {
+          "row": 5,
+          "col": 5,
+          "value": 4
+        },
+        {
+          "row": 6,
+          "col": 2,
+          "value": 3
+        },
+        {
+          "row": 6,
+          "col": 5,
+          "value": 0
+        }
+      ],
+      "first_hint": "(3,6) の 緑 は必要な1個に達したので、残る周囲へは入りません。"
+    },
+    {
+      "id": "REVIEW-BALANCE-INTERMEDIATE-01",
+      "title": "初期情報バランス案・中級（色付き数字4／色のみ3／数字のみ13／空欄16）",
+      "difficulty": "中級",
+      "solver_tier": "INTERMEDIATE",
+      "balance_review": true,
+      "rows": 6,
+      "cols": 6,
+      "colors": [
+        "R",
+        "G",
+        "B"
+      ],
+      "fixed": [
+        {
+          "row": 1,
+          "col": 4,
+          "color": "R"
+        },
+        {
+          "row": 1,
+          "col": 6,
+          "color": "R"
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "color": "G"
+        },
+        {
+          "row": 5,
+          "col": 3,
+          "color": "G"
+        },
+        {
+          "row": 6,
+          "col": 1,
+          "color": "B"
+        },
+        {
+          "row": 6,
+          "col": 2,
+          "color": "R"
+        },
+        {
+          "row": 6,
+          "col": 5,
+          "color": "G"
+        }
+      ],
+      "clues": [
+        {
+          "row": 1,
+          "col": 1,
+          "value": 3
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "value": 3
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "value": 0
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "value": 2
+        },
+        {
+          "row": 1,
+          "col": 6,
+          "value": 1
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "value": 4
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "value": 3
+        },
+        {
+          "row": 2,
+          "col": 5,
+          "value": 2
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "value": 3
+        },
+        {
+          "row": 3,
+          "col": 5,
+          "value": 0
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "value": 2
+        },
+        {
+          "row": 4,
+          "col": 6,
+          "value": 1
+        },
+        {
+          "row": 5,
+          "col": 3,
+          "value": 2
+        },
+        {
+          "row": 5,
+          "col": 4,
+          "value": 4
+        },
+        {
+          "row": 5,
+          "col": 6,
+          "value": 1
+        },
+        {
+          "row": 6,
+          "col": 4,
+          "value": 2
+        },
+        {
+          "row": 6,
+          "col": 6,
+          "value": 1
+        }
+      ],
+      "first_hint": "(1,1) の数字は近傍数と同じなので、中心と周囲はすべて同色です。"
+    },
+    {
+      "id": "REVIEW-BALANCE-ADVANCED-01",
+      "title": "初期情報バランス案・上級（色付き数字2／色のみ8／数字のみ10／空欄16）",
+      "difficulty": "上級",
+      "solver_tier": "ADVANCED",
+      "balance_review": true,
+      "rows": 6,
+      "cols": 6,
+      "colors": [
+        "R",
+        "G",
+        "B"
+      ],
+      "fixed": [
+        {
+          "row": 1,
+          "col": 1,
+          "color": "R"
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "color": "B"
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "color": "R"
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "color": "R"
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "color": "B"
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "color": "R"
+        },
+        {
+          "row": 3,
+          "col": 6,
+          "color": "G"
+        },
+        {
+          "row": 4,
+          "col": 6,
+          "color": "R"
+        },
+        {
+          "row": 6,
+          "col": 1,
+          "color": "G"
+        },
+        {
+          "row": 6,
+          "col": 5,
+          "color": "G"
+        }
+      ],
+      "clues": [
+        {
+          "row": 1,
+          "col": 3,
+          "value": 3
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "value": 3
+        },
+        {
+          "row": 2,
+          "col": 5,
+          "value": 1
+        },
+        {
+          "row": 2,
+          "col": 6,
+          "value": 0
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "value": 3
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "value": 1
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "value": 0
+        },
+        {
+          "row": 4,
+          "col": 5,
+          "value": 0
+        },
+        {
+          "row": 5,
+          "col": 2,
+          "value": 6
+        },
+        {
+          "row": 5,
+          "col": 6,
+          "value": 1
+        },
+        {
+          "row": 6,
+          "col": 5,
+          "value": 3
+        },
+        {
+          "row": 6,
+          "col": 6,
+          "value": 1
+        }
+      ],
+      "first_hint": "(1,3) の 赤 を3個置ける場所がちょうど必要数しかないので、すべて確定します。"
     }
   ]
 };
