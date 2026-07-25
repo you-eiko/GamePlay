@@ -8,6 +8,7 @@
   function cloneCells(cells) {
     return cells.map((cell) => ({
       color: cell.color,
+      tentative: cell.tentative,
       fixed: cell.fixed,
       exclusions: [...cell.exclusions],
     }));
@@ -38,6 +39,7 @@
   function createInitialCells(puzzle) {
     const cells = Array.from({ length: puzzle.rows * puzzle.cols }, () => ({
       color: null,
+      tentative: false,
       fixed: false,
       exclusions: [],
     }));
@@ -47,6 +49,7 @@
         throw new Error(`固定色の指定が不正です: r${given.row}c${given.col}`);
       }
       cells[index].color = given.color;
+      cells[index].tentative = false;
       cells[index].fixed = true;
     }
     return cells;
@@ -68,6 +71,7 @@
 
   function sameCellState(left, right) {
     return left.color === right.color
+      && left.tentative === right.tentative
       && left.exclusions.length === right.exclusions.length
       && left.exclusions.every((color, index) => color === right.exclusions[index]);
   }
@@ -85,6 +89,7 @@
     const remaining = game.puzzle.colors.filter((color) => !excluded.has(color));
     if (remaining.length !== 1) return null;
     cell.color = remaining[0];
+    cell.tentative = false;
     return remaining[0];
   }
 
@@ -99,11 +104,37 @@
     const before = snapshot(game);
     let autoFilled = null;
 
-    if (action.type === "paint") {
-      if (cell.color === color) {
+    if (action.type === "cycle") {
+      const tentative = Boolean(action.tentative);
+      if (cell.exclusions.includes(color)) {
+        cell.exclusions = cell.exclusions.filter((item) => item !== color);
+        cell.color = color;
+        cell.tentative = tentative;
+      } else if (cell.color === color) {
+        if (cell.tentative !== tentative) {
+          cell.tentative = tentative;
+        } else {
+          cell.color = null;
+          cell.tentative = false;
+        }
+      } else {
+        if (cell.color) {
+          cell.color = null;
+          cell.tentative = false;
+        }
+        cell.exclusions = game.puzzle.colors.filter(
+          (item) => item === color || cell.exclusions.includes(item),
+        );
+        autoFilled = applyAutoFillToCell(game, index);
+      }
+    } else if (action.type === "paint") {
+      const tentative = Boolean(action.tentative);
+      if (!action.direct && cell.color === color && cell.tentative === tentative) {
         cell.color = null;
+        cell.tentative = false;
       } else {
         cell.color = color;
+        cell.tentative = tentative;
         cell.exclusions = cell.exclusions.filter((item) => item !== color);
       }
     } else if (action.type === "toggle-x") {
@@ -114,7 +145,10 @@
         cell.exclusions = game.puzzle.colors.filter(
           (item) => item === color || cell.exclusions.includes(item),
         );
-        if (cell.color === color) cell.color = null;
+        if (cell.color === color) {
+          cell.color = null;
+          cell.tentative = false;
+        }
         autoFilled = applyAutoFillToCell(game, index);
       }
     } else {
@@ -195,7 +229,8 @@
       if (state.status === "impossible") impossibleClues += 1;
     }
 
-    const filled = game.cells.filter((cell) => cell.color).length;
+    const filled = game.cells.filter((cell) => cell.color && !cell.tentative).length;
+    const tentative = game.cells.filter((cell) => cell.color && cell.tentative).length;
     const contradictions = game.cells.filter(
       (cell) => cell.color && cell.exclusions.includes(cell.color),
     ).length;
@@ -205,6 +240,7 @@
 
     return {
       filled,
+      tentative,
       total: game.cells.length,
       complete,
       solved,

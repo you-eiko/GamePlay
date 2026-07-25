@@ -28,25 +28,22 @@
         <div id="puzzle-meta" class="puzzle-meta"></div>
       </section>
 
-      <section class="panel-section">
+      <section class="panel-section desktop-input-controls">
         <p class="field-label">使う色</p>
         <div id="palette" class="palette" data-palette role="radiogroup" aria-label="操作する色"></div>
       </section>
 
-      <section class="panel-section">
+      <section class="panel-section desktop-input-controls">
         <p class="field-label">操作</p>
-        <div class="tool-switch" role="radiogroup" aria-label="操作モード">
-          <button id="paint-tool" class="tool-button is-active" data-tool="paint" type="button" aria-pressed="true">
-            <span class="tool-icon paint-icon" aria-hidden="true"></span>
-            色を塗る
-          </button>
-          <button id="x-tool" class="tool-button" data-tool="x" type="button" aria-pressed="false">
-            <span class="tool-icon x-icon" aria-hidden="true">×</span>
-            Xを置く
+        <div class="tool-switch">
+          <button class="tool-button tentative-toggle" data-tentative type="button" aria-pressed="false">
+            <span class="tool-icon pencil-icon" aria-hidden="true">✎</span>
+            仮置きモード
           </button>
         </div>
+        <p class="operation-help">タップ：× → 着色 → なし<br>長押し：すぐ着色</p>
         <label class="auto-option">
-          <input id="auto-fill" type="checkbox" checked>
+          <input id="auto-fill" type="checkbox">
           <span>
             <strong>残り一色を自動で塗る</strong>
             <small>n−1色のXが付いたとき</small>
@@ -64,9 +61,11 @@
         <div class="help-content">
           <p>数字は、周囲8マスにある「数字マス自身と同じ色」の数です。数字マス自身は数えません。</p>
           <ul>
-            <li>色と操作を選び、マスを押します。</li>
-            <li>右クリックは、選択中の色のXを直接切り替えます。</li>
+            <li>色を選んでタップすると、選択色の「× → 着色 → なし」を繰り返します。</li>
+            <li>マスを長押しすると、途中の×を飛ばしてすぐ着色します。</li>
+            <li>仮置きモードの着色には鉛筆マークが付き、完成判定には数えません。</li>
             <li>色別の×は、赤＝左上、緑＝右上、青＝左下、黄＝右下に表示します。</li>
+            <li><kbd>T</kbd> で仮置きモードを切り替えます。</li>
             <li><kbd>Ctrl</kbd>＋<kbd>Z</kbd> でも一手戻せます。</li>
           </ul>
         </div>
@@ -79,26 +78,24 @@
         <div class="legend" aria-label="盤面記号">
           <span><i class="fixed-sample"></i>固定色</span>
           <span><i class="clue-sample">2</i>数字</span>
+          <span><i class="tentative-sample">✎</i>仮置き</span>
         </div>
       </div>
-      <div class="board-frame">
-        <div id="board" class="board" role="grid" aria-label="パズル盤面"></div>
-      </div>
       <section class="mobile-controls" aria-label="盤面操作">
-        <p class="mobile-control-label">色と操作</p>
+        <p class="mobile-control-label">使う色</p>
         <div id="mobile-palette" class="palette mobile-palette" data-palette role="radiogroup" aria-label="操作する色"></div>
-        <div class="mobile-action-row" role="group" aria-label="操作モードと履歴">
-          <button class="tool-button is-active" data-tool="paint" type="button" aria-pressed="true">
-            <span class="tool-icon paint-icon" aria-hidden="true"></span>
-            色を塗る
-          </button>
-          <button class="tool-button" data-tool="x" type="button" aria-pressed="false">
-            <span class="tool-icon x-icon" aria-hidden="true">×</span>
-            Xを置く
+        <div class="mobile-action-row" role="group" aria-label="仮置きと履歴">
+          <button class="tool-button tentative-toggle" data-tentative type="button" aria-pressed="false">
+            <span class="tool-icon pencil-icon" aria-hidden="true">✎</span>
+            仮置き
           </button>
           <button class="secondary-button mobile-undo" data-undo type="button" disabled>↶ Undo</button>
         </div>
+        <p class="mobile-operation-help">タップ：× → 着色 → なし　／　長押し：すぐ着色</p>
       </section>
+      <div class="board-frame">
+        <div id="board" class="board" role="grid" aria-label="パズル盤面"></div>
+      </div>
       <div id="hint" class="hint-card"></div>
     </section>
   </main>

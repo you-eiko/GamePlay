@@ -1,0 +1,93 @@
+"use strict";
+
+const assert = require("node:assert/strict");
+const Model = require("./model.js");
+
+function puzzle(overrides = {}) {
+  return {
+    id: "mobile-input-test",
+    rows: 1,
+    cols: 2,
+    colors: ["R", "B"],
+    fixed: [],
+    clues: [],
+    ...overrides,
+  };
+}
+
+{
+  const game = Model.createGame(puzzle(), { autoFill: false });
+  Model.applyAction(game, { type: "cycle", index: 0, color: "R" });
+  assert.deepEqual(game.cells[0].exclusions, ["R"], "1回目のタップはX");
+
+  Model.applyAction(game, { type: "cycle", index: 0, color: "R" });
+  assert.equal(game.cells[0].color, "R", "2回目のタップは着色");
+  assert.equal(game.cells[0].tentative, false);
+  assert.deepEqual(game.cells[0].exclusions, []);
+
+  Model.applyAction(game, { type: "cycle", index: 0, color: "R" });
+  assert.equal(game.cells[0].color, null, "3回目のタップはなし");
+}
+
+{
+  const game = Model.createGame(puzzle(), { autoFill: false });
+  Model.applyAction(game, {
+    type: "paint",
+    index: 0,
+    color: "B",
+    tentative: true,
+    direct: true,
+  });
+  assert.equal(game.cells[0].color, "B", "長押しは直接着色");
+  assert.equal(game.cells[0].tentative, true, "仮置きモードを保持");
+
+  const tentativeEvaluation = Model.evaluateGame(game);
+  assert.equal(tentativeEvaluation.filled, 0, "仮置きは完成マスへ数えない");
+  assert.equal(tentativeEvaluation.tentative, 1);
+
+  Model.applyAction(game, {
+    type: "paint",
+    index: 0,
+    color: "B",
+    tentative: false,
+    direct: true,
+  });
+  assert.equal(game.cells[0].tentative, false, "通常長押しで仮置きを確定");
+  assert.equal(Model.evaluateGame(game).filled, 1);
+
+  assert.equal(Model.undo(game), true);
+  assert.equal(game.cells[0].tentative, true, "Undoで仮置き状態も復元");
+}
+
+{
+  const game = Model.createGame(puzzle({
+    rows: 1,
+    cols: 1,
+    clues: [{ row: 1, col: 1, value: 0 }],
+  }), { autoFill: false });
+  Model.applyAction(game, {
+    type: "cycle",
+    index: 0,
+    color: "R",
+    tentative: true,
+  });
+  Model.applyAction(game, {
+    type: "cycle",
+    index: 0,
+    color: "R",
+    tentative: true,
+  });
+  const tentativeEvaluation = Model.evaluateGame(game);
+  assert.equal(tentativeEvaluation.complete, false, "仮置きだけでは完成しない");
+  assert.equal(tentativeEvaluation.clueStates.get(0).status, "satisfied", "仮置きは数字検討へ反映");
+}
+
+{
+  const game = Model.createGame(puzzle(), { autoFill: true });
+  const result = Model.applyAction(game, { type: "toggle-x", index: 0, color: "R" });
+  assert.equal(result.autoFilled, "B", "従来の残り一色自動着色を維持");
+  assert.equal(game.cells[0].color, "B");
+  assert.equal(game.cells[0].tentative, false, "自動着色は確定色");
+}
+
+console.log("ColorMosaic mobile input model tests passed.");

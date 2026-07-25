@@ -23,13 +23,14 @@
     Y: "bottom-right",
   });
   const X_SLOTS = ["top-left", "top-right", "bottom-left", "bottom-right"];
+  const LONG_PRESS_MS = 450;
+  const LONG_PRESS_MOVE_PX = 12;
 
   const elements = {
     puzzleSelect: document.querySelector("#puzzle-select"),
     puzzleMeta: document.querySelector("#puzzle-meta"),
     palettes: [...document.querySelectorAll("[data-palette]")],
-    paintTools: [...document.querySelectorAll('[data-tool="paint"]')],
-    xTools: [...document.querySelectorAll('[data-tool="x"]')],
+    tentativeButtons: [...document.querySelectorAll("[data-tentative]")],
     autoFill: document.querySelector("#auto-fill"),
     undoButtons: [...document.querySelectorAll("[data-undo]")],
     reset: document.querySelector("#reset-button"),
@@ -41,8 +42,9 @@
 
   let game = null;
   let selectedColor = null;
-  let tool = "paint";
+  let tentativeMode = false;
   let toastTimer = null;
+  let suppressedTap = { index: -1, until: 0 };
 
   function colorMeta(color) {
     return COLOR_META[color] || { name: color, hex: "#6f7c85", text: "#ffffff" };
@@ -64,17 +66,14 @@
     toastTimer = window.setTimeout(() => elements.toast.classList.remove("is-visible"), 1900);
   }
 
-  function selectTool(nextTool) {
-    tool = nextTool;
-    const painting = tool === "paint";
-    elements.paintTools.forEach((button) => {
-      button.classList.toggle("is-active", painting);
-      button.setAttribute("aria-pressed", String(painting));
+  function setTentativeMode(enabled, announce = false) {
+    tentativeMode = Boolean(enabled);
+    elements.tentativeButtons.forEach((button) => {
+      button.classList.toggle("is-active", tentativeMode);
+      button.setAttribute("aria-pressed", String(tentativeMode));
     });
-    elements.xTools.forEach((button) => {
-      button.classList.toggle("is-active", !painting);
-      button.setAttribute("aria-pressed", String(!painting));
-    });
+    elements.board.classList.toggle("is-tentative-mode", tentativeMode);
+    if (announce) showToast(tentativeMode ? "仮置きモードをオンにしました。" : "通常の着色に戻しました。");
   }
 
   function selectColor(color) {
@@ -114,7 +113,9 @@
     const cell = game.cells[index];
     const parts = [`${row}行${col}列`];
     if (clue) parts.push(`数字${clue.value}`);
-    if (cell.color) parts.push(`${colorMeta(cell.color).name}で着色`);
+    if (cell.color) {
+      parts.push(`${colorMeta(cell.color).name}で${cell.tentative ? "仮置き" : "着色"}`);
+    }
     else parts.push("未着色");
     if (cell.fixed) parts.push("固定色");
     if (cell.exclusions.length) {
@@ -123,21 +124,73 @@
     return parts.join("、");
   }
 
-  function operateCell(index, operation = tool) {
+  function operateCell(index, operation = "cycle") {
     if (game.cells[index].fixed) {
       showToast("二重枠は固定色です。");
       return;
     }
     const result = Model.applyAction(game, {
-      type: operation === "paint" ? "paint" : "toggle-x",
+      type: operation === "paint-direct" ? "paint" : operation,
       index,
       color: selectedColor,
+      tentative: tentativeMode,
+      direct: operation === "paint-direct",
     });
     if (!result.changed) return;
     if (result.autoFilled) {
       showToast(`${colorMeta(result.autoFilled).name}だけが残ったため、自動で塗りました。`);
     }
     render();
+  }
+
+  function bindCellInteractions(button, index) {
+    let longPressTimer = null;
+    let longPressed = false;
+    let startX = 0;
+    let startY = 0;
+
+    function cancelLongPress() {
+      window.clearTimeout(longPressTimer);
+      longPressTimer = null;
+    }
+
+    button.addEventListener("pointerdown", (event) => {
+      if (event.button !== 0 || game.cells[index].fixed) return;
+      longPressed = false;
+      startX = event.clientX;
+      startY = event.clientY;
+      cancelLongPress();
+      longPressTimer = window.setTimeout(() => {
+        longPressTimer = null;
+        longPressed = true;
+        suppressedTap = { index, until: performance.now() + 800 };
+        operateCell(index, "paint-direct");
+        if (typeof navigator.vibrate === "function") navigator.vibrate(18);
+      }, LONG_PRESS_MS);
+    });
+    button.addEventListener("pointermove", (event) => {
+      if (
+        Math.abs(event.clientX - startX) > LONG_PRESS_MOVE_PX
+        || Math.abs(event.clientY - startY) > LONG_PRESS_MOVE_PX
+      ) {
+        cancelLongPress();
+      }
+    });
+    button.addEventListener("pointerup", cancelLongPress);
+    button.addEventListener("pointercancel", cancelLongPress);
+    button.addEventListener("pointerleave", cancelLongPress);
+    button.addEventListener("click", (event) => {
+      if (
+        longPressed
+        || (suppressedTap.index === index && performance.now() < suppressedTap.until)
+      ) {
+        event.preventDefault();
+        longPressed = false;
+        return;
+      }
+      operateCell(index, "cycle");
+    });
+    button.addEventListener("contextmenu", (event) => event.preventDefault());
   }
 
   function renderBoard(evaluation) {
@@ -158,6 +211,7 @@
       if (cell.color) {
         const meta = colorMeta(cell.color);
         button.classList.add("is-filled");
+        if (cell.tentative) button.classList.add("is-tentative");
         button.style.setProperty("--cell-color", meta.hex);
         button.style.setProperty("--cell-text", meta.text);
       }
@@ -185,6 +239,14 @@
         button.append(label);
       }
 
+      if (cell.tentative) {
+        const badge = document.createElement("span");
+        badge.className = "tentative-badge";
+        badge.textContent = "✎";
+        badge.setAttribute("aria-hidden", "true");
+        button.append(badge);
+      }
+
       if (cell.exclusions.length) {
         const list = document.createElement("span");
         list.className = "x-list";
@@ -202,11 +264,7 @@
         button.append(list);
       }
 
-      button.addEventListener("click", () => operateCell(index));
-      button.addEventListener("contextmenu", (event) => {
-        event.preventDefault();
-        operateCell(index, "x");
-      });
+      bindCellInteractions(button, index);
       elements.board.append(button);
     });
   }
@@ -214,6 +272,7 @@
   function renderStatus(evaluation) {
     elements.status.className = "status-card";
     let message = `${evaluation.filled} / ${evaluation.total} マス着色`;
+    if (evaluation.tentative) message += `（仮置き ${evaluation.tentative}）`;
     if (evaluation.solved) {
       elements.status.classList.add("is-solved");
       message = "完成。すべての数字が一致しています。";
@@ -248,6 +307,7 @@
       button.disabled = game.history.length === 0;
     });
     elements.autoFill.checked = game.autoFill;
+    setTentativeMode(tentativeMode);
   }
 
   function loadPuzzle(id) {
@@ -268,11 +328,8 @@
     }
 
     elements.puzzleSelect.addEventListener("change", () => loadPuzzle(elements.puzzleSelect.value));
-    elements.paintTools.forEach((button) => {
-      button.addEventListener("click", () => selectTool("paint"));
-    });
-    elements.xTools.forEach((button) => {
-      button.addEventListener("click", () => selectTool("x"));
+    elements.tentativeButtons.forEach((button) => {
+      button.addEventListener("click", () => setTentativeMode(!tentativeMode, true));
     });
     elements.autoFill.addEventListener("change", () => {
       const filled = Model.setAutoFill(game, elements.autoFill.checked);
@@ -297,10 +354,8 @@
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "z") {
         event.preventDefault();
         if (Model.undo(game)) render();
-      } else if (event.key.toLowerCase() === "p" || event.key === "1") {
-        selectTool("paint");
-      } else if (event.key.toLowerCase() === "x" || event.key === "2") {
-        selectTool("x");
+      } else if (event.key.toLowerCase() === "t") {
+        setTentativeMode(!tentativeMode, true);
       } else {
         const color = game.puzzle.colors.find((item) => item.toLowerCase() === event.key.toLowerCase());
         if (color) selectColor(color);
