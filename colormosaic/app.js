@@ -165,6 +165,106 @@
     render();
   }
 
+  function fillForcedCells() {
+    const filled = Model.fillForcedCells(game);
+    if (!filled.length) {
+      showToast("残り一色に確定できるマスはありません。");
+      return;
+    }
+    render();
+    showToast(`${filled.length}マスを残りの一色で確定しました。`);
+  }
+
+  function bindBoardFrameInteractions() {
+    const DOUBLE_TAP_MS = 340;
+    const DOUBLE_TAP_MOVE_PX = 24;
+    let activePointerId = null;
+    let longPressTimer = null;
+    let longPressed = false;
+    let moved = false;
+    let startX = 0;
+    let startY = 0;
+    let lastTap = { at: 0, x: 0, y: 0 };
+
+    function cancelLongPress() {
+      window.clearTimeout(longPressTimer);
+      longPressTimer = null;
+    }
+
+    function finishPointer() {
+      cancelLongPress();
+      activePointerId = null;
+    }
+
+    elements.boardFrame.addEventListener("pointerdown", (event) => {
+      if (event.button !== 0 || event.target !== elements.boardFrame) return;
+      activePointerId = event.pointerId;
+      longPressed = false;
+      moved = false;
+      startX = event.clientX;
+      startY = event.clientY;
+      cancelLongPress();
+      longPressTimer = window.setTimeout(() => {
+        longPressTimer = null;
+        longPressed = true;
+        lastTap = { at: 0, x: 0, y: 0 };
+        fillForcedCells();
+        if (typeof navigator.vibrate === "function") navigator.vibrate(18);
+      }, LONG_PRESS_MS);
+    });
+
+    elements.boardFrame.addEventListener("pointermove", (event) => {
+      if (
+        event.pointerId === activePointerId
+        && (
+          Math.abs(event.clientX - startX) > LONG_PRESS_MOVE_PX
+          || Math.abs(event.clientY - startY) > LONG_PRESS_MOVE_PX
+        )
+      ) {
+        moved = true;
+        cancelLongPress();
+      }
+    });
+
+    elements.boardFrame.addEventListener("pointerup", (event) => {
+      if (event.pointerId !== activePointerId) return;
+      finishPointer();
+      if (moved || event.target !== elements.boardFrame) {
+        lastTap = { at: 0, x: 0, y: 0 };
+        return;
+      }
+      if (longPressed) {
+        event.preventDefault();
+        longPressed = false;
+        return;
+      }
+
+      const now = performance.now();
+      const isDoubleTap = now - lastTap.at <= DOUBLE_TAP_MS
+        && Math.abs(event.clientX - lastTap.x) <= DOUBLE_TAP_MOVE_PX
+        && Math.abs(event.clientY - lastTap.y) <= DOUBLE_TAP_MOVE_PX;
+      if (isDoubleTap) {
+        event.preventDefault();
+        lastTap = { at: 0, x: 0, y: 0 };
+        fillForcedCells();
+      } else {
+        lastTap = { at: now, x: event.clientX, y: event.clientY };
+      }
+    });
+    elements.boardFrame.addEventListener("pointercancel", () => {
+      finishPointer();
+      lastTap = { at: 0, x: 0, y: 0 };
+    });
+    elements.boardFrame.addEventListener("pointerleave", (event) => {
+      if (event.pointerId !== activePointerId) return;
+      finishPointer();
+      lastTap = { at: 0, x: 0, y: 0 };
+    });
+    elements.boardFrame.addEventListener("contextmenu", (event) => {
+      if (event.target === elements.boardFrame) event.preventDefault();
+    });
+  }
+
   function bindCellInteractions(button, index, isColoredClue) {
     let longPressTimer = null;
     let longPressed = false;
@@ -178,6 +278,9 @@
 
     button.addEventListener("pointerdown", (event) => {
       if (event.button !== 0 || (game.cells[index].fixed && !isColoredClue)) return;
+      // A new pointerdown is a new gesture. Keep suppressing only the click
+      // synthesized from the completed long press, never the user's next tap.
+      suppressedTap = { index: -1, until: 0 };
       longPressed = false;
       startX = event.clientX;
       startY = event.clientY;
@@ -212,6 +315,7 @@
       ) {
         event.preventDefault();
         longPressed = false;
+        suppressedTap = { index: -1, until: 0 };
         return;
       }
       operateCell(index, "cycle");
@@ -387,6 +491,7 @@
         showToast("初期盤面へ戻しました。Undoで取り消せます。");
       }
     });
+    bindBoardFrameInteractions();
 
     document.addEventListener("keydown", (event) => {
       const target = event.target;

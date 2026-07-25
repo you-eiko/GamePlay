@@ -86,15 +86,20 @@
     return changed;
   }
 
-  function applyAutoFillToCell(game, index) {
+  function fillRemainingColor(game, index) {
     const cell = game.cells[index];
-    if (!game.autoFill || cell.fixed || cell.color) return null;
+    if (cell.fixed || cell.color) return null;
     const excluded = new Set(cell.exclusions);
     const remaining = game.puzzle.colors.filter((color) => !excluded.has(color));
     if (remaining.length !== 1) return null;
     cell.color = remaining[0];
     cell.tentative = false;
     return remaining[0];
+  }
+
+  function applyAutoFillToCell(game, index) {
+    if (!game.autoFill) return null;
+    return fillRemainingColor(game, index);
   }
 
   function applyAction(game, action) {
@@ -181,6 +186,17 @@
         if (color) filled.push({ index, color });
       });
     }
+    pushIfChanged(game, before);
+    return filled;
+  }
+
+  function fillForcedCells(game) {
+    const before = snapshot(game);
+    const filled = [];
+    game.cells.forEach((_, index) => {
+      const color = fillRemainingColor(game, index);
+      if (color) filled.push({ index, color });
+    });
     pushIfChanged(game, before);
     return filled;
   }
@@ -310,6 +326,7 @@
     createGame,
     applyAction,
     setAutoFill,
+    fillForcedCells,
     undo,
     excludeAroundClue,
     redo,

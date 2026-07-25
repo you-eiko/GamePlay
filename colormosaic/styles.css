@@ -287,6 +287,8 @@ kbd { padding: 1px 5px; border: 1px solid #c1ccce; border-bottom-width: 2px; bor
     var(--selected-color);
   box-shadow: 0 0 0 1px rgb(25 59 73 / 7%) inset;
   transition: background-color 180ms ease;
+  cursor: pointer;
+  touch-action: manipulation;
   overflow: auto;
 }
 
@@ -301,6 +303,7 @@ kbd { padding: 1px 5px; border: 1px solid #c1ccce; border-bottom-width: 2px; bor
   border-radius: 14px;
   background: var(--deep);
   box-shadow: 0 16px 30px rgb(17 44 54 / 18%);
+  cursor: default;
 }
 
 .board.is-tentative-mode {

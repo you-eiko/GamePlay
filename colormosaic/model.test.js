@@ -60,6 +60,27 @@ function puzzle(overrides = {}) {
 }
 
 {
+  const game = Model.createGame(puzzle(), { autoFill: false });
+  Model.applyAction(game, {
+    type: "paint",
+    index: 0,
+    color: "R",
+    tentative: false,
+    direct: true,
+  });
+  assert.equal(game.cells[0].color, "R", "長押し相当の直接着色");
+
+  Model.applyAction(game, {
+    type: "cycle",
+    index: 0,
+    color: "R",
+    tentative: false,
+  });
+  assert.equal(game.cells[0].color, null, "長押し着色後の通常タップで消去");
+  assert.deepEqual(game.cells[0].exclusions, []);
+}
+
+{
   const game = Model.createGame(puzzle({
     rows: 1,
     cols: 1,
@@ -119,6 +140,30 @@ function puzzle(overrides = {}) {
   assert.equal(result.autoFilled, "B", "従来の残り一色自動着色を維持");
   assert.equal(game.cells[0].color, "B");
   assert.equal(game.cells[0].tentative, false, "自動着色は確定色");
+}
+
+{
+  const game = Model.createGame(puzzle({
+    rows: 1,
+    cols: 3,
+    colors: ["R", "G", "B"],
+  }), { autoFill: false });
+  Model.applyAction(game, { type: "toggle-x", index: 0, color: "R" });
+  Model.applyAction(game, { type: "toggle-x", index: 0, color: "G" });
+  Model.applyAction(game, { type: "toggle-x", index: 1, color: "R" });
+  const historyBefore = game.history.length;
+
+  const filled = Model.fillForcedCells(game);
+  assert.deepEqual(filled, [{ index: 0, color: "B" }]);
+  assert.equal(game.cells[0].color, "B", "n−1色のXがあるマスを残り一色で確定");
+  assert.equal(game.cells[0].tentative, false, "一括確定は確定色");
+  assert.equal(game.cells[1].color, null, "Xがn−1色未満のマスは変更しない");
+  assert.equal(game.autoFill, false, "一括確定で自動着色設定を変更しない");
+  assert.equal(game.history.length, historyBefore + 1, "一括確定を一手として履歴へ保存");
+
+  assert.equal(Model.undo(game), true);
+  assert.equal(game.cells[0].color, null, "一括確定を一度のUndoで戻す");
+  assert.deepEqual(game.cells[0].exclusions, ["R", "G"]);
 }
 
 {
