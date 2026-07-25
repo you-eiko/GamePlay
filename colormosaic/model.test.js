@@ -121,4 +121,33 @@ function puzzle(overrides = {}) {
   assert.equal(game.cells[0].tentative, false, "自動着色は確定色");
 }
 
+{
+  const game = Model.createGame(puzzle({
+    rows: 3,
+    cols: 3,
+    colors: ["R", "G", "B"],
+    fixed: [{ row: 2, col: 2, color: "R" }],
+    clues: [{ row: 2, col: 2, value: 0 }],
+  }), { autoFill: false });
+  Model.applyAction(game, {
+    type: "paint",
+    index: 0,
+    color: "B",
+    direct: true,
+  });
+  const historyBefore = game.history.length;
+
+  const result = Model.excludeAroundClue(game, 4);
+  assert.equal(result.changed, true);
+  assert.equal(result.color, "R", "長押しした数字マス自身の色を使う");
+  assert.equal(result.excluded, 7, "着色済みマスを除く周囲へまとめてX");
+  assert.deepEqual(game.cells[0].exclusions, [], "着色済みの周囲マスは変更しない");
+  assert.deepEqual(game.cells[1].exclusions, ["R"]);
+  assert.equal(game.history.length, historyBefore + 1, "一括操作を一手として履歴へ保存");
+
+  assert.equal(Model.undo(game), true);
+  assert.equal(game.cells[0].color, "B", "Undo後も一括操作前の着色を維持");
+  assert.deepEqual(game.cells[1].exclusions, [], "Undoで周囲のXをまとめて戻す");
+}
+
 console.log("ColorMosaic mobile input model tests passed.");

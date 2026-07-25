@@ -64,6 +64,7 @@
           <ul>
             <li>色を選んでタップすると、選択色の「× → 着色 → なし」を繰り返します。</li>
             <li>マスを長押しすると、途中の×を飛ばしてすぐ着色します。</li>
+            <li>着色済みの数字マスを長押しすると、周囲の未着色マスに数字マスと同じ色の×をまとめて付けます。</li>
             <li>仮置きモードの着色には鉛筆マークが付き、完成判定には数えません。</li>
             <li>色別の×は、赤＝左上、緑＝右上、青＝左下、黄＝右下に表示します。</li>
             <li>仮置きモードでは、タップするたびに「仮置き → 消す」を繰り返します。</li>
@@ -100,7 +101,7 @@
           <button class="secondary-button mobile-history-button" data-undo type="button" disabled>↶ Undo</button>
           <button class="secondary-button mobile-history-button" data-redo type="button" disabled>↷ Redo</button>
         </div>
-        <p class="mobile-operation-help"><span class="normal-cycle-help">通常：× → 着色 → なし</span><span class="tentative-cycle-help">仮置き：仮置き ↔ 消す</span><span>長押し：すぐ着色</span></p>
+        <p class="mobile-operation-help"><span class="normal-cycle-help">通常：× → 着色 → なし</span><span class="tentative-cycle-help">仮置き：仮置き ↔ 消す</span><span>長押し：すぐ着色</span><span>着色済み数字を長押し：周囲に×</span></p>
       </section>
       <div id="hint" class="hint-card"></div>
     </section>

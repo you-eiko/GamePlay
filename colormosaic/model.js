@@ -193,6 +193,40 @@
     return true;
   }
 
+  function excludeAroundClue(game, index) {
+    const center = game.cells[index];
+    const clue = game.puzzle.clues.find(
+      (item) => cellIndex(game.puzzle, item.row, item.col) === index,
+    );
+    if (!center?.color || !clue) {
+      return { changed: false, color: null, excluded: 0, autoFilled: [] };
+    }
+
+    const before = snapshot(game);
+    const color = center.color;
+    const autoFilled = [];
+    let excluded = 0;
+
+    for (const neighborIndex of neighbors(game.puzzle, clue.row, clue.col)) {
+      const cell = game.cells[neighborIndex];
+      if (cell.fixed || cell.color || cell.exclusions.includes(color)) continue;
+
+      cell.exclusions = game.puzzle.colors.filter(
+        (item) => item === color || cell.exclusions.includes(item),
+      );
+      excluded += 1;
+      const filledColor = applyAutoFillToCell(game, neighborIndex);
+      if (filledColor) autoFilled.push({ index: neighborIndex, color: filledColor });
+    }
+
+    return {
+      changed: pushIfChanged(game, before),
+      color,
+      excluded,
+      autoFilled,
+    };
+  }
+
   function redo(game) {
     const next = game.future.pop();
     if (!next) return false;
@@ -277,6 +311,7 @@
     applyAction,
     setAutoFill,
     undo,
+    excludeAroundClue,
     redo,
     reset,
     evaluateClue,

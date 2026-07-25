@@ -149,7 +149,23 @@
     render();
   }
 
-  function bindCellInteractions(button, index) {
+  function excludeAroundClue(index) {
+    const result = Model.excludeAroundClue(game, index);
+    if (!result.changed) {
+      showToast("周囲の未着色マスには、すでに同じ色の×があります。");
+      return;
+    }
+
+    const colorName = colorMeta(result.color).name;
+    if (result.autoFilled.length) {
+      showToast(`${colorName}の×を${result.excluded}マスに付け、${result.autoFilled.length}マスを自動で塗りました。`);
+    } else {
+      showToast(`周囲${result.excluded}マスに${colorName}の×を付けました。`);
+    }
+    render();
+  }
+
+  function bindCellInteractions(button, index, isColoredClue) {
     let longPressTimer = null;
     let longPressed = false;
     let startX = 0;
@@ -161,7 +177,7 @@
     }
 
     button.addEventListener("pointerdown", (event) => {
-      if (event.button !== 0 || game.cells[index].fixed) return;
+      if (event.button !== 0 || (game.cells[index].fixed && !isColoredClue)) return;
       longPressed = false;
       startX = event.clientX;
       startY = event.clientY;
@@ -170,7 +186,11 @@
         longPressTimer = null;
         longPressed = true;
         suppressedTap = { index, until: performance.now() + 800 };
-        operateCell(index, "paint-direct");
+        if (isColoredClue) {
+          excludeAroundClue(index);
+        } else {
+          operateCell(index, "paint-direct");
+        }
         if (typeof navigator.vibrate === "function") navigator.vibrate(18);
       }, LONG_PRESS_MS);
     });
@@ -222,6 +242,12 @@
         button.style.setProperty("--cell-text", meta.text);
       }
       if (cell.fixed) button.classList.add("is-fixed");
+      const isColoredClue = Boolean(clue && cell.color);
+      if (isColoredClue) {
+        const colorName = colorMeta(cell.color).name;
+        button.classList.add("can-exclude-neighbors");
+        button.title = `長押しで周囲の未着色マスに${colorName}の×を付ける`;
+      }
       if (evaluation.clueStates.get(index)?.status === "impossible") {
         button.classList.add("is-impossible");
       }
@@ -270,7 +296,7 @@
         button.append(list);
       }
 
-      bindCellInteractions(button, index);
+      bindCellInteractions(button, index, isColoredClue);
       elements.board.append(button);
     });
   }
