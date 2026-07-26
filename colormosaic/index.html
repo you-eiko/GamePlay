@@ -41,7 +41,7 @@
             仮置きモード
           </button>
         </div>
-        <p class="operation-help">タップ：× → 着色 → なし<br>長押し：すぐ着色</p>
+        <p class="operation-help">タップ：着色 → × → なし<br>長押し：すぐ×</p>
         <label class="auto-option">
           <input id="auto-fill" type="checkbox">
           <span>
@@ -62,8 +62,8 @@
         <div class="help-content">
           <p>数字は、周囲8マスにある「数字マス自身と同じ色」の数です。数字マス自身は数えません。</p>
           <ul>
-            <li>色を選んでタップすると、選択色の「× → 着色 → なし」を繰り返します。</li>
-            <li>マスを長押しすると、途中の×を飛ばしてすぐ着色します。</li>
+            <li>色を選んでタップすると、選択色の「着色 → × → なし」を繰り返します。</li>
+            <li>マスを長押しすると、選択色の×を直接付けます。</li>
             <li>着色済みの数字マスを長押しすると、周囲の未着色マスに数字マスと同じ色の×をまとめて付けます。</li>
             <li>盤面の外側をダブルタップまたは長押しすると、n−1色の×があるマスを残り一色で確定します。</li>
             <li>仮置きモードの着色には鉛筆マークが付き、完成判定には数えません。</li>
@@ -102,7 +102,7 @@
           <button class="secondary-button mobile-history-button" data-undo type="button" disabled>↶ Undo</button>
           <button class="secondary-button mobile-history-button" data-redo type="button" disabled>↷ Redo</button>
         </div>
-        <p class="mobile-operation-help"><span class="normal-cycle-help">通常：× → 着色 → なし</span><span class="tentative-cycle-help">仮置き：仮置き ↔ 消す</span><span>長押し：すぐ着色</span><span>着色済み数字を長押し：周囲に×</span><span>盤面外をダブルタップ／長押し：残り一色を確定</span></p>
+        <p class="mobile-operation-help"><span class="normal-cycle-help">通常：着色 → × → なし</span><span class="tentative-cycle-help">仮置き：仮置き ↔ 消す</span><span>長押し：すぐ×</span><span>着色済み数字を長押し：周囲に×</span><span>盤面外をダブルタップ／長押し：残り一色を確定</span></p>
       </section>
       <div id="hint" class="hint-card"></div>
     </section>

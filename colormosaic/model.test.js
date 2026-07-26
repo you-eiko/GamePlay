@@ -18,15 +18,17 @@ function puzzle(overrides = {}) {
 {
   const game = Model.createGame(puzzle(), { autoFill: false });
   Model.applyAction(game, { type: "cycle", index: 0, color: "R" });
-  assert.deepEqual(game.cells[0].exclusions, ["R"], "1回目のタップはX");
-
-  Model.applyAction(game, { type: "cycle", index: 0, color: "R" });
-  assert.equal(game.cells[0].color, "R", "2回目のタップは着色");
+  assert.equal(game.cells[0].color, "R", "1回目のタップは着色");
   assert.equal(game.cells[0].tentative, false);
   assert.deepEqual(game.cells[0].exclusions, []);
 
   Model.applyAction(game, { type: "cycle", index: 0, color: "R" });
+  assert.equal(game.cells[0].color, null, "2回目のタップはX");
+  assert.deepEqual(game.cells[0].exclusions, ["R"]);
+
+  Model.applyAction(game, { type: "cycle", index: 0, color: "R" });
   assert.equal(game.cells[0].color, null, "3回目のタップはなし");
+  assert.deepEqual(game.cells[0].exclusions, []);
 }
 
 {
@@ -76,8 +78,46 @@ function puzzle(overrides = {}) {
     color: "R",
     tentative: false,
   });
-  assert.equal(game.cells[0].color, null, "長押し着色後の通常タップで消去");
+  assert.equal(game.cells[0].color, null, "直接着色後の通常タップでX");
+  assert.deepEqual(game.cells[0].exclusions, ["R"]);
+}
+
+{
+  const game = Model.createGame(puzzle(), { autoFill: false });
+  Model.applyAction(game, {
+    type: "exclude",
+    index: 0,
+    color: "R",
+    tentative: true,
+  });
+  assert.equal(game.cells[0].color, null, "長押し相当の操作は着色しない");
+  assert.deepEqual(game.cells[0].exclusions, ["R"], "長押し相当の操作は直接X");
+
+  Model.applyAction(game, {
+    type: "cycle",
+    index: 0,
+    color: "R",
+    tentative: false,
+  });
+  assert.equal(game.cells[0].color, null, "長押しX後の通常タップはなし");
   assert.deepEqual(game.cells[0].exclusions, []);
+}
+
+{
+  const game = Model.createGame(puzzle(), { autoFill: true });
+  Model.applyAction(game, {
+    type: "cycle",
+    index: 0,
+    color: "R",
+  });
+  const result = Model.applyAction(game, {
+    type: "cycle",
+    index: 0,
+    color: "R",
+  });
+  assert.equal(result.autoFilled, "B", "着色からXへ進んだ場合も自動着色を適用");
+  assert.equal(game.cells[0].color, "B");
+  assert.deepEqual(game.cells[0].exclusions, ["R"]);
 }
 
 {
@@ -118,11 +158,10 @@ function puzzle(overrides = {}) {
 {
   const game = Model.createGame(puzzle(), { autoFill: false });
   Model.applyAction(game, { type: "cycle", index: 0, color: "R" });
-  Model.applyAction(game, { type: "cycle", index: 0, color: "R" });
   assert.equal(game.cells[0].color, "R");
 
   assert.equal(Model.undo(game), true);
-  assert.deepEqual(game.cells[0].exclusions, ["R"], "Undoで直前の状態へ戻る");
+  assert.equal(game.cells[0].color, null, "Undoで着色前へ戻る");
   assert.equal(game.future.length, 1);
 
   assert.equal(Model.redo(game), true);

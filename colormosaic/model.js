@@ -124,26 +124,23 @@
           cell.tentative = true;
           cell.exclusions = cell.exclusions.filter((item) => item !== color);
         }
-      } else if (cell.exclusions.includes(color)) {
-        cell.exclusions = cell.exclusions.filter((item) => item !== color);
-        cell.color = color;
-        cell.tentative = false;
       } else if (cell.color === color) {
         if (cell.tentative) {
           cell.tentative = false;
         } else {
           cell.color = null;
           cell.tentative = false;
+          cell.exclusions = game.puzzle.colors.filter(
+            (item) => item === color || cell.exclusions.includes(item),
+          );
+          autoFilled = applyAutoFillToCell(game, index);
         }
+      } else if (cell.exclusions.includes(color)) {
+        cell.exclusions = cell.exclusions.filter((item) => item !== color);
       } else {
-        if (cell.color) {
-          cell.color = null;
-          cell.tentative = false;
-        }
-        cell.exclusions = game.puzzle.colors.filter(
-          (item) => item === color || cell.exclusions.includes(item),
-        );
-        autoFilled = applyAutoFillToCell(game, index);
+        cell.color = color;
+        cell.tentative = false;
+        cell.exclusions = cell.exclusions.filter((item) => item !== color);
       }
     } else if (action.type === "paint") {
       const tentative = Boolean(action.tentative);
@@ -154,6 +151,15 @@
         cell.color = color;
         cell.tentative = tentative;
         cell.exclusions = cell.exclusions.filter((item) => item !== color);
+      }
+    } else if (action.type === "exclude") {
+      if (!cell.exclusions.includes(color) || cell.color) {
+        cell.color = null;
+        cell.tentative = false;
+        cell.exclusions = game.puzzle.colors.filter(
+          (item) => item === color || cell.exclusions.includes(item),
+        );
+        autoFilled = applyAutoFillToCell(game, index);
       }
     } else if (action.type === "toggle-x") {
       const hasColor = cell.exclusions.includes(color);

@@ -136,11 +136,10 @@
       return;
     }
     const result = Model.applyAction(game, {
-      type: operation === "paint-direct" ? "paint" : operation,
+      type: operation,
       index,
       color: selectedColor,
       tentative: tentativeMode,
-      direct: operation === "paint-direct",
     });
     if (!result.changed) return;
     if (result.autoFilled) {
@@ -311,7 +310,7 @@
         if (isColoredClue) {
           excludeAroundClue(index);
         } else {
-          operateCell(index, "paint-direct");
+          operateCell(index, "exclude");
         }
         if (typeof navigator.vibrate === "function") navigator.vibrate(18);
       }, LONG_PRESS_MS);
