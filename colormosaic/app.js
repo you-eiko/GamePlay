@@ -175,6 +175,25 @@
     showToast(`${filled.length}マスを残りの一色で確定しました。`);
   }
 
+  function fitBoardToFrame() {
+    if (!game || !window.matchMedia("(max-width: 560px)").matches) {
+      elements.board.style.removeProperty("--fit-cell-size");
+      return;
+    }
+
+    const frameStyle = window.getComputedStyle(elements.boardFrame);
+    const boardStyle = window.getComputedStyle(elements.board);
+    const frameInnerWidth = elements.boardFrame.clientWidth
+      - Number.parseFloat(frameStyle.paddingLeft)
+      - Number.parseFloat(frameStyle.paddingRight);
+    const boardHorizontalPadding = Number.parseFloat(boardStyle.paddingLeft)
+      + Number.parseFloat(boardStyle.paddingRight);
+    const gapWidth = Number.parseFloat(boardStyle.columnGap) * (game.puzzle.cols - 1);
+    const availableForCells = frameInnerWidth - boardHorizontalPadding - gapWidth;
+    const fittedSize = Math.floor((availableForCells / game.puzzle.cols) * 100) / 100;
+    elements.board.style.setProperty("--fit-cell-size", `${Math.max(1, fittedSize)}px`);
+  }
+
   function bindBoardFrameInteractions() {
     const DOUBLE_TAP_MS = 340;
     const DOUBLE_TAP_MOVE_PX = 24;
@@ -403,6 +422,7 @@
       bindCellInteractions(button, index, isColoredClue);
       elements.board.append(button);
     });
+    fitBoardToFrame();
   }
 
   function renderStatus(evaluation) {
@@ -492,6 +512,7 @@
       }
     });
     bindBoardFrameInteractions();
+    window.addEventListener("resize", fitBoardToFrame, { passive: true });
 
     document.addEventListener("keydown", (event) => {
       const target = event.target;

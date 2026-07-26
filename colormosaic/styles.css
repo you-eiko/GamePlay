@@ -496,8 +496,16 @@ kbd { padding: 1px 5px; border: 1px solid #c1ccce; border-bottom-width: 2px; bor
   .control-panel { display: block; }
   .play-area { padding: 12px; }
   .board-toolbar { align-items: flex-start; flex-direction: column; }
-  .board-frame { min-height: 390px; padding: 12px; }
-  .board { --cell-size: min(15vw, 68px); gap: 3px; padding: 6px; }
+  .board-frame {
+    min-height: 0;
+    padding: 14px 4px;
+    overflow: hidden;
+  }
+  .board {
+    --cell-size: min(68px, var(--fit-cell-size, 68px));
+    gap: 3px;
+    padding: 6px;
+  }
   .tool-button,
   .secondary-button { font-size: 0.78rem; }
   .mobile-palette .color-button { min-height: 52px; }
