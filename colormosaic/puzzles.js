@@ -3786,6 +3786,2141 @@
         }
       ],
       "first_hint": "(1,3) の 赤 を3個置ける場所がちょうど必要数しかないので、すべて確定します。"
+    },
+    {
+      "id": "FORMAL-REVIEW-6X6-BEGINNER-01",
+      "title": "6×6 初級 正式レビュー候補 1",
+      "difficulty": "初級",
+      "solver_tier": "BEGINNER",
+      "playtest": true,
+      "rows": 6,
+      "cols": 6,
+      "colors": [
+        "R",
+        "G",
+        "B"
+      ],
+      "fixed": [
+        {
+          "row": 1,
+          "col": 3,
+          "color": "R"
+        },
+        {
+          "row": 1,
+          "col": 6,
+          "color": "G"
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "color": "R"
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "color": "R"
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "color": "G"
+        },
+        {
+          "row": 4,
+          "col": 5,
+          "color": "G"
+        },
+        {
+          "row": 5,
+          "col": 1,
+          "color": "G"
+        },
+        {
+          "row": 5,
+          "col": 3,
+          "color": "R"
+        },
+        {
+          "row": 6,
+          "col": 2,
+          "color": "B"
+        },
+        {
+          "row": 6,
+          "col": 5,
+          "color": "B"
+        }
+      ],
+      "clues": [
+        {
+          "row": 1,
+          "col": 3,
+          "value": 1
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "value": 2
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "value": 2
+        },
+        {
+          "row": 2,
+          "col": 5,
+          "value": 4
+        },
+        {
+          "row": 2,
+          "col": 6,
+          "value": 0
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "value": 2
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "value": 1
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "value": 1
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "value": 4
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "value": 1
+        },
+        {
+          "row": 5,
+          "col": 5,
+          "value": 2
+        },
+        {
+          "row": 5,
+          "col": 6,
+          "value": 3
+        },
+        {
+          "row": 6,
+          "col": 2,
+          "value": 3
+        },
+        {
+          "row": 6,
+          "col": 4,
+          "value": 1
+        }
+      ],
+      "first_hint": "(1,3) の 赤 は必要な1個に達したので、残る周囲へは入りません。",
+      "formal_review_candidate": true
+    },
+    {
+      "id": "FORMAL-REVIEW-6X6-BEGINNER-02",
+      "title": "6×6 初級 正式レビュー候補 2",
+      "difficulty": "初級",
+      "solver_tier": "BEGINNER",
+      "playtest": true,
+      "rows": 6,
+      "cols": 6,
+      "colors": [
+        "R",
+        "G",
+        "B"
+      ],
+      "fixed": [
+        {
+          "row": 1,
+          "col": 3,
+          "color": "R"
+        },
+        {
+          "row": 1,
+          "col": 5,
+          "color": "B"
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "color": "R"
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "color": "B"
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "color": "B"
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "color": "R"
+        },
+        {
+          "row": 3,
+          "col": 6,
+          "color": "G"
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "color": "G"
+        },
+        {
+          "row": 5,
+          "col": 3,
+          "color": "R"
+        },
+        {
+          "row": 6,
+          "col": 1,
+          "color": "G"
+        },
+        {
+          "row": 6,
+          "col": 2,
+          "color": "G"
+        },
+        {
+          "row": 6,
+          "col": 6,
+          "color": "B"
+        }
+      ],
+      "clues": [
+        {
+          "row": 1,
+          "col": 1,
+          "value": 0
+        },
+        {
+          "row": 1,
+          "col": 5,
+          "value": 2
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "value": 2
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "value": 1
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "value": 1
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "value": 5
+        },
+        {
+          "row": 3,
+          "col": 6,
+          "value": 2
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "value": 1
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "value": 2
+        },
+        {
+          "row": 4,
+          "col": 6,
+          "value": 1
+        },
+        {
+          "row": 5,
+          "col": 2,
+          "value": 2
+        },
+        {
+          "row": 5,
+          "col": 5,
+          "value": 5
+        },
+        {
+          "row": 6,
+          "col": 3,
+          "value": 1
+        }
+      ],
+      "first_hint": "(1,1) は0なので、周囲に確定済みの色は中心色になれません。",
+      "formal_review_candidate": true
+    },
+    {
+      "id": "FORMAL-REVIEW-6X6-BEGINNER-03",
+      "title": "6×6 初級 正式レビュー候補 3",
+      "difficulty": "初級",
+      "solver_tier": "BEGINNER",
+      "playtest": true,
+      "rows": 6,
+      "cols": 6,
+      "colors": [
+        "R",
+        "G",
+        "B"
+      ],
+      "fixed": [
+        {
+          "row": 1,
+          "col": 1,
+          "color": "B"
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "color": "B"
+        },
+        {
+          "row": 1,
+          "col": 6,
+          "color": "R"
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "color": "R"
+        },
+        {
+          "row": 3,
+          "col": 5,
+          "color": "B"
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "color": "R"
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "color": "B"
+        },
+        {
+          "row": 5,
+          "col": 3,
+          "color": "R"
+        },
+        {
+          "row": 5,
+          "col": 6,
+          "color": "R"
+        },
+        {
+          "row": 6,
+          "col": 2,
+          "color": "R"
+        }
+      ],
+      "clues": [
+        {
+          "row": 1,
+          "col": 1,
+          "value": 1
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "value": 6
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "value": 1
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "value": 6
+        },
+        {
+          "row": 3,
+          "col": 5,
+          "value": 0
+        },
+        {
+          "row": 3,
+          "col": 6,
+          "value": 0
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "value": 1
+        },
+        {
+          "row": 4,
+          "col": 5,
+          "value": 5
+        },
+        {
+          "row": 5,
+          "col": 2,
+          "value": 3
+        },
+        {
+          "row": 5,
+          "col": 5,
+          "value": 6
+        },
+        {
+          "row": 6,
+          "col": 3,
+          "value": 3
+        }
+      ],
+      "first_hint": "(3,5) は 青 の0なので、周囲はすべて青以外です。",
+      "formal_review_candidate": true
+    },
+    {
+      "id": "FORMAL-REVIEW-6X6-BEGINNER-04",
+      "title": "6×6 初級 正式レビュー候補 4",
+      "difficulty": "初級",
+      "solver_tier": "BEGINNER",
+      "playtest": true,
+      "rows": 6,
+      "cols": 6,
+      "colors": [
+        "R",
+        "G",
+        "B"
+      ],
+      "fixed": [
+        {
+          "row": 1,
+          "col": 1,
+          "color": "G"
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "color": "G"
+        },
+        {
+          "row": 1,
+          "col": 5,
+          "color": "B"
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "color": "R"
+        },
+        {
+          "row": 2,
+          "col": 6,
+          "color": "B"
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "color": "B"
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "color": "B"
+        },
+        {
+          "row": 3,
+          "col": 5,
+          "color": "B"
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "color": "R"
+        },
+        {
+          "row": 4,
+          "col": 5,
+          "color": "B"
+        },
+        {
+          "row": 5,
+          "col": 4,
+          "color": "G"
+        },
+        {
+          "row": 6,
+          "col": 1,
+          "color": "R"
+        },
+        {
+          "row": 6,
+          "col": 5,
+          "color": "G"
+        }
+      ],
+      "clues": [
+        {
+          "row": 1,
+          "col": 2,
+          "value": 2
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "value": 1
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "value": 2
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "value": 1
+        },
+        {
+          "row": 2,
+          "col": 5,
+          "value": 3
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "value": 1
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "value": 4
+        },
+        {
+          "row": 3,
+          "col": 6,
+          "value": 2
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "value": 5
+        },
+        {
+          "row": 5,
+          "col": 2,
+          "value": 4
+        },
+        {
+          "row": 5,
+          "col": 4,
+          "value": 2
+        },
+        {
+          "row": 5,
+          "col": 5,
+          "value": 3
+        },
+        {
+          "row": 5,
+          "col": 6,
+          "value": 0
+        },
+        {
+          "row": 6,
+          "col": 2,
+          "value": 0
+        }
+      ],
+      "first_hint": "(5,6) は0なので、周囲に確定済みの色は中心色になれません。",
+      "formal_review_candidate": true
+    },
+    {
+      "id": "FORMAL-REVIEW-6X6-BEGINNER-05",
+      "title": "6×6 初級 正式レビュー候補 5",
+      "difficulty": "初級",
+      "solver_tier": "BEGINNER",
+      "playtest": true,
+      "rows": 6,
+      "cols": 6,
+      "colors": [
+        "R",
+        "G",
+        "B"
+      ],
+      "fixed": [
+        {
+          "row": 1,
+          "col": 1,
+          "color": "B"
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "color": "B"
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "color": "R"
+        },
+        {
+          "row": 2,
+          "col": 5,
+          "color": "B"
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "color": "B"
+        },
+        {
+          "row": 3,
+          "col": 5,
+          "color": "R"
+        },
+        {
+          "row": 3,
+          "col": 6,
+          "color": "B"
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "color": "G"
+        },
+        {
+          "row": 5,
+          "col": 2,
+          "color": "G"
+        },
+        {
+          "row": 5,
+          "col": 4,
+          "color": "R"
+        }
+      ],
+      "clues": [
+        {
+          "row": 1,
+          "col": 1,
+          "value": 0
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "value": 2
+        },
+        {
+          "row": 1,
+          "col": 6,
+          "value": 0
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "value": 1
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "value": 2
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "value": 1
+        },
+        {
+          "row": 3,
+          "col": 5,
+          "value": 4
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "value": 2
+        },
+        {
+          "row": 4,
+          "col": 5,
+          "value": 1
+        },
+        {
+          "row": 4,
+          "col": 6,
+          "value": 2
+        },
+        {
+          "row": 5,
+          "col": 1,
+          "value": 2
+        },
+        {
+          "row": 5,
+          "col": 2,
+          "value": 1
+        },
+        {
+          "row": 6,
+          "col": 1,
+          "value": 2
+        },
+        {
+          "row": 6,
+          "col": 3,
+          "value": 1
+        },
+        {
+          "row": 6,
+          "col": 4,
+          "value": 2
+        },
+        {
+          "row": 6,
+          "col": 6,
+          "value": 0
+        }
+      ],
+      "first_hint": "(1,1) は 青 の0なので、周囲はすべて青以外です。",
+      "formal_review_candidate": true
+    },
+    {
+      "id": "FORMAL-REVIEW-6X6-INTERMEDIATE-01",
+      "title": "6×6 中級 正式レビュー候補 1",
+      "difficulty": "中級",
+      "solver_tier": "INTERMEDIATE",
+      "playtest": true,
+      "rows": 6,
+      "cols": 6,
+      "colors": [
+        "R",
+        "G",
+        "B"
+      ],
+      "fixed": [
+        {
+          "row": 1,
+          "col": 3,
+          "color": "R"
+        },
+        {
+          "row": 1,
+          "col": 6,
+          "color": "G"
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "color": "G"
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "color": "R"
+        },
+        {
+          "row": 3,
+          "col": 6,
+          "color": "R"
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "color": "G"
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "color": "G"
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "color": "G"
+        },
+        {
+          "row": 4,
+          "col": 5,
+          "color": "G"
+        },
+        {
+          "row": 5,
+          "col": 1,
+          "color": "B"
+        },
+        {
+          "row": 5,
+          "col": 2,
+          "color": "R"
+        },
+        {
+          "row": 6,
+          "col": 5,
+          "color": "G"
+        }
+      ],
+      "clues": [
+        {
+          "row": 1,
+          "col": 1,
+          "value": 1
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "value": 0
+        },
+        {
+          "row": 1,
+          "col": 5,
+          "value": 0
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "value": 4
+        },
+        {
+          "row": 2,
+          "col": 5,
+          "value": 2
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "value": 2
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "value": 1
+        },
+        {
+          "row": 3,
+          "col": 6,
+          "value": 2
+        },
+        {
+          "row": 5,
+          "col": 2,
+          "value": 2
+        },
+        {
+          "row": 5,
+          "col": 5,
+          "value": 4
+        },
+        {
+          "row": 5,
+          "col": 6,
+          "value": 0
+        },
+        {
+          "row": 6,
+          "col": 2,
+          "value": 0
+        },
+        {
+          "row": 6,
+          "col": 4,
+          "value": 4
+        }
+      ],
+      "first_hint": "(1,2) は0なので、周囲に確定済みの色は中心色になれません。",
+      "formal_review_candidate": true
+    },
+    {
+      "id": "FORMAL-REVIEW-6X6-INTERMEDIATE-02",
+      "title": "6×6 中級 正式レビュー候補 2",
+      "difficulty": "中級",
+      "solver_tier": "INTERMEDIATE",
+      "playtest": true,
+      "rows": 6,
+      "cols": 6,
+      "colors": [
+        "R",
+        "G",
+        "B"
+      ],
+      "fixed": [
+        {
+          "row": 1,
+          "col": 1,
+          "color": "G"
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "color": "B"
+        },
+        {
+          "row": 1,
+          "col": 6,
+          "color": "G"
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "color": "B"
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "color": "B"
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "color": "G"
+        },
+        {
+          "row": 3,
+          "col": 6,
+          "color": "R"
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "color": "G"
+        },
+        {
+          "row": 6,
+          "col": 1,
+          "color": "B"
+        },
+        {
+          "row": 6,
+          "col": 5,
+          "color": "B"
+        },
+        {
+          "row": 6,
+          "col": 6,
+          "color": "R"
+        }
+      ],
+      "clues": [
+        {
+          "row": 1,
+          "col": 1,
+          "value": 2
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "value": 3
+        },
+        {
+          "row": 1,
+          "col": 5,
+          "value": 0
+        },
+        {
+          "row": 2,
+          "col": 5,
+          "value": 2
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "value": 2
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "value": 1
+        },
+        {
+          "row": 3,
+          "col": 6,
+          "value": 2
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "value": 2
+        },
+        {
+          "row": 4,
+          "col": 5,
+          "value": 1
+        },
+        {
+          "row": 5,
+          "col": 3,
+          "value": 4
+        },
+        {
+          "row": 5,
+          "col": 4,
+          "value": 5
+        },
+        {
+          "row": 5,
+          "col": 6,
+          "value": 2
+        },
+        {
+          "row": 6,
+          "col": 2,
+          "value": 1
+        },
+        {
+          "row": 6,
+          "col": 4,
+          "value": 0
+        },
+        {
+          "row": 6,
+          "col": 6,
+          "value": 2
+        }
+      ],
+      "first_hint": "(1,1) の 緑 を2個置ける場所がちょうど必要数しかないので、すべて確定します。",
+      "formal_review_candidate": true
+    },
+    {
+      "id": "FORMAL-REVIEW-6X6-INTERMEDIATE-03",
+      "title": "6×6 中級 正式レビュー候補 3",
+      "difficulty": "中級",
+      "solver_tier": "INTERMEDIATE",
+      "playtest": true,
+      "rows": 6,
+      "cols": 6,
+      "colors": [
+        "R",
+        "G",
+        "B"
+      ],
+      "fixed": [
+        {
+          "row": 1,
+          "col": 2,
+          "color": "B"
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "color": "G"
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "color": "R"
+        },
+        {
+          "row": 2,
+          "col": 6,
+          "color": "B"
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "color": "B"
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "color": "R"
+        },
+        {
+          "row": 5,
+          "col": 1,
+          "color": "G"
+        },
+        {
+          "row": 5,
+          "col": 6,
+          "color": "B"
+        },
+        {
+          "row": 6,
+          "col": 1,
+          "color": "G"
+        }
+      ],
+      "clues": [
+        {
+          "row": 1,
+          "col": 3,
+          "value": 1
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "value": 2
+        },
+        {
+          "row": 1,
+          "col": 5,
+          "value": 0
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "value": 3
+        },
+        {
+          "row": 2,
+          "col": 6,
+          "value": 3
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "value": 1
+        },
+        {
+          "row": 3,
+          "col": 5,
+          "value": 0
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "value": 3
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "value": 3
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "value": 2
+        },
+        {
+          "row": 4,
+          "col": 6,
+          "value": 1
+        },
+        {
+          "row": 5,
+          "col": 2,
+          "value": 3
+        },
+        {
+          "row": 5,
+          "col": 4,
+          "value": 2
+        },
+        {
+          "row": 6,
+          "col": 4,
+          "value": 1
+        },
+        {
+          "row": 6,
+          "col": 5,
+          "value": 0
+        },
+        {
+          "row": 6,
+          "col": 6,
+          "value": 0
+        }
+      ],
+      "first_hint": "(4,1) の 赤 を3個置ける場所がちょうど必要数しかないので、すべて確定します。",
+      "formal_review_candidate": true
+    },
+    {
+      "id": "FORMAL-REVIEW-6X6-INTERMEDIATE-04",
+      "title": "6×6 中級 正式レビュー候補 4",
+      "difficulty": "中級",
+      "solver_tier": "INTERMEDIATE",
+      "playtest": true,
+      "rows": 6,
+      "cols": 6,
+      "colors": [
+        "R",
+        "G",
+        "B"
+      ],
+      "fixed": [
+        {
+          "row": 1,
+          "col": 1,
+          "color": "B"
+        },
+        {
+          "row": 2,
+          "col": 6,
+          "color": "R"
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "color": "B"
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "color": "R"
+        },
+        {
+          "row": 5,
+          "col": 1,
+          "color": "B"
+        },
+        {
+          "row": 5,
+          "col": 6,
+          "color": "B"
+        }
+      ],
+      "clues": [
+        {
+          "row": 1,
+          "col": 1,
+          "value": 1
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "value": 1
+        },
+        {
+          "row": 1,
+          "col": 5,
+          "value": 1
+        },
+        {
+          "row": 1,
+          "col": 6,
+          "value": 1
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "value": 2
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "value": 0
+        },
+        {
+          "row": 2,
+          "col": 6,
+          "value": 1
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "value": 2
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "value": 3
+        },
+        {
+          "row": 3,
+          "col": 5,
+          "value": 4
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "value": 0
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "value": 3
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "value": 0
+        },
+        {
+          "row": 4,
+          "col": 5,
+          "value": 2
+        },
+        {
+          "row": 6,
+          "col": 1,
+          "value": 3
+        },
+        {
+          "row": 6,
+          "col": 4,
+          "value": 2
+        },
+        {
+          "row": 6,
+          "col": 6,
+          "value": 0
+        }
+      ],
+      "first_hint": "(6,1) の数字は近傍数と同じなので、中心と周囲はすべて同色です。",
+      "formal_review_candidate": true
+    },
+    {
+      "id": "FORMAL-REVIEW-6X6-INTERMEDIATE-05",
+      "title": "6×6 中級 正式レビュー候補 5",
+      "difficulty": "中級",
+      "solver_tier": "INTERMEDIATE",
+      "playtest": true,
+      "rows": 6,
+      "cols": 6,
+      "colors": [
+        "R",
+        "G",
+        "B"
+      ],
+      "fixed": [
+        {
+          "row": 1,
+          "col": 5,
+          "color": "B"
+        },
+        {
+          "row": 2,
+          "col": 5,
+          "color": "R"
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "color": "G"
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "color": "B"
+        },
+        {
+          "row": 3,
+          "col": 5,
+          "color": "G"
+        },
+        {
+          "row": 3,
+          "col": 6,
+          "color": "B"
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "color": "B"
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "color": "B"
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "color": "R"
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "color": "R"
+        },
+        {
+          "row": 5,
+          "col": 2,
+          "color": "G"
+        },
+        {
+          "row": 6,
+          "col": 1,
+          "color": "G"
+        },
+        {
+          "row": 6,
+          "col": 3,
+          "color": "G"
+        }
+      ],
+      "clues": [
+        {
+          "row": 1,
+          "col": 2,
+          "value": 0
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "value": 1
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "value": 2
+        },
+        {
+          "row": 2,
+          "col": 6,
+          "value": 2
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "value": 2
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "value": 1
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "value": 3
+        },
+        {
+          "row": 3,
+          "col": 5,
+          "value": 2
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "value": 3
+        },
+        {
+          "row": 4,
+          "col": 5,
+          "value": 3
+        },
+        {
+          "row": 5,
+          "col": 6,
+          "value": 0
+        },
+        {
+          "row": 6,
+          "col": 2,
+          "value": 2
+        },
+        {
+          "row": 6,
+          "col": 5,
+          "value": 3
+        }
+      ],
+      "first_hint": "(3,3) の数字1を作れない候補を除きます（赤:2〜6、青:2〜6）。",
+      "formal_review_candidate": true
+    },
+    {
+      "id": "FORMAL-REVIEW-6X6-ADVANCED-01",
+      "title": "6×6 上級 正式レビュー候補 1",
+      "difficulty": "上級",
+      "solver_tier": "ADVANCED",
+      "playtest": true,
+      "rows": 6,
+      "cols": 6,
+      "colors": [
+        "R",
+        "G",
+        "B"
+      ],
+      "fixed": [
+        {
+          "row": 1,
+          "col": 2,
+          "color": "B"
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "color": "B"
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "color": "B"
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "color": "B"
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "color": "G"
+        },
+        {
+          "row": 5,
+          "col": 1,
+          "color": "R"
+        },
+        {
+          "row": 5,
+          "col": 4,
+          "color": "B"
+        },
+        {
+          "row": 6,
+          "col": 3,
+          "color": "B"
+        },
+        {
+          "row": 6,
+          "col": 5,
+          "color": "B"
+        },
+        {
+          "row": 6,
+          "col": 6,
+          "color": "G"
+        }
+      ],
+      "clues": [
+        {
+          "row": 1,
+          "col": 3,
+          "value": 2
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "value": 3
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "value": 3
+        },
+        {
+          "row": 2,
+          "col": 5,
+          "value": 4
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "value": 4
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "value": 3
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "value": 5
+        },
+        {
+          "row": 4,
+          "col": 5,
+          "value": 1
+        },
+        {
+          "row": 4,
+          "col": 6,
+          "value": 0
+        },
+        {
+          "row": 5,
+          "col": 3,
+          "value": 4
+        },
+        {
+          "row": 5,
+          "col": 6,
+          "value": 0
+        },
+        {
+          "row": 6,
+          "col": 1,
+          "value": 1
+        },
+        {
+          "row": 6,
+          "col": 3,
+          "value": 1
+        }
+      ],
+      "first_hint": "(6,3) の 青 は必要な1個に達したので、残る周囲へは入りません。",
+      "formal_review_candidate": true
+    },
+    {
+      "id": "FORMAL-REVIEW-6X6-ADVANCED-02",
+      "title": "6×6 上級 正式レビュー候補 2",
+      "difficulty": "上級",
+      "solver_tier": "ADVANCED",
+      "playtest": true,
+      "rows": 6,
+      "cols": 6,
+      "colors": [
+        "R",
+        "G",
+        "B"
+      ],
+      "fixed": [
+        {
+          "row": 1,
+          "col": 1,
+          "color": "R"
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "color": "R"
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "color": "R"
+        },
+        {
+          "row": 1,
+          "col": 6,
+          "color": "G"
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "color": "B"
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "color": "R"
+        },
+        {
+          "row": 5,
+          "col": 5,
+          "color": "R"
+        },
+        {
+          "row": 6,
+          "col": 5,
+          "color": "G"
+        }
+      ],
+      "clues": [
+        {
+          "row": 1,
+          "col": 4,
+          "value": 0
+        },
+        {
+          "row": 2,
+          "col": 6,
+          "value": 4
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "value": 3
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "value": 4
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "value": 1
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "value": 1
+        },
+        {
+          "row": 4,
+          "col": 5,
+          "value": 2
+        },
+        {
+          "row": 5,
+          "col": 2,
+          "value": 1
+        },
+        {
+          "row": 5,
+          "col": 4,
+          "value": 0
+        },
+        {
+          "row": 5,
+          "col": 6,
+          "value": 3
+        },
+        {
+          "row": 6,
+          "col": 2,
+          "value": 0
+        },
+        {
+          "row": 6,
+          "col": 3,
+          "value": 1
+        },
+        {
+          "row": 6,
+          "col": 6,
+          "value": 1
+        }
+      ],
+      "first_hint": "(1,4) は0なので、周囲に確定済みの色は中心色になれません。",
+      "formal_review_candidate": true
+    },
+    {
+      "id": "FORMAL-REVIEW-6X6-ADVANCED-03",
+      "title": "6×6 上級 正式レビュー候補 3",
+      "difficulty": "上級",
+      "solver_tier": "ADVANCED",
+      "playtest": true,
+      "rows": 6,
+      "cols": 6,
+      "colors": [
+        "R",
+        "G",
+        "B"
+      ],
+      "fixed": [
+        {
+          "row": 1,
+          "col": 6,
+          "color": "B"
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "color": "B"
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "color": "B"
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "color": "G"
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "color": "R"
+        },
+        {
+          "row": 5,
+          "col": 5,
+          "color": "R"
+        }
+      ],
+      "clues": [
+        {
+          "row": 1,
+          "col": 5,
+          "value": 1
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "value": 0
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "value": 2
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "value": 2
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "value": 0
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "value": 2
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "value": 3
+        },
+        {
+          "row": 3,
+          "col": 5,
+          "value": 3
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "value": 1
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "value": 1
+        },
+        {
+          "row": 4,
+          "col": 5,
+          "value": 3
+        },
+        {
+          "row": 4,
+          "col": 6,
+          "value": 0
+        },
+        {
+          "row": 5,
+          "col": 2,
+          "value": 2
+        },
+        {
+          "row": 5,
+          "col": 4,
+          "value": 1
+        },
+        {
+          "row": 5,
+          "col": 5,
+          "value": 1
+        },
+        {
+          "row": 6,
+          "col": 3,
+          "value": 3
+        },
+        {
+          "row": 6,
+          "col": 4,
+          "value": 3
+        },
+        {
+          "row": 6,
+          "col": 5,
+          "value": 1
+        }
+      ],
+      "first_hint": "(4,4) の 赤 は必要な1個に達したので、残る周囲へは入りません。",
+      "formal_review_candidate": true
+    },
+    {
+      "id": "FORMAL-REVIEW-6X6-ADVANCED-04",
+      "title": "6×6 上級 正式レビュー候補 4",
+      "difficulty": "上級",
+      "solver_tier": "ADVANCED",
+      "playtest": true,
+      "rows": 6,
+      "cols": 6,
+      "colors": [
+        "R",
+        "G",
+        "B"
+      ],
+      "fixed": [
+        {
+          "row": 1,
+          "col": 3,
+          "color": "B"
+        },
+        {
+          "row": 1,
+          "col": 5,
+          "color": "G"
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "color": "G"
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "color": "B"
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "color": "R"
+        },
+        {
+          "row": 2,
+          "col": 6,
+          "color": "G"
+        },
+        {
+          "row": 3,
+          "col": 5,
+          "color": "B"
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "color": "G"
+        },
+        {
+          "row": 6,
+          "col": 1,
+          "color": "R"
+        }
+      ],
+      "clues": [
+        {
+          "row": 1,
+          "col": 5,
+          "value": 2
+        },
+        {
+          "row": 1,
+          "col": 6,
+          "value": 0
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "value": 5
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "value": 2
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "value": 2
+        },
+        {
+          "row": 3,
+          "col": 5,
+          "value": 4
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "value": 1
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "value": 3
+        },
+        {
+          "row": 4,
+          "col": 5,
+          "value": 3
+        },
+        {
+          "row": 4,
+          "col": 6,
+          "value": 0
+        },
+        {
+          "row": 5,
+          "col": 2,
+          "value": 1
+        },
+        {
+          "row": 5,
+          "col": 5,
+          "value": 1
+        },
+        {
+          "row": 6,
+          "col": 2,
+          "value": 1
+        },
+        {
+          "row": 6,
+          "col": 3,
+          "value": 1
+        },
+        {
+          "row": 6,
+          "col": 4,
+          "value": 0
+        },
+        {
+          "row": 6,
+          "col": 5,
+          "value": 1
+        }
+      ],
+      "first_hint": "(1,6) は0なので、周囲に確定済みの色は中心色になれません。",
+      "formal_review_candidate": true
+    },
+    {
+      "id": "FORMAL-REVIEW-6X6-ADVANCED-05",
+      "title": "6×6 上級 正式レビュー候補 5",
+      "difficulty": "上級",
+      "solver_tier": "ADVANCED",
+      "playtest": true,
+      "rows": 6,
+      "cols": 6,
+      "colors": [
+        "R",
+        "G",
+        "B"
+      ],
+      "fixed": [
+        {
+          "row": 1,
+          "col": 6,
+          "color": "R"
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "color": "R"
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "color": "B"
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "color": "B"
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "color": "G"
+        },
+        {
+          "row": 3,
+          "col": 5,
+          "color": "G"
+        },
+        {
+          "row": 5,
+          "col": 1,
+          "color": "B"
+        },
+        {
+          "row": 5,
+          "col": 6,
+          "color": "R"
+        },
+        {
+          "row": 6,
+          "col": 2,
+          "color": "B"
+        },
+        {
+          "row": 6,
+          "col": 5,
+          "color": "R"
+        }
+      ],
+      "clues": [
+        {
+          "row": 1,
+          "col": 1,
+          "value": 1
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "value": 1
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "value": 2
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "value": 2
+        },
+        {
+          "row": 2,
+          "col": 5,
+          "value": 0
+        },
+        {
+          "row": 2,
+          "col": 6,
+          "value": 3
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "value": 2
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "value": 1
+        },
+        {
+          "row": 3,
+          "col": 5,
+          "value": 2
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "value": 0
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "value": 4
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "value": 2
+        },
+        {
+          "row": 5,
+          "col": 2,
+          "value": 4
+        },
+        {
+          "row": 5,
+          "col": 5,
+          "value": 3
+        },
+        {
+          "row": 5,
+          "col": 6,
+          "value": 1
+        },
+        {
+          "row": 6,
+          "col": 6,
+          "value": 0
+        }
+      ],
+      "first_hint": "(3,3) の 青 は必要な1個に達したので、残る周囲へは入りません。",
+      "formal_review_candidate": true
     }
   ]
 };
