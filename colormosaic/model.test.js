@@ -40,8 +40,8 @@ function puzzle(overrides = {}) {
     tentative: true,
     direct: true,
   });
-  assert.equal(game.cells[0].color, "B", "長押しは直接着色");
-  assert.equal(game.cells[0].tentative, true, "仮置きモードを保持");
+  assert.equal(game.cells[0].color, "B", "直接着色で仮置き");
+  assert.equal(game.cells[0].tentative, true, "仮置き状態を保持");
 
   const tentativeEvaluation = Model.evaluateGame(game);
   assert.equal(tentativeEvaluation.filled, 0, "仮置きは完成マスへ数えない");
@@ -54,7 +54,7 @@ function puzzle(overrides = {}) {
     tentative: false,
     direct: true,
   });
-  assert.equal(game.cells[0].tentative, false, "通常長押しで仮置きを確定");
+  assert.equal(game.cells[0].tentative, false, "確定着色で仮置きを確定");
   assert.equal(Model.evaluateGame(game).filled, 1);
 
   assert.equal(Model.undo(game), true);
@@ -90,8 +90,31 @@ function puzzle(overrides = {}) {
     color: "R",
     tentative: true,
   });
-  assert.equal(game.cells[0].color, null, "長押し相当の操作は着色しない");
-  assert.deepEqual(game.cells[0].exclusions, ["R"], "長押し相当の操作は直接X");
+  assert.equal(game.cells[0].color, null, "仮置き長押しは着色しない");
+  assert.deepEqual(game.cells[0].exclusions, [], "仮置き長押しは確定Xを変更しない");
+  assert.deepEqual(game.cells[0].tentativeExclusions, ["R"], "仮置き長押しは直接仮置きX");
+
+  Model.applyAction(game, {
+    type: "cycle",
+    index: 0,
+    color: "R",
+    tentative: true,
+  });
+  assert.equal(game.cells[0].color, null, "仮置き長押しX後のタップはなし");
+  assert.deepEqual(game.cells[0].exclusions, []);
+  assert.deepEqual(game.cells[0].tentativeExclusions, []);
+}
+
+{
+  const game = Model.createGame(puzzle(), { autoFill: false });
+  Model.applyAction(game, {
+    type: "exclude",
+    index: 0,
+    color: "R",
+    tentative: false,
+  });
+  assert.deepEqual(game.cells[0].exclusions, ["R"], "通常長押しは直接確定X");
+  assert.deepEqual(game.cells[0].tentativeExclusions, []);
 
   Model.applyAction(game, {
     type: "cycle",
@@ -99,7 +122,7 @@ function puzzle(overrides = {}) {
     color: "R",
     tentative: false,
   });
-  assert.equal(game.cells[0].color, null, "長押しX後の通常タップはなし");
+  assert.equal(game.cells[0].color, null, "通常長押しX後のタップはなし");
   assert.deepEqual(game.cells[0].exclusions, []);
 }
 
@@ -134,7 +157,7 @@ function puzzle(overrides = {}) {
   });
   assert.equal(game.cells[0].color, "R", "仮置きモードの1回目は仮置き");
   assert.equal(game.cells[0].tentative, true);
-  assert.deepEqual(game.cells[0].exclusions, [], "仮置きモードではXを経由しない");
+  assert.deepEqual(game.cells[0].tentativeExclusions, []);
 
   Model.applyAction(game, {
     type: "cycle",
@@ -142,7 +165,18 @@ function puzzle(overrides = {}) {
     color: "R",
     tentative: true,
   });
-  assert.equal(game.cells[0].color, null, "仮置きモードの2回目は消去");
+  assert.equal(game.cells[0].color, null, "仮置きモードの2回目はX");
+  assert.deepEqual(game.cells[0].exclusions, [], "仮置きXは確定Xへ入れない");
+  assert.deepEqual(game.cells[0].tentativeExclusions, ["R"]);
+
+  Model.applyAction(game, {
+    type: "cycle",
+    index: 0,
+    color: "R",
+    tentative: true,
+  });
+  assert.equal(game.cells[0].color, null, "仮置きモードの3回目は消去");
+  assert.deepEqual(game.cells[0].tentativeExclusions, []);
 
   Model.applyAction(game, {
     type: "cycle",
@@ -153,6 +187,129 @@ function puzzle(overrides = {}) {
   const tentativeEvaluation = Model.evaluateGame(game);
   assert.equal(tentativeEvaluation.complete, false, "仮置きだけでは完成しない");
   assert.equal(tentativeEvaluation.clueStates.get(0).status, "satisfied", "仮置きは数字検討へ反映");
+}
+
+{
+  const game = Model.createGame(puzzle({
+    rows: 1,
+    cols: 3,
+    colors: ["R", "G", "B"],
+  }), { autoFill: false });
+  Model.applyAction(game, {
+    type: "cycle",
+    index: 0,
+    color: "R",
+    tentative: true,
+  });
+  Model.applyAction(game, {
+    type: "cycle",
+    index: 1,
+    color: "G",
+    tentative: true,
+  });
+  Model.applyAction(game, {
+    type: "cycle",
+    index: 1,
+    color: "G",
+    tentative: true,
+  });
+  Model.applyAction(game, {
+    type: "exclude",
+    index: 2,
+    color: "B",
+    tentative: true,
+  });
+  const evaluation = Model.evaluateGame(game);
+  assert.equal(evaluation.tentativeColors, 1);
+  assert.equal(evaluation.tentativeExclusions, 2);
+  assert.equal(evaluation.tentative, 3, "仮置き色とXを合算");
+  const historyBefore = game.history.length;
+
+  const result = Model.commitTentative(game);
+  assert.equal(result.changed, true);
+  assert.equal(result.committed, 3);
+  assert.equal(game.cells[0].color, "R");
+  assert.equal(game.cells[0].tentative, false, "仮置き色を確定");
+  assert.deepEqual(game.cells[1].exclusions, ["G"], "仮置きXを確定");
+  assert.deepEqual(game.cells[2].exclusions, ["B"]);
+  assert.deepEqual(game.cells[1].tentativeExclusions, []);
+  assert.equal(game.history.length, historyBefore + 1, "全確定を一手として保存");
+
+  assert.equal(Model.undo(game), true);
+  assert.equal(game.cells[0].tentative, true, "Undoで仮置き色へ戻る");
+  assert.deepEqual(game.cells[1].exclusions, []);
+  assert.deepEqual(game.cells[1].tentativeExclusions, ["G"], "Undoで仮置きXへ戻る");
+  assert.equal(Model.redo(game), true);
+  assert.deepEqual(game.cells[1].exclusions, ["G"], "Redoで再び確定");
+}
+
+{
+  const game = Model.createGame(puzzle({
+    rows: 1,
+    cols: 2,
+    colors: ["R", "G", "B"],
+  }), { autoFill: false });
+  Model.applyAction(game, {
+    type: "cycle",
+    index: 0,
+    color: "R",
+    tentative: true,
+  });
+  Model.applyAction(game, {
+    type: "toggle-x",
+    index: 1,
+    color: "R",
+  });
+  Model.applyAction(game, {
+    type: "cycle",
+    index: 1,
+    color: "G",
+    tentative: true,
+  });
+  const historyBefore = game.history.length;
+
+  const result = Model.discardTentative(game);
+  assert.equal(result.changed, true);
+  assert.equal(result.discarded, 2);
+  assert.equal(game.cells[0].color, null, "仮置き色を消去");
+  assert.equal(game.cells[1].color, null);
+  assert.deepEqual(game.cells[1].exclusions, ["R"], "確定Xは全消去で残す");
+  assert.equal(game.history.length, historyBefore + 1, "全消去を一手として保存");
+
+  assert.equal(Model.undo(game), true);
+  assert.equal(game.cells[0].tentative, true, "Undoで仮置き色を復元");
+  assert.equal(game.cells[1].color, "G");
+  assert.equal(game.cells[1].tentative, true);
+  assert.deepEqual(game.cells[1].exclusions, ["R"], "Undo後も確定Xを維持");
+}
+
+{
+  const game = Model.createGame(puzzle({
+    rows: 1,
+    cols: 1,
+    colors: ["R", "G", "B"],
+  }), { autoFill: true });
+  for (const color of ["R", "G"]) {
+    Model.applyAction(game, {
+      type: "cycle",
+      index: 0,
+      color,
+      tentative: true,
+    });
+    Model.applyAction(game, {
+      type: "cycle",
+      index: 0,
+      color,
+      tentative: true,
+    });
+  }
+  assert.equal(game.cells[0].color, null, "仮置きXだけでは自動着色しない");
+  assert.deepEqual(game.cells[0].tentativeExclusions, ["R", "G"]);
+
+  const result = Model.commitTentative(game);
+  assert.deepEqual(result.autoFilled, [{ index: 0, color: "B" }]);
+  assert.equal(game.cells[0].color, "B", "全確定後に自動着色");
+  assert.equal(game.cells[0].tentative, false);
 }
 
 {
@@ -232,6 +389,22 @@ function puzzle(overrides = {}) {
   assert.equal(Model.undo(game), true);
   assert.equal(game.cells[0].color, "B", "Undo後も一括操作前の着色を維持");
   assert.deepEqual(game.cells[1].exclusions, [], "Undoで周囲のXをまとめて戻す");
+}
+
+{
+  const game = Model.createGame(puzzle({
+    rows: 3,
+    cols: 3,
+    colors: ["R", "G", "B"],
+    fixed: [{ row: 2, col: 2, color: "R" }],
+    clues: [{ row: 2, col: 2, value: 0 }],
+  }), { autoFill: true });
+  const result = Model.excludeAroundClue(game, 4, { tentative: true });
+  assert.equal(result.tentative, true);
+  assert.equal(result.excluded, 8);
+  assert.equal(result.autoFilled.length, 0, "一括仮置きXでは自動着色しない");
+  assert.deepEqual(game.cells[0].exclusions, []);
+  assert.deepEqual(game.cells[0].tentativeExclusions, ["R"]);
 }
 
 console.log("ColorMosaic mobile input model tests passed.");

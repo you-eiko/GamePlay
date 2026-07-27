@@ -11,6 +11,7 @@
       tentative: cell.tentative,
       fixed: cell.fixed,
       exclusions: [...cell.exclusions],
+      tentativeExclusions: [...(cell.tentativeExclusions || [])],
     }));
   }
 
@@ -42,6 +43,7 @@
       tentative: false,
       fixed: false,
       exclusions: [],
+      tentativeExclusions: [],
     }));
     for (const given of puzzle.fixed) {
       const index = cellIndex(puzzle, given.row, given.col);
@@ -74,7 +76,11 @@
     return left.color === right.color
       && left.tentative === right.tentative
       && left.exclusions.length === right.exclusions.length
-      && left.exclusions.every((color, index) => color === right.exclusions[index]);
+      && left.exclusions.every((color, index) => color === right.exclusions[index])
+      && left.tentativeExclusions.length === right.tentativeExclusions.length
+      && left.tentativeExclusions.every(
+        (color, index) => color === right.tentativeExclusions[index],
+      );
   }
 
   function pushIfChanged(game, before) {
@@ -102,6 +108,12 @@
     return fillRemainingColor(game, index);
   }
 
+  function addExclusion(game, exclusions, color) {
+    return game.puzzle.colors.filter(
+      (item) => item === color || exclusions.includes(item),
+    );
+  }
+
   function applyAction(game, action) {
     const index = action.index;
     const color = action.color;
@@ -116,48 +128,100 @@
     if (action.type === "cycle") {
       const tentative = Boolean(action.tentative);
       if (tentative) {
-        if (cell.color === color && cell.tentative) {
+        if ((cell.color && !cell.tentative) || cell.exclusions.includes(color)) {
+          // 確定済みの情報は仮置き操作で上書きしない。
+        } else if (cell.color === color && cell.tentative) {
           cell.color = null;
           cell.tentative = false;
+          cell.tentativeExclusions = addExclusion(
+            game,
+            cell.tentativeExclusions,
+            color,
+          );
+        } else if (cell.tentativeExclusions.includes(color)) {
+          cell.tentativeExclusions = cell.tentativeExclusions.filter(
+            (item) => item !== color,
+          );
         } else {
           cell.color = color;
           cell.tentative = true;
-          cell.exclusions = cell.exclusions.filter((item) => item !== color);
+          cell.tentativeExclusions = cell.tentativeExclusions.filter(
+            (item) => item !== color,
+          );
         }
       } else if (cell.color === color) {
+        cell.tentativeExclusions = cell.tentativeExclusions.filter(
+          (item) => item !== color,
+        );
         if (cell.tentative) {
           cell.tentative = false;
         } else {
           cell.color = null;
           cell.tentative = false;
-          cell.exclusions = game.puzzle.colors.filter(
-            (item) => item === color || cell.exclusions.includes(item),
-          );
+          cell.exclusions = addExclusion(game, cell.exclusions, color);
           autoFilled = applyAutoFillToCell(game, index);
         }
       } else if (cell.exclusions.includes(color)) {
         cell.exclusions = cell.exclusions.filter((item) => item !== color);
+        cell.tentativeExclusions = cell.tentativeExclusions.filter(
+          (item) => item !== color,
+        );
       } else {
         cell.color = color;
         cell.tentative = false;
         cell.exclusions = cell.exclusions.filter((item) => item !== color);
+        cell.tentativeExclusions = cell.tentativeExclusions.filter(
+          (item) => item !== color,
+        );
       }
     } else if (action.type === "paint") {
       const tentative = Boolean(action.tentative);
-      if (!action.direct && cell.color === color && cell.tentative === tentative) {
+      if (
+        tentative
+        && ((cell.color && !cell.tentative) || cell.exclusions.includes(color))
+      ) {
+        // 確定済みの情報は仮置き操作で上書きしない。
+      } else if (!action.direct && cell.color === color && cell.tentative === tentative) {
         cell.color = null;
         cell.tentative = false;
       } else {
         cell.color = color;
         cell.tentative = tentative;
-        cell.exclusions = cell.exclusions.filter((item) => item !== color);
+        if (tentative) {
+          cell.tentativeExclusions = cell.tentativeExclusions.filter(
+            (item) => item !== color,
+          );
+        } else {
+          cell.exclusions = cell.exclusions.filter((item) => item !== color);
+          cell.tentativeExclusions = cell.tentativeExclusions.filter(
+            (item) => item !== color,
+          );
+        }
       }
     } else if (action.type === "exclude") {
-      if (!cell.exclusions.includes(color) || cell.color) {
+      const tentative = Boolean(action.tentative);
+      if (tentative) {
+        if (
+          (!cell.color || cell.tentative)
+          && !cell.exclusions.includes(color)
+          && (!cell.tentativeExclusions.includes(color) || cell.color)
+        ) {
+          if (cell.tentative) {
+            cell.color = null;
+            cell.tentative = false;
+          }
+          cell.tentativeExclusions = addExclusion(
+            game,
+            cell.tentativeExclusions,
+            color,
+          );
+        }
+      } else if (!cell.exclusions.includes(color) || cell.color) {
         cell.color = null;
         cell.tentative = false;
-        cell.exclusions = game.puzzle.colors.filter(
-          (item) => item === color || cell.exclusions.includes(item),
+        cell.exclusions = addExclusion(game, cell.exclusions, color);
+        cell.tentativeExclusions = cell.tentativeExclusions.filter(
+          (item) => item !== color,
         );
         autoFilled = applyAutoFillToCell(game, index);
       }
@@ -166,13 +230,14 @@
       if (hasColor) {
         cell.exclusions = cell.exclusions.filter((item) => item !== color);
       } else {
-        cell.exclusions = game.puzzle.colors.filter(
-          (item) => item === color || cell.exclusions.includes(item),
-        );
+        cell.exclusions = addExclusion(game, cell.exclusions, color);
         if (cell.color === color) {
           cell.color = null;
           cell.tentative = false;
         }
+        cell.tentativeExclusions = cell.tentativeExclusions.filter(
+          (item) => item !== color,
+        );
         autoFilled = applyAutoFillToCell(game, index);
       }
     } else {
@@ -207,6 +272,55 @@
     return filled;
   }
 
+  function commitTentative(game) {
+    const before = snapshot(game);
+    let committed = 0;
+    const autoFilled = [];
+
+    game.cells.forEach((cell, index) => {
+      if (cell.tentative && cell.color) {
+        cell.tentative = false;
+        cell.exclusions = cell.exclusions.filter((color) => color !== cell.color);
+        committed += 1;
+      }
+      if (cell.tentativeExclusions.length) {
+        for (const color of cell.tentativeExclusions) {
+          cell.exclusions = addExclusion(game, cell.exclusions, color);
+          committed += 1;
+        }
+        cell.tentativeExclusions = [];
+      }
+      const filledColor = applyAutoFillToCell(game, index);
+      if (filledColor) autoFilled.push({ index, color: filledColor });
+    });
+
+    return {
+      changed: pushIfChanged(game, before),
+      committed,
+      autoFilled,
+    };
+  }
+
+  function discardTentative(game) {
+    const before = snapshot(game);
+    let discarded = 0;
+
+    for (const cell of game.cells) {
+      if (cell.tentative && cell.color) {
+        cell.color = null;
+        cell.tentative = false;
+        discarded += 1;
+      }
+      discarded += cell.tentativeExclusions.length;
+      cell.tentativeExclusions = [];
+    }
+
+    return {
+      changed: pushIfChanged(game, before),
+      discarded,
+    };
+  }
+
   function undo(game) {
     const previous = game.history.pop();
     if (!previous) return false;
@@ -215,7 +329,7 @@
     return true;
   }
 
-  function excludeAroundClue(game, index) {
+  function excludeAroundClue(game, index, options = {}) {
     const center = game.cells[index];
     const clue = game.puzzle.clues.find(
       (item) => cellIndex(game.puzzle, item.row, item.col) === index,
@@ -226,18 +340,32 @@
 
     const before = snapshot(game);
     const color = center.color;
+    const tentative = Boolean(options.tentative);
     const autoFilled = [];
     let excluded = 0;
 
     for (const neighborIndex of neighbors(game.puzzle, clue.row, clue.col)) {
       const cell = game.cells[neighborIndex];
-      if (cell.fixed || cell.color || cell.exclusions.includes(color)) continue;
+      if (
+        cell.fixed
+        || cell.color
+        || cell.exclusions.includes(color)
+        || cell.tentativeExclusions.includes(color)
+      ) continue;
 
-      cell.exclusions = game.puzzle.colors.filter(
-        (item) => item === color || cell.exclusions.includes(item),
-      );
+      if (tentative) {
+        cell.tentativeExclusions = addExclusion(
+          game,
+          cell.tentativeExclusions,
+          color,
+        );
+      } else {
+        cell.exclusions = addExclusion(game, cell.exclusions, color);
+      }
       excluded += 1;
-      const filledColor = applyAutoFillToCell(game, neighborIndex);
+      const filledColor = tentative
+        ? null
+        : applyAutoFillToCell(game, neighborIndex);
       if (filledColor) autoFilled.push({ index: neighborIndex, color: filledColor });
     }
 
@@ -246,6 +374,7 @@
       color,
       excluded,
       autoFilled,
+      tentative,
     };
   }
 
@@ -286,7 +415,11 @@
     for (const index of neighbors(game.puzzle, clue.row, clue.col)) {
       const neighbor = game.cells[index];
       if (neighbor.color === center.color) same += 1;
-      else if (!neighbor.color && !neighbor.exclusions.includes(center.color)) possible += 1;
+      else if (
+        !neighbor.color
+        && !neighbor.exclusions.includes(center.color)
+        && !neighbor.tentativeExclusions.includes(center.color)
+      ) possible += 1;
     }
 
     if (same > clue.value || same + possible < clue.value) {
@@ -308,9 +441,17 @@
     }
 
     const filled = game.cells.filter((cell) => cell.color && !cell.tentative).length;
-    const tentative = game.cells.filter((cell) => cell.color && cell.tentative).length;
+    const tentativeColors = game.cells.filter((cell) => cell.color && cell.tentative).length;
+    const tentativeExclusions = game.cells.reduce(
+      (total, cell) => total + cell.tentativeExclusions.length,
+      0,
+    );
+    const tentative = tentativeColors + tentativeExclusions;
     const contradictions = game.cells.filter(
-      (cell) => cell.color && cell.exclusions.includes(cell.color),
+      (cell) => cell.color && (
+        cell.exclusions.includes(cell.color)
+        || cell.tentativeExclusions.includes(cell.color)
+      ),
     ).length;
     const complete = filled === game.cells.length;
     const solved = complete && impossibleClues === 0 && contradictions === 0
@@ -319,6 +460,8 @@
     return {
       filled,
       tentative,
+      tentativeColors,
+      tentativeExclusions,
       total: game.cells.length,
       complete,
       solved,
@@ -333,6 +476,8 @@
     applyAction,
     setAutoFill,
     fillForcedCells,
+    commitTentative,
+    discardTentative,
     undo,
     excludeAroundClue,
     redo,

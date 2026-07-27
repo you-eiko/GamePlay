@@ -31,6 +31,9 @@
     puzzleMeta: document.querySelector("#puzzle-meta"),
     palettes: [...document.querySelectorAll("[data-palette]")],
     tentativeButtons: [...document.querySelectorAll("[data-tentative]")],
+    tentativeActionGroups: [...document.querySelectorAll("[data-tentative-actions]")],
+    tentativeCommitButtons: [...document.querySelectorAll("[data-tentative-commit]")],
+    tentativeDiscardButtons: [...document.querySelectorAll("[data-tentative-discard]")],
     mobileSelectedLabel: document.querySelector(".mobile-selected-label"),
     autoFill: document.querySelector("#auto-fill"),
     undoButtons: [...document.querySelectorAll("[data-undo]")],
@@ -69,6 +72,22 @@
     toastTimer = window.setTimeout(() => elements.toast.classList.remove("is-visible"), 1900);
   }
 
+  function updateTentativeActions(evaluation) {
+    const count = evaluation?.tentative || 0;
+    const visible = tentativeMode || count > 0;
+    elements.tentativeActionGroups.forEach((group) => {
+      group.hidden = !visible;
+    });
+    [
+      ...elements.tentativeCommitButtons,
+      ...elements.tentativeDiscardButtons,
+    ].forEach((button) => {
+      button.disabled = count === 0;
+      const countLabel = button.querySelector("[data-tentative-count]");
+      if (countLabel) countLabel.textContent = `(${count})`;
+    });
+  }
+
   function setTentativeMode(enabled, announce = false) {
     tentativeMode = Boolean(enabled);
     elements.tentativeButtons.forEach((button) => {
@@ -76,6 +95,7 @@
       button.setAttribute("aria-pressed", String(tentativeMode));
     });
     elements.board.classList.toggle("is-tentative-mode", tentativeMode);
+    if (game) updateTentativeActions(Model.evaluateGame(game));
     if (announce) showToast(tentativeMode ? "仮置きモードをオンにしました。" : "通常の着色に戻しました。");
   }
 
@@ -127,6 +147,11 @@
     if (cell.exclusions.length) {
       parts.push(`${cell.exclusions.map((color) => colorMeta(color).name).join("、")}にX`);
     }
+    if (cell.tentativeExclusions.length) {
+      parts.push(
+        `${cell.tentativeExclusions.map((color) => colorMeta(color).name).join("、")}に仮置きX`,
+      );
+    }
     return parts.join("、");
   }
 
@@ -149,14 +174,18 @@
   }
 
   function excludeAroundClue(index) {
-    const result = Model.excludeAroundClue(game, index);
+    const result = Model.excludeAroundClue(game, index, {
+      tentative: tentativeMode,
+    });
     if (!result.changed) {
-      showToast("周囲の未着色マスには、すでに同じ色の×があります。");
+      showToast(`周囲の未着色マスには、すでに同じ色の${tentativeMode ? "仮置き×" : "×"}があります。`);
       return;
     }
 
     const colorName = colorMeta(result.color).name;
-    if (result.autoFilled.length) {
+    if (result.tentative) {
+      showToast(`周囲${result.excluded}マスに${colorName}の仮置き×を付けました。`);
+    } else if (result.autoFilled.length) {
       showToast(`${colorName}の×を${result.excluded}マスに付け、${result.autoFilled.length}マスを自動で塗りました。`);
     } else {
       showToast(`周囲${result.excluded}マスに${colorName}の×を付けました。`);
@@ -172,6 +201,29 @@
     }
     render();
     showToast(`${filled.length}マスを残りの一色で確定しました。`);
+  }
+
+  function commitTentative() {
+    const result = Model.commitTentative(game);
+    if (!result.changed) {
+      showToast("確定する仮置きはありません。");
+      return;
+    }
+    render();
+    const autoFilled = result.autoFilled.length
+      ? `、${result.autoFilled.length}マスを自動着色`
+      : "";
+    showToast(`仮置き${result.committed}件を確定しました${autoFilled}。`);
+  }
+
+  function discardTentative() {
+    const result = Model.discardTentative(game);
+    if (!result.changed) {
+      showToast("消去する仮置きはありません。");
+      return;
+    }
+    render();
+    showToast(`仮置き${result.discarded}件を消去しました。Undoで戻せます。`);
   }
 
   function fitBoardToFrame() {
@@ -401,18 +453,25 @@
         button.append(badge);
       }
 
-      if (cell.exclusions.length) {
+      if (cell.exclusions.length || cell.tentativeExclusions.length) {
         const list = document.createElement("span");
         list.className = "x-list";
-        for (const color of cell.exclusions) {
+        const marks = [
+          ...cell.exclusions.map((color) => ({ color, tentative: false })),
+          ...cell.tentativeExclusions
+            .filter((color) => !cell.exclusions.includes(color))
+            .map((color) => ({ color, tentative: true })),
+        ];
+        for (const { color, tentative } of marks) {
           const meta = colorMeta(color);
           const mark = document.createElement("span");
           mark.className = "x-mark";
+          if (tentative) mark.classList.add("is-tentative");
           mark.dataset.slot = xSlot(color);
           mark.style.setProperty("--x-color", meta.hex);
           mark.textContent = "×";
           mark.setAttribute("aria-hidden", "true");
-          mark.title = `${meta.name}を除外`;
+          mark.title = tentative ? `${meta.name}を仮置きで除外` : `${meta.name}を除外`;
           list.append(mark);
         }
         button.append(list);
@@ -427,7 +486,9 @@
   function renderStatus(evaluation) {
     elements.status.className = "status-card";
     let message = `${evaluation.filled} / ${evaluation.total} マス着色`;
-    if (evaluation.tentative) message += `（仮置き ${evaluation.tentative}）`;
+    if (evaluation.tentative) {
+      message += `（仮置き 色${evaluation.tentativeColors}・×${evaluation.tentativeExclusions}）`;
+    }
     if (evaluation.solved) {
       elements.status.classList.add("is-solved");
       message = "完成。すべての数字が一致しています。";
@@ -466,6 +527,7 @@
     });
     elements.autoFill.checked = game.autoFill;
     setTentativeMode(tentativeMode);
+    updateTentativeActions(evaluation);
   }
 
   function loadPuzzle(id) {
@@ -488,6 +550,12 @@
     elements.puzzleSelect.addEventListener("change", () => loadPuzzle(elements.puzzleSelect.value));
     elements.tentativeButtons.forEach((button) => {
       button.addEventListener("click", () => setTentativeMode(!tentativeMode, true));
+    });
+    elements.tentativeCommitButtons.forEach((button) => {
+      button.addEventListener("click", commitTentative);
+    });
+    elements.tentativeDiscardButtons.forEach((button) => {
+      button.addEventListener("click", discardTentative);
     });
     elements.autoFill.addEventListener("change", () => {
       const filled = Model.setAutoFill(game, elements.autoFill.checked);
