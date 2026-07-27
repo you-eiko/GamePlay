@@ -8,6 +8,15 @@
     return;
   }
 
+  const visiblePuzzles = puzzleData.puzzles.filter((puzzle) => (
+    !/^P[1-5]$/.test(puzzle.id)
+    && !puzzle.id.startsWith("PLAY-6X6-")
+  ));
+  if (visiblePuzzles.length === 0) {
+    document.body.textContent = "表示できる問題がありません。";
+    return;
+  }
+
   const COLOR_META = {
     R: { name: "赤", hex: "#ef5b64", text: "#ffffff" },
     G: { name: "緑", hex: "#4f9185", text: "#ffffff" },
@@ -531,7 +540,7 @@
   }
 
   function loadPuzzle(id) {
-    const puzzle = puzzleData.puzzles.find((item) => item.id === id) || puzzleData.puzzles[0];
+    const puzzle = visiblePuzzles.find((item) => item.id === id) || visiblePuzzles[0];
     game = Model.createGame(puzzle, { autoFill: elements.autoFill.checked });
     renderPalette();
     renderMeta();
@@ -539,7 +548,7 @@
   }
 
   function initialize() {
-    for (const puzzle of puzzleData.puzzles) {
+    for (const puzzle of visiblePuzzles) {
       const option = document.createElement("option");
       option.value = puzzle.id;
       const difficulty = puzzle.difficulty ? `［${puzzle.difficulty}］` : "";
@@ -602,7 +611,7 @@
       }
     });
 
-    loadPuzzle(puzzleData.puzzles[0].id);
+    loadPuzzle(visiblePuzzles[0].id);
   }
 
   initialize();
