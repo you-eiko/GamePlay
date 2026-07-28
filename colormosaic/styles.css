@@ -143,7 +143,24 @@ select {
   background: rgb(255 255 255 / 65%);
 }
 
-.palette { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.color-mode-note {
+  margin: 10px 0 0;
+  padding: 8px 10px;
+  border: 1px solid #c7d8d8;
+  border-radius: 10px;
+  color: var(--muted);
+  background: rgb(255 255 255 / 54%);
+  font-size: 0.76rem;
+  line-height: 1.55;
+}
+
+body[data-color-count="4"] .color-mode-note {
+  border-color: #e0bd72;
+  color: var(--ink);
+  background: #fff5d8;
+}
+
+.palette { display: grid; grid-template-columns: repeat(var(--palette-columns, 4), minmax(0, 1fr)); gap: 8px; }
 .color-button {
   display: grid;
   place-items: center;
@@ -163,7 +180,7 @@ select {
   width: 30px;
   height: 30px;
   border-radius: 9px;
-  color: white;
+  color: var(--cell-text, white);
   background: var(--cell-color);
   font-size: 0.77rem;
   font-weight: 900;

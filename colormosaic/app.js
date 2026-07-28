@@ -10,7 +10,7 @@
 
   const visiblePuzzles = puzzleData.puzzles.filter((puzzle) => (
     !/^P[1-5]$/.test(puzzle.id)
-    && !puzzle.id.startsWith("PLAY-6X6-")
+    && !/^PLAY-6X6-(?:BEGINNER|INTERMEDIATE|ADVANCED)-/.test(puzzle.id)
   ));
   if (visiblePuzzles.length === 0) {
     document.body.textContent = "表示できる問題がありません。";
@@ -31,6 +31,12 @@
     B: "bottom-left",
     Y: "bottom-right",
   });
+  const X_SLOT_LABEL = Object.freeze({
+    "top-left": "左上",
+    "top-right": "右上",
+    "bottom-left": "左下",
+    "bottom-right": "右下",
+  });
   const X_SLOTS = ["top-left", "top-right", "bottom-left", "bottom-right"];
   const LONG_PRESS_MS = 450;
   const LONG_PRESS_MOVE_PX = 12;
@@ -38,6 +44,9 @@
   const elements = {
     puzzleSelect: document.querySelector("#puzzle-select"),
     puzzleMeta: document.querySelector("#puzzle-meta"),
+    colorModeNote: document.querySelector("#color-mode-note"),
+    exclusionTargetLabels: [...document.querySelectorAll("[data-exclusion-target]")],
+    xSlotHelp: document.querySelector("#x-slot-help"),
     palettes: [...document.querySelectorAll("[data-palette]")],
     tentativeButtons: [...document.querySelectorAll("[data-tentative]")],
     tentativeActionGroups: [...document.querySelectorAll("[data-tentative-actions]")],
@@ -125,6 +134,8 @@
   function renderPalette() {
     elements.palettes.forEach((palette) => {
       palette.replaceChildren();
+      palette.style.setProperty("--palette-columns", String(game.puzzle.colors.length));
+      palette.setAttribute("aria-label", `${game.puzzle.colors.length}色から操作する色を選択`);
       for (const color of game.puzzle.colors) {
         const meta = colorMeta(color);
         const button = document.createElement("button");
@@ -134,12 +145,30 @@
         button.setAttribute("role", "radio");
         button.setAttribute("aria-label", `${meta.name}を選択`);
         button.style.setProperty("--cell-color", meta.hex);
+        button.style.setProperty("--cell-text", meta.text);
         button.innerHTML = `<span class="color-dot">${color}</span>`;
         button.addEventListener("click", () => selectColor(color));
         palette.append(button);
       }
     });
     selectColor(game.puzzle.colors.includes(selectedColor) ? selectedColor : game.puzzle.colors[0]);
+  }
+
+  function applyColorModeUI() {
+    const colors = game.puzzle.colors;
+    const colorCount = colors.length;
+    const exclusionTarget = Math.max(0, colorCount - 1);
+    const colorNames = colors.map((color) => colorMeta(color).name);
+
+    document.body.dataset.colorCount = String(colorCount);
+    elements.colorModeNote.textContent = `${colorCount}色モード：${colorNames.join("・")}。${exclusionTarget}色の×で残り1色を確定できます。`;
+    elements.exclusionTargetLabels.forEach((label) => {
+      label.textContent = String(exclusionTarget);
+    });
+    elements.xSlotHelp.textContent = `色別の×は、${colors.map((color) => (
+      `${colorMeta(color).name}＝${X_SLOT_LABEL[xSlot(color)] || xSlot(color)}`
+    )).join("、")}に表示します。`;
+    elements.boardFrame.title = `盤面の外側をダブルタップまたは長押しすると、${exclusionTarget}色の×があるマスを残り1色で確定します`;
   }
 
   function cellDescription(index, clue) {
@@ -542,6 +571,7 @@
   function loadPuzzle(id) {
     const puzzle = visiblePuzzles.find((item) => item.id === id) || visiblePuzzles[0];
     game = Model.createGame(puzzle, { autoFill: elements.autoFill.checked });
+    applyColorModeUI();
     renderPalette();
     renderMeta();
     render();

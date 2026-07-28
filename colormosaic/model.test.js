@@ -2,6 +2,7 @@
 
 const assert = require("node:assert/strict");
 const Model = require("./model.js");
+const PuzzleData = require("./puzzles.js");
 
 function puzzle(overrides = {}) {
   return {
@@ -364,6 +365,24 @@ function puzzle(overrides = {}) {
 
 {
   const game = Model.createGame(puzzle({
+    rows: 1,
+    cols: 2,
+    colors: ["R", "G", "B", "Y"],
+  }), { autoFill: false });
+  Model.applyAction(game, { type: "toggle-x", index: 0, color: "R" });
+  Model.applyAction(game, { type: "toggle-x", index: 0, color: "G" });
+  Model.applyAction(game, { type: "toggle-x", index: 0, color: "B" });
+  Model.applyAction(game, { type: "toggle-x", index: 1, color: "R" });
+  Model.applyAction(game, { type: "toggle-x", index: 1, color: "G" });
+
+  const filled = Model.fillForcedCells(game);
+  assert.deepEqual(filled, [{ index: 0, color: "Y" }]);
+  assert.equal(game.cells[0].color, "Y", "4色盤面は3色のXで残りの黄を確定");
+  assert.equal(game.cells[1].color, null, "4色盤面は2色のXでは確定しない");
+}
+
+{
+  const game = Model.createGame(puzzle({
     rows: 3,
     cols: 3,
     colors: ["R", "G", "B"],
@@ -407,4 +426,23 @@ function puzzle(overrides = {}) {
   assert.deepEqual(game.cells[0].tentativeExclusions, ["R"]);
 }
 
-console.log("ColorMosaic mobile input model tests passed.");
+{
+  const fourColorPuzzles = PuzzleData.puzzles.filter((item) => item.id.startsWith("PLAY-6X6-4C-"));
+  assert.equal(fourColorPuzzles.length, 6, "4色盤面を6盤収録");
+  assert.deepEqual(
+    Object.fromEntries(["BEGINNER", "INTERMEDIATE", "ADVANCED"].map((tier) => [
+      tier,
+      fourColorPuzzles.filter((item) => item.solver_tier === tier).length,
+    ])),
+    { BEGINNER: 2, INTERMEDIATE: 2, ADVANCED: 2 },
+    "4色盤面は初級・中級・上級を各2盤収録",
+  );
+  for (const item of fourColorPuzzles) {
+    assert.equal(item.rows, 6);
+    assert.equal(item.cols, 6);
+    assert.deepEqual(item.colors, ["R", "G", "B", "Y"]);
+    assert.equal(Model.createGame(item).cells.length, 36);
+  }
+}
+
+console.log("ColorMosaic model and puzzle data tests passed.");
