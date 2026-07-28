@@ -18,10 +18,10 @@
   }
 
   const COLOR_META = {
-    R: { name: "赤", hex: "#ef5b64", text: "#ffffff" },
-    G: { name: "緑", hex: "#4f9185", text: "#ffffff" },
-    B: { name: "青", hex: "#4e82c4", text: "#ffffff" },
-    Y: { name: "黄", hex: "#efa83d", text: "#17303b" },
+    R: { name: "赤", hex: "#ef5b64", text: "#ffffff", xHex: "#d23849" },
+    G: { name: "緑", hex: "#4f9185", text: "#ffffff", xHex: "#087a55" },
+    B: { name: "青", hex: "#4e82c4", text: "#ffffff", xHex: "#245fbd" },
+    Y: { name: "黄", hex: "#efa83d", text: "#17303b", xHex: "#a85f00" },
     P: { name: "紫", hex: "#8d69b5", text: "#ffffff" },
     O: { name: "橙", hex: "#e27a3f", text: "#ffffff" },
   };
@@ -147,7 +147,7 @@
         button.setAttribute("aria-label", `${meta.name}を選択`);
         button.style.setProperty("--cell-color", meta.hex);
         button.style.setProperty("--cell-text", meta.text);
-        button.innerHTML = `<span class="color-dot" aria-hidden="true"><span class="color-code">${color}</span></span>`;
+        button.innerHTML = `<span class="color-dot" aria-hidden="true"><span class="palette-color-code">${color}</span></span>`;
         button.addEventListener("click", () => selectColor(color));
         palette.append(button);
       }
@@ -512,7 +512,7 @@
           mark.className = "x-mark";
           if (tentative) mark.classList.add("is-tentative");
           mark.dataset.slot = xSlot(color);
-          mark.style.setProperty("--x-color", meta.hex);
+          mark.style.setProperty("--x-color", meta.xHex || meta.hex);
           mark.textContent = "×";
           mark.setAttribute("aria-hidden", "true");
           mark.title = tentative ? `${meta.name}を仮置きで除外` : `${meta.name}を除外`;

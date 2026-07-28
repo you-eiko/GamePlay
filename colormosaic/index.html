@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#19333f">
   <title>ColorMosaic | GamePlay</title>
-  <link rel="stylesheet" href="styles.css?v=20260728-symbols-1">
+  <link rel="stylesheet" href="styles.css?v=20260728-symbols-2">
 </head>
 <body>
   <header class="site-header">
@@ -31,7 +31,7 @@
           <input id="show-color-symbols" type="checkbox">
           <span>
             <strong>色のアルファベットを表示</strong>
-            <small>盤面と色選択に B・R・G・Y を表示</small>
+            <small>盤面の色マスに B・R・G・Y を表示</small>
           </span>
         </label>
       </section>
@@ -85,7 +85,7 @@
             <li>仮置きモードでは「着色 → × → なし」を繰り返し、色と×は確定情報と区別して表示します。</li>
             <li>「全確定」で仮置きの色と×をまとめて確定し、「全消去」で仮置きだけを消せます。</li>
             <li id="x-slot-help">色別の×は色ごとの位置に分けて表示します。</li>
-            <li>色のアルファベットは表示設定で切り替えられ、初期状態では非表示です。</li>
+            <li>盤面内の色アルファベットは表示設定で切り替えられ、初期状態では非表示です。</li>
             <li><kbd>T</kbd> で仮置きモードを切り替えます。</li>
             <li><kbd>Ctrl</kbd>＋<kbd>Z</kbd> でUndo、<kbd>Ctrl</kbd>＋<kbd>Shift</kbd>＋<kbd>Z</kbd> でRedoできます。</li>
           </ul>
@@ -135,8 +135,8 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-  <script src="puzzles.js?v=20260728-symbols-1"></script>
-  <script src="model.js?v=20260728-symbols-1"></script>
-  <script src="app.js?v=20260728-symbols-1"></script>
+  <script src="puzzles.js?v=20260728-symbols-2"></script>
+  <script src="model.js?v=20260728-symbols-2"></script>
+  <script src="app.js?v=20260728-symbols-2"></script>
 </body>
 </html>
