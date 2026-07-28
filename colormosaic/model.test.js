@@ -195,6 +195,45 @@ function puzzle(overrides = {}) {
     rows: 1,
     cols: 3,
     colors: ["R", "G", "B"],
+    fixed: [{ row: 1, col: 2, color: "R" }],
+    clues: [{ row: 1, col: 2, value: 1 }],
+  }), { autoFill: false });
+  Model.applyAction(game, {
+    type: "paint",
+    index: 0,
+    color: "R",
+    direct: true,
+  });
+  Model.applyAction(game, {
+    type: "toggle-x",
+    index: 2,
+    color: "R",
+  });
+  let clueState = Model.evaluateGame(game).clueStates.get(1);
+  assert.equal(clueState.status, "satisfied", "Xだけでも数字の成立は判定できる");
+  assert.equal(clueState.completed, false, "周囲が未着色なら完了表示にしない");
+
+  Model.applyAction(game, {
+    type: "paint",
+    index: 2,
+    color: "G",
+    tentative: true,
+    direct: true,
+  });
+  clueState = Model.evaluateGame(game).clueStates.get(1);
+  assert.equal(clueState.completed, false, "仮置き色は完了表示の着色に数えない");
+
+  Model.commitTentative(game);
+  clueState = Model.evaluateGame(game).clueStates.get(1);
+  assert.equal(clueState.status, "satisfied");
+  assert.equal(clueState.completed, true, "周囲が確定着色済みで数字も一致すれば完了");
+}
+
+{
+  const game = Model.createGame(puzzle({
+    rows: 1,
+    cols: 3,
+    colors: ["R", "G", "B"],
   }), { autoFill: false });
   Model.applyAction(game, {
     type: "cycle",

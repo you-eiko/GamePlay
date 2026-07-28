@@ -408,12 +408,16 @@
 
   function evaluateClue(game, clue) {
     const center = game.cells[cellIndex(game.puzzle, clue.row, clue.col)];
-    if (!center.color) return { status: "unknown-center", same: 0, possible: 0 };
+    if (!center.color) {
+      return { status: "unknown-center", same: 0, possible: 0, completed: false };
+    }
 
     let same = 0;
     let possible = 0;
+    let allNeighborsConfirmed = true;
     for (const index of neighbors(game.puzzle, clue.row, clue.col)) {
       const neighbor = game.cells[index];
+      if (!neighbor.color || neighbor.tentative) allNeighborsConfirmed = false;
       if (neighbor.color === center.color) same += 1;
       else if (
         !neighbor.color
@@ -421,14 +425,20 @@
         && !neighbor.tentativeExclusions.includes(center.color)
       ) possible += 1;
     }
+    const completed = !center.tentative && allNeighborsConfirmed && same === clue.value;
 
     if (same > clue.value || same + possible < clue.value) {
-      return { status: "impossible", same, possible };
+      return { status: "impossible", same, possible, completed: false };
     }
     if (possible === 0) {
-      return { status: same === clue.value ? "satisfied" : "impossible", same, possible };
+      return {
+        status: same === clue.value ? "satisfied" : "impossible",
+        same,
+        possible,
+        completed,
+      };
     }
-    return { status: "pending", same, possible };
+    return { status: "pending", same, possible, completed: false };
   }
 
   function evaluateGame(game) {

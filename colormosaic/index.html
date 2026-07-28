@@ -27,6 +27,13 @@
         <select id="puzzle-select"></select>
         <div id="puzzle-meta" class="puzzle-meta"></div>
         <p id="color-mode-note" class="color-mode-note" aria-live="polite"></p>
+        <label class="auto-option display-option">
+          <input id="show-color-symbols" type="checkbox">
+          <span>
+            <strong>色のアルファベットを表示</strong>
+            <small>盤面と色選択に B・R・G・Y を表示</small>
+          </span>
+        </label>
       </section>
 
       <section class="panel-section desktop-input-controls">
@@ -78,6 +85,7 @@
             <li>仮置きモードでは「着色 → × → なし」を繰り返し、色と×は確定情報と区別して表示します。</li>
             <li>「全確定」で仮置きの色と×をまとめて確定し、「全消去」で仮置きだけを消せます。</li>
             <li id="x-slot-help">色別の×は色ごとの位置に分けて表示します。</li>
+            <li>色のアルファベットは表示設定で切り替えられ、初期状態では非表示です。</li>
             <li><kbd>T</kbd> で仮置きモードを切り替えます。</li>
             <li><kbd>Ctrl</kbd>＋<kbd>Z</kbd> でUndo、<kbd>Ctrl</kbd>＋<kbd>Shift</kbd>＋<kbd>Z</kbd> でRedoできます。</li>
           </ul>

@@ -53,6 +53,7 @@
     tentativeCommitButtons: [...document.querySelectorAll("[data-tentative-commit]")],
     tentativeDiscardButtons: [...document.querySelectorAll("[data-tentative-discard]")],
     mobileSelectedLabel: document.querySelector(".mobile-selected-label"),
+    showColorSymbols: document.querySelector("#show-color-symbols"),
     autoFill: document.querySelector("#auto-fill"),
     undoButtons: [...document.querySelectorAll("[data-undo]")],
     redoButtons: [...document.querySelectorAll("[data-redo]")],
@@ -146,12 +147,18 @@
         button.setAttribute("aria-label", `${meta.name}を選択`);
         button.style.setProperty("--cell-color", meta.hex);
         button.style.setProperty("--cell-text", meta.text);
-        button.innerHTML = `<span class="color-dot">${color}</span>`;
+        button.innerHTML = `<span class="color-dot" aria-hidden="true"><span class="color-code">${color}</span></span>`;
         button.addEventListener("click", () => selectColor(color));
         palette.append(button);
       }
     });
     selectColor(game.puzzle.colors.includes(selectedColor) ? selectedColor : game.puzzle.colors[0]);
+  }
+
+  function setColorSymbolVisibility(visible) {
+    const enabled = Boolean(visible);
+    elements.showColorSymbols.checked = enabled;
+    document.body.classList.toggle("show-color-codes", enabled);
   }
 
   function applyColorModeUI() {
@@ -460,27 +467,26 @@
         button.classList.add("can-exclude-neighbors");
         button.title = `長押しで周囲の未着色マスに${colorName}の×を付ける`;
       }
-      if (evaluation.clueStates.get(index)?.status === "impossible") {
+      const clueState = evaluation.clueStates.get(index);
+      if (clueState?.status === "impossible") {
         button.classList.add("is-impossible");
       }
+      if (clueState?.completed) button.classList.add("is-clue-complete");
 
       if (clue) {
         const number = document.createElement("span");
         number.className = "clue-number";
         number.textContent = String(clue.value);
         button.append(number);
-      } else if (cell.color) {
-        const symbol = document.createElement("span");
-        symbol.className = "color-symbol";
-        symbol.textContent = cell.color;
-        button.append(symbol);
       }
 
-      if (cell.color || cell.fixed) {
-        const label = document.createElement("span");
-        label.className = "fixed-label";
-        label.textContent = `${cell.color || "?"}${cell.fixed ? "◆" : ""}`;
-        button.append(label);
+      if (cell.color) {
+        const code = document.createElement("span");
+        code.className = "cell-color-code color-code";
+        code.dataset.slot = xSlot(cell.color);
+        code.textContent = cell.color;
+        code.setAttribute("aria-hidden", "true");
+        button.append(code);
       }
 
       if (cell.tentative) {
@@ -601,6 +607,9 @@
       if (filled.length) showToast(`${filled.length}マスを残りの色で塗りました。`);
       render();
     });
+    elements.showColorSymbols.addEventListener("change", () => {
+      setColorSymbolVisibility(elements.showColorSymbols.checked);
+    });
     elements.undoButtons.forEach((button) => {
       button.addEventListener("click", () => {
         if (Model.undo(game)) render();
@@ -641,6 +650,7 @@
       }
     });
 
+    setColorSymbolVisibility(false);
     loadPuzzle(visiblePuzzles[0].id);
   }
 
