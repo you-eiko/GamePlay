@@ -484,4 +484,29 @@ function puzzle(overrides = {}) {
   }
 }
 
+{
+  const largeFourColorPuzzles = PuzzleData.puzzles.filter((item) => (
+    /^PLAY-(?:8X8|9X9)-4C-/.test(item.id)
+  ));
+  assert.equal(largeFourColorPuzzles.length, 12, "8×8・9×9の4色盤面を12盤収録");
+  for (const size of [8, 9]) {
+    const sized = largeFourColorPuzzles.filter((item) => item.rows === size && item.cols === size);
+    assert.equal(sized.length, 6, `${size}×${size}の4色盤面を6盤収録`);
+    assert.deepEqual(
+      Object.fromEntries(["BEGINNER", "INTERMEDIATE", "ADVANCED"].map((tier) => [
+        tier,
+        sized.filter((item) => item.solver_tier === tier).length,
+      ])),
+      { BEGINNER: 2, INTERMEDIATE: 2, ADVANCED: 2 },
+      `${size}×${size}は初級・中級・上級を各2盤収録`,
+    );
+    for (const item of sized) {
+      assert.deepEqual(item.colors, ["R", "G", "B", "Y"]);
+      assert.equal(Model.createGame(item).cells.length, size * size);
+      assert.equal(item.generation.uniqueness_basis, "sound-branch-free-completion");
+      assert.match(item.generation.canonical_signature_sha256, /^[0-9a-f]{64}$/);
+    }
+  }
+}
+
 console.log("ColorMosaic model and puzzle data tests passed.");

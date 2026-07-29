@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#19333f">
   <title>ColorMosaic | GamePlay</title>
-  <link rel="stylesheet" href="styles.css?v=20260728-symbols-2">
+  <link rel="stylesheet" href="styles.css?v=20260729-puzzle-browser-1">
 </head>
 <body>
   <header class="site-header">
@@ -23,8 +23,26 @@
   <main class="app-shell">
     <aside class="control-panel" aria-label="ゲーム設定と操作">
       <section class="panel-section setup-section">
-        <label class="field-label" for="puzzle-select">問題</label>
-        <select id="puzzle-select"></select>
+        <div class="puzzle-browser-header">
+          <label class="field-label" for="puzzle-select">問題</label>
+          <span id="puzzle-count" class="puzzle-count" aria-live="polite"></span>
+        </div>
+        <div class="puzzle-filter-grid" aria-label="問題の絞り込み">
+          <label class="puzzle-filter-field">
+            <span>盤面</span>
+            <select id="puzzle-group-filter" aria-label="盤面サイズと色数で絞り込む"></select>
+          </label>
+          <label class="puzzle-filter-field">
+            <span>難易度</span>
+            <select id="puzzle-difficulty-filter" aria-label="難易度で絞り込む"></select>
+          </label>
+        </div>
+        <div class="puzzle-select-row">
+          <button id="previous-puzzle" class="puzzle-nav-button" type="button" aria-label="前の問題">‹</button>
+          <select id="puzzle-select" aria-label="遊ぶ問題"></select>
+          <button id="next-puzzle" class="puzzle-nav-button" type="button" aria-label="次の問題">›</button>
+        </div>
+        <p id="puzzle-title" class="puzzle-title"></p>
         <div id="puzzle-meta" class="puzzle-meta"></div>
         <p id="color-mode-note" class="color-mode-note" aria-live="polite"></p>
         <label class="auto-option display-option">
@@ -135,8 +153,8 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-  <script src="puzzles.js?v=20260728-symbols-2"></script>
-  <script src="model.js?v=20260728-symbols-2"></script>
-  <script src="app.js?v=20260728-symbols-2"></script>
+  <script src="puzzles.js?v=20260729-puzzle-browser-1"></script>
+  <script src="model.js?v=20260729-puzzle-browser-1"></script>
+  <script src="app.js?v=20260729-puzzle-browser-1"></script>
 </body>
 </html>

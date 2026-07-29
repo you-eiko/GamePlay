@@ -43,6 +43,12 @@
 
   const elements = {
     puzzleSelect: document.querySelector("#puzzle-select"),
+    puzzleGroupFilter: document.querySelector("#puzzle-group-filter"),
+    puzzleDifficultyFilter: document.querySelector("#puzzle-difficulty-filter"),
+    puzzleCount: document.querySelector("#puzzle-count"),
+    puzzleTitle: document.querySelector("#puzzle-title"),
+    previousPuzzle: document.querySelector("#previous-puzzle"),
+    nextPuzzle: document.querySelector("#next-puzzle"),
     puzzleMeta: document.querySelector("#puzzle-meta"),
     colorModeNote: document.querySelector("#color-mode-note"),
     exclusionTargetLabels: [...document.querySelectorAll("[data-exclusion-target]")],
@@ -70,6 +76,160 @@
   let tentativeMode = false;
   let toastTimer = null;
   let suppressedTap = { index: -1, until: 0 };
+
+  const DIFFICULTY_ORDER = ["初級", "中級", "上級", "人間解答範囲外"];
+
+  function puzzleGroup(puzzle) {
+    if (puzzle.rows <= 3 && puzzle.cols <= 3) {
+      return { key: "calibration", label: "短いルール確認", rank: 9_999 };
+    }
+    const colorCount = puzzle.colors.length;
+    return {
+      key: `${puzzle.rows}x${puzzle.cols}-${colorCount}c`,
+      label: `${puzzle.rows}×${puzzle.cols}・${colorCount}色`,
+      rank: (colorCount === 4 ? 0 : 1_000) - (puzzle.rows * puzzle.cols),
+    };
+  }
+
+  function puzzleGroups() {
+    const groups = new Map();
+    for (const puzzle of visiblePuzzles) {
+      const group = puzzleGroup(puzzle);
+      if (!groups.has(group.key)) groups.set(group.key, { ...group, count: 0 });
+      groups.get(group.key).count += 1;
+    }
+    return [...groups.values()].sort((left, right) => (
+      left.rank - right.rank || left.label.localeCompare(right.label, "ja")
+    ));
+  }
+
+  function filteredPuzzles() {
+    const groupKey = elements.puzzleGroupFilter.value;
+    const difficulty = elements.puzzleDifficultyFilter.value;
+    return visiblePuzzles.filter((puzzle) => (
+      (groupKey === "all" || puzzleGroup(puzzle).key === groupKey)
+      && (difficulty === "all" || puzzle.difficulty === difficulty)
+    ));
+  }
+
+  function updateDifficultyOptions() {
+    const groupKey = elements.puzzleGroupFilter.value;
+    const groupMembers = visiblePuzzles.filter((puzzle) => (
+      groupKey === "all" || puzzleGroup(puzzle).key === groupKey
+    ));
+    for (const option of elements.puzzleDifficultyFilter.options) {
+      const count = option.value === "all"
+        ? groupMembers.length
+        : groupMembers.filter((puzzle) => puzzle.difficulty === option.value).length;
+      option.textContent = option.value === "all"
+        ? `すべて（${count}問）`
+        : `${option.value}（${count}問）`;
+      option.disabled = count === 0;
+    }
+    if (elements.puzzleDifficultyFilter.selectedOptions[0]?.disabled) {
+      elements.puzzleDifficultyFilter.value = "all";
+    }
+  }
+
+  function puzzleOption(puzzle) {
+    const option = document.createElement("option");
+    option.value = puzzle.id;
+    const difficulty = puzzle.difficulty ? `${puzzle.difficulty}｜` : "";
+    option.textContent = `${difficulty}${puzzle.title}`;
+    option.title = puzzle.id;
+    return option;
+  }
+
+  function renderPuzzleOptions(loadFirstWhenChanged = false) {
+    const puzzles = filteredPuzzles();
+    const currentId = game?.puzzle.id || elements.puzzleSelect.value;
+    elements.puzzleSelect.replaceChildren();
+
+    if (elements.puzzleGroupFilter.value === "all") {
+      for (const group of puzzleGroups()) {
+        const members = puzzles.filter((puzzle) => puzzleGroup(puzzle).key === group.key);
+        if (members.length === 0) continue;
+        const optionGroup = document.createElement("optgroup");
+        optionGroup.label = `${group.label}（${members.length}問）`;
+        members.forEach((puzzle) => optionGroup.append(puzzleOption(puzzle)));
+        elements.puzzleSelect.append(optionGroup);
+      }
+    } else {
+      puzzles.forEach((puzzle) => elements.puzzleSelect.append(puzzleOption(puzzle)));
+    }
+
+    const nextId = puzzles.some((puzzle) => puzzle.id === currentId)
+      ? currentId
+      : puzzles[0]?.id;
+    if (nextId) elements.puzzleSelect.value = nextId;
+    elements.puzzleCount.textContent = `${puzzles.length} / 全${visiblePuzzles.length}問`;
+    elements.previousPuzzle.disabled = puzzles.length <= 1;
+    elements.nextPuzzle.disabled = puzzles.length <= 1;
+
+    if (loadFirstWhenChanged && nextId && nextId !== game?.puzzle.id) {
+      loadPuzzle(nextId);
+    }
+    return puzzles;
+  }
+
+  function initializePuzzleBrowser() {
+    const allGroups = document.createElement("option");
+    allGroups.value = "all";
+    allGroups.textContent = `すべて（${visiblePuzzles.length}問）`;
+    elements.puzzleGroupFilter.append(allGroups);
+    for (const group of puzzleGroups()) {
+      const option = document.createElement("option");
+      option.value = group.key;
+      option.textContent = `${group.label}（${group.count}問）`;
+      elements.puzzleGroupFilter.append(option);
+    }
+
+    const allDifficulties = document.createElement("option");
+    allDifficulties.value = "all";
+    allDifficulties.textContent = "すべて";
+    elements.puzzleDifficultyFilter.append(allDifficulties);
+    for (const difficulty of DIFFICULTY_ORDER) {
+      const count = visiblePuzzles.filter((puzzle) => puzzle.difficulty === difficulty).length;
+      if (count === 0) continue;
+      const option = document.createElement("option");
+      option.value = difficulty;
+      option.textContent = `${difficulty}（${count}問）`;
+      elements.puzzleDifficultyFilter.append(option);
+    }
+    updateDifficultyOptions();
+    renderPuzzleOptions();
+  }
+
+  function movePuzzle(offset) {
+    const puzzles = filteredPuzzles();
+    if (puzzles.length <= 1) return;
+    const currentIndex = Math.max(
+      0,
+      puzzles.findIndex((puzzle) => puzzle.id === elements.puzzleSelect.value),
+    );
+    const nextIndex = (currentIndex + offset + puzzles.length) % puzzles.length;
+    elements.puzzleSelect.value = puzzles[nextIndex].id;
+    loadPuzzle(puzzles[nextIndex].id);
+  }
+
+  function requestedPuzzle() {
+    try {
+      const id = new URL(window.location.href).searchParams.get("puzzle");
+      return visiblePuzzles.find((puzzle) => puzzle.id === id) || null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function rememberPuzzle(id) {
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set("puzzle", id);
+      window.history.replaceState(null, "", url);
+    } catch (_) {
+      // file://で履歴APIが制限される環境でも、プレイ自体は継続する。
+    }
+  }
 
   function colorMeta(color) {
     return COLOR_META[color] || { name: color, hex: "#6f7c85", text: "#ffffff" };
@@ -168,6 +328,7 @@
     const colorNames = colors.map((color) => colorMeta(color).name);
 
     document.body.dataset.colorCount = String(colorCount);
+    document.body.dataset.boardSize = String(Math.max(game.puzzle.rows, game.puzzle.cols));
     elements.colorModeNote.textContent = `${colorCount}色モード：${colorNames.join("・")}。${exclusionTarget}色の×で残り1色を確定できます。`;
     elements.exclusionTargetLabels.forEach((label) => {
       label.textContent = String(exclusionTarget);
@@ -549,6 +710,8 @@
 
   function renderMeta() {
     const puzzle = game.puzzle;
+    elements.puzzleTitle.textContent = puzzle.title;
+    elements.puzzleTitle.title = puzzle.id;
     elements.puzzleMeta.innerHTML = [
       puzzle.difficulty ? `難易度 ${puzzle.difficulty}` : null,
       `${puzzle.rows}×${puzzle.cols}`,
@@ -576,6 +739,8 @@
 
   function loadPuzzle(id) {
     const puzzle = visiblePuzzles.find((item) => item.id === id) || visiblePuzzles[0];
+    elements.puzzleSelect.value = puzzle.id;
+    rememberPuzzle(puzzle.id);
     game = Model.createGame(puzzle, { autoFill: elements.autoFill.checked });
     applyColorModeUI();
     renderPalette();
@@ -584,15 +749,15 @@
   }
 
   function initialize() {
-    for (const puzzle of visiblePuzzles) {
-      const option = document.createElement("option");
-      option.value = puzzle.id;
-      const difficulty = puzzle.difficulty ? `［${puzzle.difficulty}］` : "";
-      option.textContent = `${puzzle.id}　${difficulty}${puzzle.title}`;
-      elements.puzzleSelect.append(option);
-    }
-
+    initializePuzzleBrowser();
     elements.puzzleSelect.addEventListener("change", () => loadPuzzle(elements.puzzleSelect.value));
+    elements.puzzleGroupFilter.addEventListener("change", () => {
+      updateDifficultyOptions();
+      renderPuzzleOptions(true);
+    });
+    elements.puzzleDifficultyFilter.addEventListener("change", () => renderPuzzleOptions(true));
+    elements.previousPuzzle.addEventListener("click", () => movePuzzle(-1));
+    elements.nextPuzzle.addEventListener("click", () => movePuzzle(1));
     elements.tentativeButtons.forEach((button) => {
       button.addEventListener("click", () => setTentativeMode(!tentativeMode, true));
     });
@@ -651,7 +816,14 @@
     });
 
     setColorSymbolVisibility(false);
-    loadPuzzle(visiblePuzzles[0].id);
+    const requested = requestedPuzzle();
+    if (requested) {
+      elements.puzzleGroupFilter.value = puzzleGroup(requested).key;
+      elements.puzzleDifficultyFilter.value = requested.difficulty || "all";
+      updateDifficultyOptions();
+      renderPuzzleOptions();
+    }
+    loadPuzzle(requested?.id || visiblePuzzles[0].id);
   }
 
   initialize();
