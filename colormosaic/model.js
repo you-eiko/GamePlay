@@ -414,10 +414,12 @@
 
     let same = 0;
     let possible = 0;
-    let allNeighborsConfirmed = true;
+    let allNeighborRelationsConfirmed = true;
     for (const index of neighbors(game.puzzle, clue.row, clue.col)) {
       const neighbor = game.cells[index];
-      if (!neighbor.color || neighbor.tentative) allNeighborsConfirmed = false;
+      const relationConfirmed = (neighbor.color && !neighbor.tentative)
+        || neighbor.exclusions.includes(center.color);
+      if (!relationConfirmed) allNeighborRelationsConfirmed = false;
       if (neighbor.color === center.color) same += 1;
       else if (
         !neighbor.color
@@ -425,7 +427,9 @@
         && !neighbor.tentativeExclusions.includes(center.color)
       ) possible += 1;
     }
-    const completed = !center.tentative && allNeighborsConfirmed && same === clue.value;
+    const completed = !center.tentative
+      && allNeighborRelationsConfirmed
+      && same === clue.value;
 
     if (same > clue.value || same + possible < clue.value) {
       return { status: "impossible", same, possible, completed: false };

@@ -211,22 +211,70 @@ function puzzle(overrides = {}) {
   });
   let clueState = Model.evaluateGame(game).clueStates.get(1);
   assert.equal(clueState.status, "satisfied", "Xだけでも数字の成立は判定できる");
-  assert.equal(clueState.completed, false, "周囲が未着色なら完了表示にしない");
+  assert.equal(clueState.completed, true, "数字と同色の確定Xは別色の確定着色を代用する");
+}
 
+{
+  const game = Model.createGame(puzzle({
+    rows: 1,
+    cols: 3,
+    colors: ["R", "G", "B"],
+    fixed: [{ row: 1, col: 2, color: "R" }],
+    clues: [{ row: 1, col: 2, value: 1 }],
+  }), { autoFill: false });
   Model.applyAction(game, {
     type: "paint",
-    index: 2,
-    color: "G",
-    tentative: true,
+    index: 0,
+    color: "R",
     direct: true,
   });
+  Model.applyAction(game, {
+    type: "exclude",
+    index: 2,
+    color: "G",
+  });
+  let clueState = Model.evaluateGame(game).clueStates.get(1);
+  assert.equal(clueState.status, "pending", "別色のXでは数字の色を否定できない");
+  assert.equal(clueState.completed, false, "別色のXは完了表示に使わない");
+
+  Model.applyAction(game, {
+    type: "exclude",
+    index: 2,
+    color: "R",
+    tentative: true,
+  });
   clueState = Model.evaluateGame(game).clueStates.get(1);
-  assert.equal(clueState.completed, false, "仮置き色は完了表示の着色に数えない");
+  assert.equal(clueState.status, "satisfied", "仮置きXは数字検討には反映する");
+  assert.equal(clueState.completed, false, "仮置きXは完了表示に使わない");
 
   Model.commitTentative(game);
   clueState = Model.evaluateGame(game).clueStates.get(1);
   assert.equal(clueState.status, "satisfied");
-  assert.equal(clueState.completed, true, "周囲が確定着色済みで数字も一致すれば完了");
+  assert.equal(clueState.completed, true, "仮置きXを確定すると完了表示に使う");
+}
+
+{
+  const game = Model.createGame(puzzle({
+    rows: 1,
+    cols: 3,
+    colors: ["R", "G", "B"],
+    fixed: [{ row: 1, col: 2, color: "R" }],
+    clues: [{ row: 1, col: 2, value: 0 }],
+  }), { autoFill: false });
+  Model.applyAction(game, {
+    type: "paint",
+    index: 0,
+    color: "R",
+    direct: true,
+  });
+  Model.applyAction(game, {
+    type: "toggle-x",
+    index: 2,
+    color: "R",
+  });
+  const clueState = Model.evaluateGame(game).clueStates.get(1);
+  assert.equal(clueState.status, "impossible");
+  assert.equal(clueState.completed, false, "周囲が確定しても数字が不一致なら完了表示にしない");
 }
 
 {
