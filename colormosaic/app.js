@@ -9,7 +9,8 @@
   }
 
   const visiblePuzzles = puzzleData.puzzles.filter((puzzle) => (
-    !/^P[1-5]$/.test(puzzle.id)
+    puzzle.playtest !== false
+    && !/^P[1-5]$/.test(puzzle.id)
     && !/^PLAY-6X6-(?:BEGINNER|INTERMEDIATE|ADVANCED)-/.test(puzzle.id)
   ));
   if (visiblePuzzles.length === 0) {

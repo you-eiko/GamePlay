@@ -5923,8 +5923,1332 @@
       "formal_review_candidate": true
     },
     {
+      "id": "EXTRA-ROWCOL-3C-6X6-BEGINNER-01",
+      "title": "Extra 各行・各列に全色 3色 6×6 初級",
+      "difficulty": "初級",
+      "solver_tier": "BEGINNER",
+      "playtest": true,
+      "extra": true,
+      "extra_rules": [
+        "row_col_all_colors"
+      ],
+      "extra_rule_label": "各行・各列に全色",
+      "rows": 6,
+      "cols": 6,
+      "colors": [
+        "R",
+        "G",
+        "B"
+      ],
+      "fixed": [
+        {
+          "row": 1,
+          "col": 2,
+          "color": "R"
+        },
+        {
+          "row": 1,
+          "col": 5,
+          "color": "G"
+        },
+        {
+          "row": 1,
+          "col": 6,
+          "color": "B"
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "color": "B"
+        },
+        {
+          "row": 2,
+          "col": 5,
+          "color": "R"
+        },
+        {
+          "row": 2,
+          "col": 6,
+          "color": "G"
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "color": "G"
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "color": "R"
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "color": "G"
+        },
+        {
+          "row": 5,
+          "col": 2,
+          "color": "B"
+        },
+        {
+          "row": 5,
+          "col": 3,
+          "color": "R"
+        },
+        {
+          "row": 5,
+          "col": 4,
+          "color": "G"
+        },
+        {
+          "row": 5,
+          "col": 6,
+          "color": "R"
+        },
+        {
+          "row": 6,
+          "col": 2,
+          "color": "G"
+        },
+        {
+          "row": 6,
+          "col": 4,
+          "color": "G"
+        },
+        {
+          "row": 6,
+          "col": 5,
+          "color": "R"
+        }
+      ],
+      "clues": [
+        {
+          "row": 1,
+          "col": 2,
+          "value": 2
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "value": 3
+        },
+        {
+          "row": 1,
+          "col": 5,
+          "value": 2
+        },
+        {
+          "row": 1,
+          "col": 6,
+          "value": 0
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "value": 3
+        },
+        {
+          "row": 2,
+          "col": 6,
+          "value": 2
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "value": 1
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "value": 3
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "value": 2
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "value": 2
+        },
+        {
+          "row": 4,
+          "col": 5,
+          "value": 2
+        },
+        {
+          "row": 5,
+          "col": 2,
+          "value": 2
+        },
+        {
+          "row": 5,
+          "col": 3,
+          "value": 3
+        },
+        {
+          "row": 5,
+          "col": 4,
+          "value": 2
+        },
+        {
+          "row": 5,
+          "col": 5,
+          "value": 1
+        },
+        {
+          "row": 5,
+          "col": 6,
+          "value": 1
+        },
+        {
+          "row": 6,
+          "col": 2,
+          "value": 1
+        }
+      ],
+      "first_hint": "行6で未登場の青を置けるのは(6,1)だけです。"
+    },
+    {
+      "id": "EXTRA-ROWCOL-3C-6X6-INTERMEDIATE-01",
+      "title": "Extra 各行・各列に全色 3色 6×6 中級",
+      "difficulty": "中級",
+      "solver_tier": "INTERMEDIATE",
+      "playtest": true,
+      "extra": true,
+      "extra_rules": [
+        "row_col_all_colors"
+      ],
+      "extra_rule_label": "各行・各列に全色",
+      "rows": 6,
+      "cols": 6,
+      "colors": [
+        "R",
+        "G",
+        "B"
+      ],
+      "fixed": [
+        {
+          "row": 1,
+          "col": 1,
+          "color": "R"
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "color": "R"
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "color": "B"
+        },
+        {
+          "row": 5,
+          "col": 5,
+          "color": "G"
+        },
+        {
+          "row": 6,
+          "col": 1,
+          "color": "B"
+        },
+        {
+          "row": 6,
+          "col": 3,
+          "color": "B"
+        },
+        {
+          "row": 6,
+          "col": 5,
+          "color": "B"
+        }
+      ],
+      "clues": [
+        {
+          "row": 1,
+          "col": 1,
+          "value": 1
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "value": 1
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "value": 1
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "value": 1
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "value": 3
+        },
+        {
+          "row": 2,
+          "col": 5,
+          "value": 3
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "value": 2
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "value": 3
+        },
+        {
+          "row": 3,
+          "col": 5,
+          "value": 0
+        },
+        {
+          "row": 3,
+          "col": 6,
+          "value": 3
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "value": 0
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "value": 3
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "value": 3
+        },
+        {
+          "row": 4,
+          "col": 5,
+          "value": 5
+        },
+        {
+          "row": 5,
+          "col": 2,
+          "value": 1
+        },
+        {
+          "row": 5,
+          "col": 3,
+          "value": 2
+        },
+        {
+          "row": 5,
+          "col": 4,
+          "value": 0
+        },
+        {
+          "row": 5,
+          "col": 6,
+          "value": 1
+        },
+        {
+          "row": 6,
+          "col": 6,
+          "value": 0
+        }
+      ],
+      "first_hint": "行4で未登場の赤を置けるのは(4,1)だけです。"
+    },
+    {
+      "id": "EXTRA-ROWCOL-3C-6X6-ADVANCED-01",
+      "title": "Extra 各行・各列に全色 3色 6×6 上級",
+      "difficulty": "上級",
+      "solver_tier": "ADVANCED",
+      "playtest": true,
+      "extra": true,
+      "extra_rules": [
+        "row_col_all_colors"
+      ],
+      "extra_rule_label": "各行・各列に全色",
+      "rows": 6,
+      "cols": 6,
+      "colors": [
+        "R",
+        "G",
+        "B"
+      ],
+      "fixed": [
+        {
+          "row": 4,
+          "col": 2,
+          "color": "G"
+        },
+        {
+          "row": 5,
+          "col": 2,
+          "color": "R"
+        }
+      ],
+      "clues": [
+        {
+          "row": 1,
+          "col": 1,
+          "value": 1
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "value": 1
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "value": 2
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "value": 0
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "value": 1
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "value": 0
+        },
+        {
+          "row": 2,
+          "col": 6,
+          "value": 1
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "value": 6
+        },
+        {
+          "row": 3,
+          "col": 6,
+          "value": 2
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "value": 1
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "value": 5
+        },
+        {
+          "row": 4,
+          "col": 5,
+          "value": 5
+        },
+        {
+          "row": 4,
+          "col": 6,
+          "value": 1
+        },
+        {
+          "row": 5,
+          "col": 3,
+          "value": 3
+        },
+        {
+          "row": 5,
+          "col": 5,
+          "value": 4
+        },
+        {
+          "row": 6,
+          "col": 1,
+          "value": 2
+        },
+        {
+          "row": 6,
+          "col": 2,
+          "value": 1
+        },
+        {
+          "row": 6,
+          "col": 3,
+          "value": 1
+        },
+        {
+          "row": 6,
+          "col": 4,
+          "value": 2
+        },
+        {
+          "row": 6,
+          "col": 6,
+          "value": 1
+        }
+      ],
+      "first_hint": "行1には青が未登場なので、候補[(1,1), (1,2), (1,3), (1,4), (1,5), (1,6)]の少なくとも一マスが青です。"
+    },
+    {
+      "id": "EXTRA-ROWCOL-3C-8X8-BEGINNER-01",
+      "title": "Extra 各行・各列に全色 3色 8×8 初級",
+      "difficulty": "初級",
+      "solver_tier": "BEGINNER",
+      "playtest": true,
+      "extra": true,
+      "extra_rules": [
+        "row_col_all_colors"
+      ],
+      "extra_rule_label": "各行・各列に全色",
+      "rows": 8,
+      "cols": 8,
+      "colors": [
+        "R",
+        "G",
+        "B"
+      ],
+      "fixed": [
+        {
+          "row": 1,
+          "col": 1,
+          "color": "R"
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "color": "G"
+        },
+        {
+          "row": 1,
+          "col": 7,
+          "color": "R"
+        },
+        {
+          "row": 1,
+          "col": 8,
+          "color": "B"
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "color": "R"
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "color": "G"
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "color": "G"
+        },
+        {
+          "row": 2,
+          "col": 5,
+          "color": "R"
+        },
+        {
+          "row": 2,
+          "col": 7,
+          "color": "B"
+        },
+        {
+          "row": 2,
+          "col": 8,
+          "color": "G"
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "color": "R"
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "color": "R"
+        },
+        {
+          "row": 3,
+          "col": 7,
+          "color": "G"
+        },
+        {
+          "row": 3,
+          "col": 8,
+          "color": "B"
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "color": "G"
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "color": "R"
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "color": "G"
+        },
+        {
+          "row": 4,
+          "col": 6,
+          "color": "R"
+        },
+        {
+          "row": 4,
+          "col": 7,
+          "color": "B"
+        },
+        {
+          "row": 4,
+          "col": 8,
+          "color": "G"
+        },
+        {
+          "row": 5,
+          "col": 1,
+          "color": "G"
+        },
+        {
+          "row": 5,
+          "col": 2,
+          "color": "G"
+        },
+        {
+          "row": 5,
+          "col": 5,
+          "color": "R"
+        },
+        {
+          "row": 5,
+          "col": 7,
+          "color": "R"
+        },
+        {
+          "row": 5,
+          "col": 8,
+          "color": "B"
+        },
+        {
+          "row": 6,
+          "col": 4,
+          "color": "G"
+        },
+        {
+          "row": 6,
+          "col": 5,
+          "color": "R"
+        },
+        {
+          "row": 6,
+          "col": 7,
+          "color": "G"
+        },
+        {
+          "row": 6,
+          "col": 8,
+          "color": "R"
+        },
+        {
+          "row": 7,
+          "col": 1,
+          "color": "R"
+        },
+        {
+          "row": 7,
+          "col": 3,
+          "color": "R"
+        },
+        {
+          "row": 7,
+          "col": 6,
+          "color": "B"
+        },
+        {
+          "row": 7,
+          "col": 7,
+          "color": "R"
+        },
+        {
+          "row": 8,
+          "col": 1,
+          "color": "R"
+        },
+        {
+          "row": 8,
+          "col": 3,
+          "color": "G"
+        },
+        {
+          "row": 8,
+          "col": 4,
+          "color": "G"
+        },
+        {
+          "row": 8,
+          "col": 5,
+          "color": "B"
+        },
+        {
+          "row": 8,
+          "col": 6,
+          "color": "G"
+        },
+        {
+          "row": 8,
+          "col": 8,
+          "color": "G"
+        }
+      ],
+      "clues": [
+        {
+          "row": 1,
+          "col": 4,
+          "value": 2
+        },
+        {
+          "row": 1,
+          "col": 6,
+          "value": 2
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "value": 3
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "value": 1
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "value": 1
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "value": 3
+        },
+        {
+          "row": 3,
+          "col": 5,
+          "value": 1
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "value": 4
+        },
+        {
+          "row": 4,
+          "col": 5,
+          "value": 3
+        },
+        {
+          "row": 5,
+          "col": 1,
+          "value": 3
+        },
+        {
+          "row": 5,
+          "col": 3,
+          "value": 5
+        },
+        {
+          "row": 5,
+          "col": 6,
+          "value": 1
+        },
+        {
+          "row": 6,
+          "col": 3,
+          "value": 2
+        },
+        {
+          "row": 6,
+          "col": 6,
+          "value": 4
+        },
+        {
+          "row": 6,
+          "col": 8,
+          "value": 2
+        },
+        {
+          "row": 7,
+          "col": 4,
+          "value": 2
+        },
+        {
+          "row": 7,
+          "col": 6,
+          "value": 1
+        },
+        {
+          "row": 7,
+          "col": 8,
+          "value": 2
+        },
+        {
+          "row": 8,
+          "col": 2,
+          "value": 1
+        },
+        {
+          "row": 8,
+          "col": 3,
+          "value": 1
+        },
+        {
+          "row": 8,
+          "col": 5,
+          "value": 2
+        }
+      ],
+      "first_hint": "列1で未登場の青を置けるのは(3,1)だけです。"
+    },
+    {
+      "id": "EXTRA-ROWCOL-3C-8X8-INTERMEDIATE-01",
+      "title": "Extra 各行・各列に全色 3色 8×8 中級",
+      "difficulty": "中級",
+      "solver_tier": "INTERMEDIATE",
+      "playtest": true,
+      "extra": true,
+      "extra_rules": [
+        "row_col_all_colors"
+      ],
+      "extra_rule_label": "各行・各列に全色",
+      "rows": 8,
+      "cols": 8,
+      "colors": [
+        "R",
+        "G",
+        "B"
+      ],
+      "fixed": [
+        {
+          "row": 1,
+          "col": 6,
+          "color": "G"
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "color": "R"
+        },
+        {
+          "row": 2,
+          "col": 8,
+          "color": "G"
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "color": "R"
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "color": "B"
+        },
+        {
+          "row": 3,
+          "col": 8,
+          "color": "R"
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "color": "R"
+        },
+        {
+          "row": 4,
+          "col": 8,
+          "color": "G"
+        },
+        {
+          "row": 5,
+          "col": 2,
+          "color": "G"
+        },
+        {
+          "row": 5,
+          "col": 4,
+          "color": "R"
+        },
+        {
+          "row": 6,
+          "col": 5,
+          "color": "G"
+        },
+        {
+          "row": 7,
+          "col": 1,
+          "color": "B"
+        },
+        {
+          "row": 7,
+          "col": 2,
+          "color": "R"
+        },
+        {
+          "row": 8,
+          "col": 4,
+          "color": "G"
+        },
+        {
+          "row": 8,
+          "col": 7,
+          "color": "G"
+        }
+      ],
+      "clues": [
+        {
+          "row": 1,
+          "col": 3,
+          "value": 3
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "value": 1
+        },
+        {
+          "row": 2,
+          "col": 6,
+          "value": 6
+        },
+        {
+          "row": 2,
+          "col": 8,
+          "value": 2
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "value": 1
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "value": 0
+        },
+        {
+          "row": 3,
+          "col": 6,
+          "value": 6
+        },
+        {
+          "row": 3,
+          "col": 8,
+          "value": 3
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "value": 2
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "value": 2
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "value": 1
+        },
+        {
+          "row": 4,
+          "col": 6,
+          "value": 2
+        },
+        {
+          "row": 4,
+          "col": 7,
+          "value": 5
+        },
+        {
+          "row": 5,
+          "col": 1,
+          "value": 1
+        },
+        {
+          "row": 5,
+          "col": 4,
+          "value": 3
+        },
+        {
+          "row": 5,
+          "col": 5,
+          "value": 4
+        },
+        {
+          "row": 5,
+          "col": 8,
+          "value": 2
+        },
+        {
+          "row": 6,
+          "col": 1,
+          "value": 2
+        },
+        {
+          "row": 6,
+          "col": 2,
+          "value": 2
+        },
+        {
+          "row": 6,
+          "col": 3,
+          "value": 3
+        },
+        {
+          "row": 6,
+          "col": 5,
+          "value": 1
+        },
+        {
+          "row": 6,
+          "col": 7,
+          "value": 2
+        },
+        {
+          "row": 7,
+          "col": 1,
+          "value": 1
+        },
+        {
+          "row": 7,
+          "col": 3,
+          "value": 1
+        },
+        {
+          "row": 7,
+          "col": 4,
+          "value": 4
+        },
+        {
+          "row": 7,
+          "col": 8,
+          "value": 1
+        },
+        {
+          "row": 8,
+          "col": 2,
+          "value": 1
+        },
+        {
+          "row": 8,
+          "col": 6,
+          "value": 2
+        },
+        {
+          "row": 8,
+          "col": 7,
+          "value": 0
+        }
+      ],
+      "first_hint": "行2で未登場の青を置けるのは(2,4)だけです。"
+    },
+    {
+      "id": "EXTRA-ROWCOL-3C-8X8-ADVANCED-01",
+      "title": "Extra 各行・各列に全色 3色 8×8 上級",
+      "difficulty": "上級",
+      "solver_tier": "ADVANCED",
+      "playtest": true,
+      "extra": true,
+      "extra_rules": [
+        "row_col_all_colors"
+      ],
+      "extra_rule_label": "各行・各列に全色",
+      "rows": 8,
+      "cols": 8,
+      "colors": [
+        "R",
+        "G",
+        "B"
+      ],
+      "fixed": [
+        {
+          "row": 2,
+          "col": 2,
+          "color": "G"
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "color": "R"
+        },
+        {
+          "row": 3,
+          "col": 8,
+          "color": "G"
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "color": "B"
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "color": "B"
+        },
+        {
+          "row": 4,
+          "col": 6,
+          "color": "R"
+        },
+        {
+          "row": 5,
+          "col": 4,
+          "color": "G"
+        },
+        {
+          "row": 5,
+          "col": 8,
+          "color": "B"
+        },
+        {
+          "row": 6,
+          "col": 6,
+          "color": "R"
+        },
+        {
+          "row": 6,
+          "col": 7,
+          "color": "G"
+        },
+        {
+          "row": 8,
+          "col": 2,
+          "color": "B"
+        },
+        {
+          "row": 8,
+          "col": 5,
+          "color": "G"
+        },
+        {
+          "row": 8,
+          "col": 6,
+          "color": "B"
+        },
+        {
+          "row": 8,
+          "col": 7,
+          "color": "R"
+        }
+      ],
+      "clues": [
+        {
+          "row": 1,
+          "col": 3,
+          "value": 2
+        },
+        {
+          "row": 1,
+          "col": 5,
+          "value": 0
+        },
+        {
+          "row": 1,
+          "col": 6,
+          "value": 0
+        },
+        {
+          "row": 1,
+          "col": 7,
+          "value": 2
+        },
+        {
+          "row": 1,
+          "col": 8,
+          "value": 0
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "value": 2
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "value": 3
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "value": 2
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "value": 1
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "value": 3
+        },
+        {
+          "row": 3,
+          "col": 5,
+          "value": 1
+        },
+        {
+          "row": 3,
+          "col": 7,
+          "value": 2
+        },
+        {
+          "row": 3,
+          "col": 8,
+          "value": 2
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "value": 2
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "value": 2
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "value": 3
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "value": 3
+        },
+        {
+          "row": 4,
+          "col": 5,
+          "value": 2
+        },
+        {
+          "row": 4,
+          "col": 6,
+          "value": 2
+        },
+        {
+          "row": 4,
+          "col": 7,
+          "value": 2
+        },
+        {
+          "row": 5,
+          "col": 1,
+          "value": 1
+        },
+        {
+          "row": 5,
+          "col": 2,
+          "value": 3
+        },
+        {
+          "row": 5,
+          "col": 5,
+          "value": 2
+        },
+        {
+          "row": 5,
+          "col": 6,
+          "value": 4
+        },
+        {
+          "row": 5,
+          "col": 8,
+          "value": 2
+        },
+        {
+          "row": 6,
+          "col": 1,
+          "value": 2
+        },
+        {
+          "row": 6,
+          "col": 3,
+          "value": 1
+        },
+        {
+          "row": 6,
+          "col": 5,
+          "value": 4
+        },
+        {
+          "row": 6,
+          "col": 6,
+          "value": 2
+        },
+        {
+          "row": 6,
+          "col": 7,
+          "value": 3
+        },
+        {
+          "row": 6,
+          "col": 8,
+          "value": 0
+        },
+        {
+          "row": 7,
+          "col": 1,
+          "value": 2
+        },
+        {
+          "row": 7,
+          "col": 2,
+          "value": 3
+        },
+        {
+          "row": 7,
+          "col": 4,
+          "value": 5
+        },
+        {
+          "row": 8,
+          "col": 2,
+          "value": 1
+        },
+        {
+          "row": 8,
+          "col": 6,
+          "value": 2
+        },
+        {
+          "row": 8,
+          "col": 7,
+          "value": 2
+        }
+      ],
+      "first_hint": "行1には青が未登場なので、候補[(1,1), (1,2), (1,3), (1,4), (1,5), (1,6), (1,7), (1,8)]の少なくとも一マスが青です。"
+    },
+    {
       "id": "EXTRA-ROWCOL-6X6-BEGINNER-01",
-      "title": "Extra 各行・各列に全色 6×6 初級",
+      "title": "Extra 各行・各列に全色 4色 6×6 初級",
       "difficulty": "初級",
       "solver_tier": "BEGINNER",
       "playtest": true,
@@ -5944,6 +7268,16 @@
       "fixed": [
         {
           "row": 1,
+          "col": 1,
+          "color": "G"
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "color": "R"
+        },
+        {
+          "row": 1,
           "col": 6,
           "color": "R"
         },
@@ -5954,12 +7288,32 @@
         },
         {
           "row": 2,
+          "col": 2,
+          "color": "B"
+        },
+        {
+          "row": 2,
           "col": 6,
           "color": "Y"
         },
         {
           "row": 3,
+          "col": 1,
+          "color": "R"
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "color": "B"
+        },
+        {
+          "row": 3,
           "col": 6,
+          "color": "B"
+        },
+        {
+          "row": 4,
+          "col": 1,
           "color": "B"
         },
         {
@@ -5973,6 +7327,21 @@
           "color": "Y"
         },
         {
+          "row": 4,
+          "col": 4,
+          "color": "R"
+        },
+        {
+          "row": 5,
+          "col": 1,
+          "color": "Y"
+        },
+        {
+          "row": 5,
+          "col": 3,
+          "color": "G"
+        },
+        {
           "row": 5,
           "col": 4,
           "color": "B"
@@ -5984,23 +7353,33 @@
         },
         {
           "row": 6,
-          "col": 5,
+          "col": 1,
+          "color": "B"
+        },
+        {
+          "row": 6,
+          "col": 2,
+          "color": "Y"
+        },
+        {
+          "row": 6,
+          "col": 3,
+          "color": "R"
+        },
+        {
+          "row": 6,
+          "col": 4,
           "color": "G"
         },
         {
           "row": 6,
-          "col": 6,
+          "col": 5,
           "color": "G"
         }
       ],
       "clues": [
         {
           "row": 1,
-          "col": 2,
-          "value": 2
-        },
-        {
-          "row": 1,
           "col": 4,
           "value": 2
         },
@@ -6008,11 +7387,6 @@
           "row": 2,
           "col": 2,
           "value": 2
-        },
-        {
-          "row": 2,
-          "col": 4,
-          "value": 0
         },
         {
           "row": 2,
@@ -6026,27 +7400,17 @@
         },
         {
           "row": 3,
-          "col": 1,
-          "value": 1
-        },
-        {
-          "row": 3,
           "col": 2,
           "value": 0
         },
         {
-          "row": 4,
-          "col": 2,
+          "row": 3,
+          "col": 3,
           "value": 2
         },
         {
-          "row": 4,
-          "col": 3,
-          "value": 1
-        },
-        {
-          "row": 4,
-          "col": 4,
+          "row": 5,
+          "col": 2,
           "value": 1
         },
         {
@@ -6058,11 +7422,6 @@
           "row": 5,
           "col": 6,
           "value": 1
-        },
-        {
-          "row": 6,
-          "col": 1,
-          "value": 0
         },
         {
           "row": 6,
@@ -6459,7 +7818,7 @@
     },
     {
       "id": "EXTRA-ROWCOL-8X8-BEGINNER-01",
-      "title": "Extra 各行・各列に全色 8×8 初級",
+      "title": "Extra 各行・各列に全色 4色 8×8 初級",
       "difficulty": "初級",
       "solver_tier": "BEGINNER",
       "playtest": true,
@@ -6479,33 +7838,53 @@
       "fixed": [
         {
           "row": 1,
-          "col": 2,
+          "col": 1,
+          "color": "G"
+        },
+        {
+          "row": 1,
+          "col": 3,
           "color": "B"
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "color": "B"
+        },
+        {
+          "row": 1,
+          "col": 5,
+          "color": "G"
+        },
+        {
+          "row": 1,
+          "col": 6,
+          "color": "R"
         },
         {
           "row": 1,
           "col": 7,
-          "color": "G"
-        },
-        {
-          "row": 1,
-          "col": 8,
           "color": "Y"
         },
         {
           "row": 2,
           "col": 1,
-          "color": "R"
-        },
-        {
-          "row": 2,
-          "col": 3,
           "color": "Y"
         },
         {
           "row": 2,
+          "col": 3,
+          "color": "B"
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "color": "G"
+        },
+        {
+          "row": 2,
           "col": 5,
-          "color": "R"
+          "color": "B"
         },
         {
           "row": 2,
@@ -6514,13 +7893,33 @@
         },
         {
           "row": 3,
-          "col": 6,
-          "color": "R"
+          "col": 1,
+          "color": "B"
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "color": "G"
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "color": "Y"
+        },
+        {
+          "row": 3,
+          "col": 5,
+          "color": "Y"
+        },
+        {
+          "row": 3,
+          "col": 7,
+          "color": "G"
         },
         {
           "row": 3,
           "col": 8,
-          "color": "G"
+          "color": "Y"
         },
         {
           "row": 4,
@@ -6530,6 +7929,16 @@
         {
           "row": 4,
           "col": 2,
+          "color": "G"
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "color": "R"
+        },
+        {
+          "row": 4,
+          "col": 4,
           "color": "B"
         },
         {
@@ -6538,190 +7947,200 @@
           "color": "B"
         },
         {
-          "row": 5,
-          "col": 5,
-          "color": "Y"
+          "row": 4,
+          "col": 6,
+          "color": "R"
         },
         {
-          "row": 5,
+          "row": 4,
+          "col": 7,
+          "color": "B"
+        },
+        {
+          "row": 4,
           "col": 8,
-          "color": "R"
+          "color": "B"
         },
         {
-          "row": 6,
-          "col": 5,
-          "color": "Y"
-        },
-        {
-          "row": 7,
+          "row": 5,
           "col": 1,
-          "color": "R"
+          "color": "G"
         },
         {
-          "row": 7,
+          "row": 5,
+          "col": 2,
+          "color": "B"
+        },
+        {
+          "row": 5,
           "col": 4,
           "color": "R"
         },
         {
-          "row": 7,
-          "col": 6,
+          "row": 5,
+          "col": 5,
           "color": "B"
         },
         {
-          "row": 8,
+          "row": 5,
+          "col": 6,
+          "color": "Y"
+        },
+        {
+          "row": 5,
+          "col": 7,
+          "color": "R"
+        },
+        {
+          "row": 6,
+          "col": 2,
+          "color": "Y"
+        },
+        {
+          "row": 6,
           "col": 3,
           "color": "R"
         },
         {
-          "row": 8,
+          "row": 6,
+          "col": 4,
+          "color": "G"
+        },
+        {
+          "row": 6,
+          "col": 5,
+          "color": "R"
+        },
+        {
+          "row": 6,
           "col": 6,
+          "color": "Y"
+        },
+        {
+          "row": 6,
+          "col": 7,
+          "color": "B"
+        },
+        {
+          "row": 7,
+          "col": 3,
+          "color": "Y"
+        },
+        {
+          "row": 7,
+          "col": 4,
+          "color": "B"
+        },
+        {
+          "row": 7,
+          "col": 5,
+          "color": "G"
+        },
+        {
+          "row": 7,
+          "col": 8,
+          "color": "G"
+        },
+        {
+          "row": 8,
+          "col": 1,
+          "color": "R"
+        },
+        {
+          "row": 8,
+          "col": 2,
+          "color": "G"
+        },
+        {
+          "row": 8,
+          "col": 3,
+          "color": "G"
+        },
+        {
+          "row": 8,
+          "col": 4,
+          "color": "Y"
+        },
+        {
+          "row": 8,
+          "col": 5,
+          "color": "B"
+        },
+        {
+          "row": 8,
+          "col": 7,
+          "color": "Y"
+        },
+        {
+          "row": 8,
+          "col": 8,
           "color": "Y"
         }
       ],
       "clues": [
         {
           "row": 1,
-          "col": 5,
-          "value": 2
+          "col": 7,
+          "value": 0
         },
         {
           "row": 1,
-          "col": 6,
-          "value": 3
-        },
-        {
-          "row": 2,
-          "col": 1,
-          "value": 3
-        },
-        {
-          "row": 2,
-          "col": 3,
-          "value": 2
-        },
-        {
-          "row": 2,
-          "col": 4,
-          "value": 2
-        },
-        {
-          "row": 2,
-          "col": 5,
+          "col": 8,
           "value": 1
         },
         {
           "row": 2,
-          "col": 7,
-          "value": 4
-        },
-        {
-          "row": 3,
           "col": 2,
           "value": 2
         },
         {
-          "row": 3,
-          "col": 4,
-          "value": 1
-        },
-        {
-          "row": 3,
-          "col": 5,
-          "value": 2
-        },
-        {
-          "row": 3,
-          "col": 6,
-          "value": 2
-        },
-        {
-          "row": 3,
-          "col": 8,
+          "row": 2,
+          "col": 7,
           "value": 0
         },
         {
-          "row": 4,
+          "row": 3,
           "col": 2,
-          "value": 2
-        },
-        {
-          "row": 4,
-          "col": 3,
-          "value": 1
-        },
-        {
-          "row": 4,
-          "col": 4,
-          "value": 2
-        },
-        {
-          "row": 4,
-          "col": 6,
           "value": 3
         },
         {
-          "row": 4,
+          "row": 3,
+          "col": 3,
+          "value": 2
+        },
+        {
+          "row": 3,
+          "col": 6,
+          "value": 1
+        },
+        {
+          "row": 5,
+          "col": 3,
+          "value": 2
+        },
+        {
+          "row": 5,
           "col": 8,
           "value": 1
         },
         {
-          "row": 5,
+          "row": 6,
           "col": 1,
-          "value": 1
-        },
-        {
-          "row": 5,
-          "col": 2,
-          "value": 1
-        },
-        {
-          "row": 5,
-          "col": 4,
           "value": 2
-        },
-        {
-          "row": 5,
-          "col": 5,
-          "value": 2
-        },
-        {
-          "row": 5,
-          "col": 7,
-          "value": 1
-        },
-        {
-          "row": 6,
-          "col": 3,
-          "value": 3
         },
         {
           "row": 6,
           "col": 4,
-          "value": 1
-        },
-        {
-          "row": 6,
-          "col": 5,
-          "value": 2
-        },
-        {
-          "row": 6,
-          "col": 6,
           "value": 1
         },
         {
           "row": 6,
           "col": 7,
-          "value": 1
+          "value": 2
         },
         {
           "row": 6,
           "col": 8,
-          "value": 0
-        },
-        {
-          "row": 7,
-          "col": 1,
           "value": 0
         },
         {
@@ -6731,56 +8150,11 @@
         },
         {
           "row": 7,
-          "col": 4,
-          "value": 2
-        },
-        {
-          "row": 7,
           "col": 5,
-          "value": 1
-        },
-        {
-          "row": 7,
-          "col": 6,
-          "value": 0
-        },
-        {
-          "row": 7,
-          "col": 8,
-          "value": 1
-        },
-        {
-          "row": 8,
-          "col": 1,
-          "value": 1
-        },
-        {
-          "row": 8,
-          "col": 2,
-          "value": 1
-        },
-        {
-          "row": 8,
-          "col": 3,
-          "value": 1
-        },
-        {
-          "row": 8,
-          "col": 4,
-          "value": 1
-        },
-        {
-          "row": 8,
-          "col": 5,
-          "value": 0
-        },
-        {
-          "row": 8,
-          "col": 6,
           "value": 2
         }
       ],
-      "first_hint": "行6で未登場の赤を置けるのは(6,7)だけです。"
+      "first_hint": "行7で未登場の赤を置けるのは(7,1)だけです。"
     },
     {
       "id": "EXTRA-ROWCOL-8X8-INTERMEDIATE-01",
@@ -7372,7 +8746,7 @@
       "title": "Extra 各色が上下左右でひとつながり 6×6 初級",
       "difficulty": "初級",
       "solver_tier": "BEGINNER",
-      "playtest": true,
+      "playtest": false,
       "extra": true,
       "extra_rules": [
         "all_colors_connected"
@@ -7477,7 +8851,7 @@
       "title": "Extra 各色が上下左右でひとつながり 6×6 中級",
       "difficulty": "中級",
       "solver_tier": "INTERMEDIATE",
-      "playtest": true,
+      "playtest": false,
       "extra": true,
       "extra_rules": [
         "all_colors_connected"
@@ -7592,7 +8966,7 @@
       "title": "Extra 各色が上下左右でひとつながり 6×6 上級",
       "difficulty": "上級",
       "solver_tier": "ADVANCED",
-      "playtest": true,
+      "playtest": false,
       "extra": true,
       "extra_rules": [
         "all_colors_connected"
@@ -7697,7 +9071,7 @@
       "title": "Extra 各色が上下左右でひとつながり 8×8 初級",
       "difficulty": "初級",
       "solver_tier": "BEGINNER",
-      "playtest": true,
+      "playtest": false,
       "extra": true,
       "extra_rules": [
         "all_colors_connected"
@@ -7827,7 +9201,7 @@
       "title": "Extra 各色が上下左右でひとつながり 8×8 中級",
       "difficulty": "中級",
       "solver_tier": "INTERMEDIATE",
-      "playtest": true,
+      "playtest": false,
       "extra": true,
       "extra_rules": [
         "all_colors_connected"
@@ -7992,7 +9366,7 @@
       "title": "Extra 各色が上下左右でひとつながり 8×8 上級",
       "difficulty": "上級",
       "solver_tier": "ADVANCED",
-      "playtest": true,
+      "playtest": false,
       "extra": true,
       "extra_rules": [
         "all_colors_connected"

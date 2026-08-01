@@ -618,21 +618,31 @@ function paintSolution(game, colors) {
 
 {
   const extraPuzzles = PuzzleData.puzzles.filter((item) => item.extra === true);
-  assert.equal(extraPuzzles.length, 12, "Extra盤面を12盤収録");
-  for (const mode of ["row_col_all_colors", "all_colors_connected"]) {
+  assert.equal(extraPuzzles.length, 18, "Extra盤面を18盤収録");
+  const visibleExtra = extraPuzzles.filter((item) => item.playtest !== false);
+  assert.equal(visibleExtra.length, 12, "表示対象は行列全色Extraの12盤");
+  assert.ok(visibleExtra.every((item) => (
+    item.extra_rules?.includes("row_col_all_colors")
+  )));
+  for (const colorCount of [3, 4]) {
     for (const size of [6, 8]) {
-      const entries = extraPuzzles.filter((item) => (
-        item.extra_rules?.includes(mode)
+      const entries = visibleExtra.filter((item) => (
+        item.colors.length === colorCount
         && item.rows === size
         && item.cols === size
       ));
       assert.deepEqual(
         entries.map((item) => item.solver_tier).sort(),
         ["ADVANCED", "BEGINNER", "INTERMEDIATE"],
-        `${mode} ${size}×${size}に初級・中級・上級を収録`,
+        `${colorCount}色 ${size}×${size}に初級・中級・上級を収録`,
       );
     }
   }
+  const connected = extraPuzzles.filter((item) => (
+    item.extra_rules?.includes("all_colors_connected")
+  ));
+  assert.equal(connected.length, 6, "連結Extraは検証用に6盤保持");
+  assert.ok(connected.every((item) => item.playtest === false));
 }
 
 console.log("ColorMosaic model and puzzle data tests passed.");
