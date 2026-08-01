@@ -16,6 +16,17 @@ function puzzle(overrides = {}) {
   };
 }
 
+function paintSolution(game, colors) {
+  colors.forEach((color, index) => {
+    Model.applyAction(game, {
+      type: "paint",
+      index,
+      color,
+      direct: true,
+    });
+  });
+}
+
 {
   const game = Model.createGame(puzzle(), { autoFill: false });
   Model.applyAction(game, { type: "cycle", index: 0, color: "R" });
@@ -514,6 +525,54 @@ function puzzle(overrides = {}) {
 }
 
 {
+  const invalid = Model.createGame(puzzle({
+    rows: 2,
+    cols: 2,
+    colors: ["R", "G"],
+    extra_rules: ["row_col_all_colors"],
+  }), { autoFill: false });
+  paintSolution(invalid, ["R", "R", "G", "G"]);
+  let evaluation = Model.evaluateGame(invalid);
+  assert.equal(evaluation.complete, true);
+  assert.equal(evaluation.solved, false, "全色が出ない行・列では完成にしない");
+  assert.equal(evaluation.extraViolations, 1);
+
+  const valid = Model.createGame(puzzle({
+    rows: 2,
+    cols: 2,
+    colors: ["R", "G"],
+    extra_rules: ["row_col_all_colors"],
+  }), { autoFill: false });
+  paintSolution(valid, ["R", "G", "G", "R"]);
+  evaluation = Model.evaluateGame(valid);
+  assert.equal(evaluation.solved, true, "各行・各列に全色があれば完成");
+  assert.equal(evaluation.extraViolations, 0);
+}
+
+{
+  const invalid = Model.createGame(puzzle({
+    rows: 2,
+    cols: 3,
+    colors: ["R", "G"],
+    extra_rules: ["all_colors_connected"],
+  }), { autoFill: false });
+  paintSolution(invalid, ["R", "G", "R", "R", "G", "G"]);
+  let evaluation = Model.evaluateGame(invalid);
+  assert.equal(evaluation.solved, false, "同色が4近傍で分断されていれば完成にしない");
+  assert.equal(evaluation.extraViolations, 1);
+
+  const valid = Model.createGame(puzzle({
+    rows: 2,
+    cols: 3,
+    colors: ["R", "G"],
+    extra_rules: ["all_colors_connected"],
+  }), { autoFill: false });
+  paintSolution(valid, ["R", "R", "G", "R", "G", "G"]);
+  evaluation = Model.evaluateGame(valid);
+  assert.equal(evaluation.solved, true, "各色が4近傍で一つなら完成");
+}
+
+{
   const fourColorPuzzles = PuzzleData.puzzles.filter((item) => item.id.startsWith("PLAY-6X6-4C-"));
   assert.equal(fourColorPuzzles.length, 6, "4色盤面を6盤収録");
   assert.deepEqual(
@@ -553,6 +612,25 @@ function puzzle(overrides = {}) {
       assert.equal(Model.createGame(item).cells.length, size * size);
       assert.equal(item.generation.uniqueness_basis, "sound-branch-free-completion");
       assert.match(item.generation.canonical_signature_sha256, /^[0-9a-f]{64}$/);
+    }
+  }
+}
+
+{
+  const extraPuzzles = PuzzleData.puzzles.filter((item) => item.extra === true);
+  assert.equal(extraPuzzles.length, 12, "Extra盤面を12盤収録");
+  for (const mode of ["row_col_all_colors", "all_colors_connected"]) {
+    for (const size of [6, 8]) {
+      const entries = extraPuzzles.filter((item) => (
+        item.extra_rules?.includes(mode)
+        && item.rows === size
+        && item.cols === size
+      ));
+      assert.deepEqual(
+        entries.map((item) => item.solver_tier).sort(),
+        ["ADVANCED", "BEGINNER", "INTERMEDIATE"],
+        `${mode} ${size}×${size}に初級・中級・上級を収録`,
+      );
     }
   }
 }

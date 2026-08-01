@@ -236,6 +236,19 @@ body[data-color-count="4"] .color-mode-note {
   background: #fff5d8;
 }
 
+body[data-extra="true"] .color-mode-note {
+  border-color: #a47ac2;
+  color: var(--ink);
+  background: #f6edff;
+}
+
+body[data-extra="true"] .meta-chip:first-child {
+  border-color: #a47ac2;
+  color: #63397f;
+  background: #f6edff;
+  font-weight: 900;
+}
+
 .palette { display: grid; grid-template-columns: repeat(var(--palette-columns, 4), minmax(0, 1fr)); gap: 8px; }
 .color-button {
   display: grid;

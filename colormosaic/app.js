@@ -84,6 +84,14 @@
       return { key: "calibration", label: "短いルール確認", rank: 9_999 };
     }
     const colorCount = puzzle.colors.length;
+    if (puzzle.extra) {
+      const mode = puzzle.extra_rules?.[0] || "extra";
+      return {
+        key: `extra-${mode}-${puzzle.rows}x${puzzle.cols}-${colorCount}c`,
+        label: `Extra｜${puzzle.extra_rule_label || "追加ルール"}｜${puzzle.rows}×${puzzle.cols}・${colorCount}色`,
+        rank: -20_000 - (puzzle.rows * puzzle.cols),
+      };
+    }
     return {
       key: `${puzzle.rows}x${puzzle.cols}-${colorCount}c`,
       label: `${puzzle.rows}×${puzzle.cols}・${colorCount}色`,
@@ -329,7 +337,11 @@
 
     document.body.dataset.colorCount = String(colorCount);
     document.body.dataset.boardSize = String(Math.max(game.puzzle.rows, game.puzzle.cols));
-    elements.colorModeNote.textContent = `${colorCount}色モード：${colorNames.join("・")}。${exclusionTarget}色の×で残り1色を確定できます。`;
+    document.body.dataset.extra = String(Boolean(game.puzzle.extra));
+    const extraNote = game.puzzle.extra
+      ? ` Extraルール：${game.puzzle.extra_rule_label}。`
+      : "";
+    elements.colorModeNote.textContent = `${colorCount}色モード：${colorNames.join("・")}。${extraNote}${exclusionTarget}色の×で残り1色を確定できます。`;
     elements.exclusionTargetLabels.forEach((label) => {
       label.textContent = String(exclusionTarget);
     });
@@ -696,14 +708,24 @@
     }
     if (evaluation.solved) {
       elements.status.classList.add("is-solved");
-      message = "完成。すべての数字が一致しています。";
-    } else if (evaluation.impossibleClues || evaluation.contradictions) {
+      message = game.puzzle.extra
+        ? "完成。すべての数字とExtraルールが成立しています。"
+        : "完成。すべての数字が一致しています。";
+    } else if (
+      evaluation.impossibleClues
+      || evaluation.contradictions
+      || evaluation.extraViolations
+    ) {
       elements.status.classList.add("is-warning");
-      const count = evaluation.impossibleClues + evaluation.contradictions;
+      const count = evaluation.impossibleClues
+        + evaluation.contradictions
+        + evaluation.extraViolations;
       message = `現在の候補では成立しない場所が${count}か所あります。`;
     } else if (evaluation.complete) {
       elements.status.classList.add("is-warning");
-      message = "全マス着色済みですが、数字を再確認してください。";
+      message = game.puzzle.extra
+        ? "全マス着色済みですが、数字とExtraルールを再確認してください。"
+        : "全マス着色済みですが、数字を再確認してください。";
     }
     elements.status.innerHTML = `<span class="status-dot" aria-hidden="true"></span><span>${message}</span>`;
   }
@@ -713,6 +735,8 @@
     elements.puzzleTitle.textContent = puzzle.title;
     elements.puzzleTitle.title = puzzle.id;
     elements.puzzleMeta.innerHTML = [
+      puzzle.extra ? "Extra" : null,
+      puzzle.extra_rule_label || null,
       puzzle.difficulty ? `難易度 ${puzzle.difficulty}` : null,
       `${puzzle.rows}×${puzzle.cols}`,
       `${puzzle.colors.length}色`,

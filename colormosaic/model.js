@@ -5,6 +5,13 @@
 })(typeof globalThis !== "undefined" ? globalThis : this, function () {
   "use strict";
 
+  const EXTRA_ROW_COL_ALL_COLORS = "row_col_all_colors";
+  const EXTRA_ALL_COLORS_CONNECTED = "all_colors_connected";
+  const KNOWN_EXTRA_RULES = new Set([
+    EXTRA_ROW_COL_ALL_COLORS,
+    EXTRA_ALL_COLORS_CONNECTED,
+  ]);
+
   function cloneCells(cells) {
     return cells.map((cell) => ({
       color: cell.color,
@@ -24,10 +31,25 @@
     }
     const colors = [...new Set(puzzle.colors)];
     if (colors.length !== puzzle.colors.length) throw new Error("色記号が重複しています。");
+    const extraRules = Array.isArray(puzzle.extra_rules)
+      ? [...new Set(puzzle.extra_rules)]
+      : [];
+    if (extraRules.length !== (puzzle.extra_rules || []).length) {
+      throw new Error("Extraルールが重複しています。");
+    }
+    const unknownExtra = extraRules.find((rule) => !KNOWN_EXTRA_RULES.has(rule));
+    if (unknownExtra) throw new Error(`未知のExtraルールです: ${unknownExtra}`);
+    if (
+      extraRules.includes(EXTRA_ROW_COL_ALL_COLORS)
+      && colors.length > Math.min(puzzle.rows, puzzle.cols)
+    ) {
+      throw new Error("行列全色には、色数以上の行長・列長が必要です。");
+    }
 
     return {
       ...puzzle,
       colors,
+      extra_rules: extraRules,
       fixed: Array.isArray(puzzle.fixed) ? puzzle.fixed : [],
       clues: Array.isArray(puzzle.clues) ? puzzle.clues : [],
     };
@@ -406,6 +428,17 @@
     return result;
   }
 
+  function orthogonalNeighbors(puzzle, row, col) {
+    const result = [];
+    for (const [dr, dc] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) {
+      const nextRow = row + dr;
+      const nextCol = col + dc;
+      if (nextRow < 1 || nextRow > puzzle.rows || nextCol < 1 || nextCol > puzzle.cols) continue;
+      result.push(cellIndex(puzzle, nextRow, nextCol));
+    }
+    return result;
+  }
+
   function evaluateClue(game, clue) {
     const center = game.cells[cellIndex(game.puzzle, clue.row, clue.col)];
     if (!center.color) {
@@ -445,6 +478,66 @@
     return { status: "pending", same, possible, completed: false };
   }
 
+  function evaluateExtraRules(game, complete) {
+    const states = new Map();
+    let violations = 0;
+    const rules = game.puzzle.extra_rules || [];
+
+    if (rules.includes(EXTRA_ROW_COL_ALL_COLORS)) {
+      let valid = complete;
+      if (complete) {
+        const required = new Set(game.puzzle.colors);
+        const lines = [];
+        for (let row = 1; row <= game.puzzle.rows; row += 1) {
+          lines.push(Array.from({ length: game.puzzle.cols }, (_, col) => (
+            game.cells[cellIndex(game.puzzle, row, col + 1)].color
+          )));
+        }
+        for (let col = 1; col <= game.puzzle.cols; col += 1) {
+          lines.push(Array.from({ length: game.puzzle.rows }, (_, row) => (
+            game.cells[cellIndex(game.puzzle, row + 1, col)].color
+          )));
+        }
+        valid = lines.every((line) => (
+          [...required].every((color) => line.includes(color))
+        ));
+      }
+      states.set(EXTRA_ROW_COL_ALL_COLORS, complete ? valid : null);
+      if (complete && !valid) violations += 1;
+    }
+
+    if (rules.includes(EXTRA_ALL_COLORS_CONNECTED)) {
+      let valid = complete;
+      if (complete) {
+        valid = game.puzzle.colors.every((color) => {
+          const colored = new Set();
+          game.cells.forEach((cell, index) => {
+            if (cell.color === color && !cell.tentative) colored.add(index);
+          });
+          if (colored.size === 0) return false;
+          const start = colored.values().next().value;
+          const reached = new Set([start]);
+          const frontier = [start];
+          while (frontier.length) {
+            const current = frontier.pop();
+            const row = Math.floor(current / game.puzzle.cols) + 1;
+            const col = (current % game.puzzle.cols) + 1;
+            for (const neighbor of orthogonalNeighbors(game.puzzle, row, col)) {
+              if (colored.has(neighbor) && !reached.has(neighbor)) {
+                reached.add(neighbor);
+                frontier.push(neighbor);
+              }
+            }
+          }
+          return reached.size === colored.size;
+        });
+      }
+      states.set(EXTRA_ALL_COLORS_CONNECTED, complete ? valid : null);
+      if (complete && !valid) violations += 1;
+    }
+    return { states, violations };
+  }
+
   function evaluateGame(game) {
     const clueStates = new Map();
     let impossibleClues = 0;
@@ -468,7 +561,9 @@
       ),
     ).length;
     const complete = filled === game.cells.length;
+    const extra = evaluateExtraRules(game, complete);
     const solved = complete && impossibleClues === 0 && contradictions === 0
+      && extra.violations === 0
       && [...clueStates.values()].every((state) => state.status === "satisfied");
 
     return {
@@ -481,6 +576,8 @@
       solved,
       impossibleClues,
       contradictions,
+      extraViolations: extra.violations,
+      extraRuleStates: extra.states,
       clueStates,
     };
   }
@@ -498,7 +595,9 @@
     reset,
     evaluateClue,
     evaluateGame,
+    evaluateExtraRules,
     cellIndex,
     neighbors,
+    orthogonalNeighbors,
   };
 });
