@@ -41,6 +41,7 @@
   const X_SLOTS = ["top-left", "top-right", "bottom-left", "bottom-right"];
   const LONG_PRESS_MS = 450;
   const LONG_PRESS_MOVE_PX = 12;
+  const STORAGE_PREFIX = "gameplay:colormosaic:";
 
   const elements = {
     puzzleSelect: document.querySelector("#puzzle-select"),
@@ -227,6 +228,41 @@
       return visiblePuzzles.find((puzzle) => puzzle.id === id) || null;
     } catch (_) {
       return null;
+    }
+  }
+
+  function rememberedPuzzle() {
+    try {
+      const id = window.localStorage.getItem(`${STORAGE_PREFIX}last-puzzle`);
+      return visiblePuzzles.find((puzzle) => puzzle.id === id) || null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function storageKey(id) {
+    return `${STORAGE_PREFIX}${id}`;
+  }
+
+  function readProgress(id) {
+    try {
+      const value = window.localStorage.getItem(storageKey(id));
+      return value ? JSON.parse(value) : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function saveProgress() {
+    if (!game) return;
+    try {
+      window.localStorage.setItem(
+        storageKey(game.puzzle.id),
+        JSON.stringify(Model.serializeProgress(game)),
+      );
+      window.localStorage.setItem(`${STORAGE_PREFIX}last-puzzle`, game.puzzle.id);
+    } catch (_) {
+      // プライベートブラウズなどで保存できない場合も、プレイ自体は続ける。
     }
   }
 
@@ -747,7 +783,7 @@
     elements.hint.innerHTML = `<strong>最初のヒント</strong><br>${puzzle.first_hint || "固定色つきの0と、位置の最大値から探してみましょう。"}`;
   }
 
-  function render() {
+  function render(options = {}) {
     const evaluation = Model.evaluateGame(game);
     renderBoard(evaluation);
     renderStatus(evaluation);
@@ -760,13 +796,17 @@
     elements.autoFill.checked = game.autoFill;
     setTentativeMode(tentativeMode);
     updateTentativeActions(evaluation);
+    if (options.persist !== false) saveProgress();
   }
 
   function loadPuzzle(id) {
     const puzzle = visiblePuzzles.find((item) => item.id === id) || visiblePuzzles[0];
     elements.puzzleSelect.value = puzzle.id;
     rememberPuzzle(puzzle.id);
-    game = Model.createGame(puzzle, { autoFill: elements.autoFill.checked });
+    game = Model.createGame(puzzle, {
+      autoFill: elements.autoFill.checked,
+      progress: readProgress(puzzle.id),
+    });
     applyColorModeUI();
     renderPalette();
     renderMeta();
@@ -841,14 +881,14 @@
     });
 
     setColorSymbolVisibility(false);
-    const requested = requestedPuzzle();
-    if (requested) {
-      elements.puzzleGroupFilter.value = puzzleGroup(requested).key;
-      elements.puzzleDifficultyFilter.value = requested.difficulty || "all";
+    const initialPuzzle = requestedPuzzle() || rememberedPuzzle();
+    if (initialPuzzle) {
+      elements.puzzleGroupFilter.value = puzzleGroup(initialPuzzle).key;
+      elements.puzzleDifficultyFilter.value = initialPuzzle.difficulty || "all";
       updateDifficultyOptions();
       renderPuzzleOptions();
     }
-    loadPuzzle(requested?.id || visiblePuzzles[0].id);
+    loadPuzzle(initialPuzzle?.id || visiblePuzzles[0].id);
   }
 
   initialize();

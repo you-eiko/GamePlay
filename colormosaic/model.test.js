@@ -573,6 +573,87 @@ function paintSolution(game, colors) {
 }
 
 {
+  const progressPuzzle = puzzle({
+    id: "progress-round-trip",
+    rows: 1,
+    cols: 3,
+    colors: ["R", "G", "B"],
+    fixed: [{ row: 1, col: 3, color: "B" }],
+  });
+  const source = Model.createGame(progressPuzzle, { autoFill: false });
+  Model.applyAction(source, {
+    type: "paint",
+    index: 0,
+    color: "G",
+    tentative: true,
+    direct: true,
+  });
+  Model.applyAction(source, {
+    type: "exclude",
+    index: 1,
+    color: "R",
+    tentative: false,
+  });
+  Model.applyAction(source, {
+    type: "exclude",
+    index: 1,
+    color: "B",
+    tentative: true,
+  });
+
+  const progress = JSON.parse(JSON.stringify(Model.serializeProgress(source)));
+  const restored = Model.createGame(progressPuzzle, { autoFill: true, progress });
+  assert.deepEqual(restored.cells, source.cells, "着色・X・仮置きを保存データから復元");
+  assert.equal(restored.autoFill, false, "自動着色設定を復元");
+  assert.deepEqual(restored.history, [], "Undo履歴は保存しない");
+  assert.deepEqual(restored.future, [], "Redo履歴は保存しない");
+  assert.equal(Object.hasOwn(progress, "history"), false);
+  assert.equal(Model.undo(restored), false, "復元後は新しいUndo履歴を始める");
+}
+
+{
+  const progressPuzzle = puzzle({
+    id: "progress-validation",
+    fixed: [{ row: 1, col: 2, color: "B" }],
+  });
+  const source = Model.createGame(progressPuzzle);
+  const progress = Model.serializeProgress(source);
+  progress.autoFill = false;
+  progress.cells[0] = {
+    color: "invalid",
+    tentative: true,
+    exclusions: ["R", "R", "invalid"],
+    tentativeExclusions: ["R", "B", "invalid"],
+  };
+  progress.cells[1] = {
+    color: "R",
+    tentative: true,
+    exclusions: ["B"],
+    tentativeExclusions: [],
+  };
+
+  const restored = Model.createGame(progressPuzzle, { progress });
+  assert.equal(restored.cells[0].color, null, "不正な色は復元しない");
+  assert.equal(restored.cells[0].tentative, false);
+  assert.deepEqual(restored.cells[0].exclusions, ["R"], "Xは有効色だけを重複なく復元");
+  assert.deepEqual(restored.cells[0].tentativeExclusions, ["B"]);
+  assert.deepEqual(
+    restored.cells[1],
+    { color: "B", tentative: false, fixed: true, exclusions: [], tentativeExclusions: [] },
+    "固定色は保存データで上書きしない",
+  );
+  assert.equal(restored.autoFill, false);
+
+  const untouched = Model.createGame(progressPuzzle);
+  assert.equal(
+    Model.restoreProgress(untouched, { ...progress, puzzleId: "another-puzzle" }),
+    false,
+    "別問題の保存データは復元しない",
+  );
+  assert.deepEqual(untouched.cells, Model.createGame(progressPuzzle).cells);
+}
+
+{
   const fourColorPuzzles = PuzzleData.puzzles.filter((item) => item.id.startsWith("PLAY-6X6-4C-"));
   assert.equal(fourColorPuzzles.length, 6, "4色盤面を6盤収録");
   assert.deepEqual(

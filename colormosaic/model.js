@@ -81,13 +81,15 @@
 
   function createGame(rawPuzzle, options = {}) {
     const puzzle = normalizePuzzle(rawPuzzle);
-    return {
+    const game = {
       puzzle,
       cells: createInitialCells(puzzle),
       history: [],
       future: [],
       autoFill: options.autoFill !== false,
     };
+    if (options.progress) restoreProgress(game, options.progress);
+    return game;
   }
 
   function snapshot(game) {
@@ -414,6 +416,72 @@
     return pushIfChanged(game, before);
   }
 
+  function serializeProgress(game) {
+    return {
+      version: 1,
+      puzzleId: game.puzzle.id,
+      rows: game.puzzle.rows,
+      cols: game.puzzle.cols,
+      palette: [...game.puzzle.colors],
+      cells: game.cells.map((cell) => ({
+        color: cell.color,
+        tentative: cell.tentative,
+        exclusions: [...cell.exclusions],
+        tentativeExclusions: [...cell.tentativeExclusions],
+      })),
+      autoFill: game.autoFill,
+    };
+  }
+
+  function restoreProgress(game, progress) {
+    const puzzle = game.puzzle;
+    const matchesPuzzle = progress
+      && progress.version === 1
+      && progress.puzzleId === puzzle.id
+      && progress.rows === puzzle.rows
+      && progress.cols === puzzle.cols
+      && Array.isArray(progress.palette)
+      && progress.palette.length === puzzle.colors.length
+      && progress.palette.every((color, index) => color === puzzle.colors[index])
+      && Array.isArray(progress.cells)
+      && progress.cells.length === game.cells.length;
+    if (!matchesPuzzle) return false;
+
+    const initial = createInitialCells(puzzle);
+    game.cells = initial.map((cell, index) => {
+      if (cell.fixed) return cell;
+
+      const saved = progress.cells[index];
+      if (!saved || typeof saved !== "object" || Array.isArray(saved)) return cell;
+
+      const color = puzzle.colors.includes(saved.color) ? saved.color : null;
+      const savedExclusions = Array.isArray(saved.exclusions) ? saved.exclusions : [];
+      const exclusions = puzzle.colors.filter(
+        (candidate) => candidate !== color && savedExclusions.includes(candidate),
+      );
+      const savedTentativeExclusions = Array.isArray(saved.tentativeExclusions)
+        ? saved.tentativeExclusions
+        : [];
+      const tentativeExclusions = puzzle.colors.filter((candidate) => (
+        candidate !== color
+        && !exclusions.includes(candidate)
+        && savedTentativeExclusions.includes(candidate)
+      ));
+
+      return {
+        color,
+        tentative: Boolean(color && saved.tentative),
+        fixed: false,
+        exclusions,
+        tentativeExclusions,
+      };
+    });
+    if (typeof progress.autoFill === "boolean") game.autoFill = progress.autoFill;
+    game.history = [];
+    game.future = [];
+    return true;
+  }
+
   function neighbors(puzzle, row, col) {
     const result = [];
     for (let dr = -1; dr <= 1; dr += 1) {
@@ -593,6 +661,8 @@
     excludeAroundClue,
     redo,
     reset,
+    serializeProgress,
+    restoreProgress,
     evaluateClue,
     evaluateGame,
     evaluateExtraRules,
