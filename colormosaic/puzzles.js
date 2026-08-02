@@ -5943,43 +5943,28 @@
       "fixed": [
         {
           "row": 1,
-          "col": 2,
-          "color": "R"
-        },
-        {
-          "row": 1,
-          "col": 5,
+          "col": 1,
           "color": "G"
         },
         {
-          "row": 1,
-          "col": 6,
-          "color": "B"
-        },
-        {
           "row": 2,
-          "col": 4,
-          "color": "B"
-        },
-        {
-          "row": 2,
-          "col": 5,
-          "color": "R"
-        },
-        {
-          "row": 2,
-          "col": 6,
-          "color": "G"
-        },
-        {
-          "row": 3,
           "col": 2,
           "color": "G"
         },
         {
           "row": 3,
-          "col": 4,
-          "color": "R"
+          "col": 1,
+          "color": "G"
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "color": "B"
+        },
+        {
+          "row": 3,
+          "col": 6,
+          "color": "G"
         },
         {
           "row": 4,
@@ -5988,37 +5973,17 @@
         },
         {
           "row": 5,
-          "col": 2,
-          "color": "B"
-        },
-        {
-          "row": 5,
-          "col": 3,
-          "color": "R"
-        },
-        {
-          "row": 5,
-          "col": 4,
-          "color": "G"
-        },
-        {
-          "row": 5,
           "col": 6,
           "color": "R"
         },
         {
           "row": 6,
-          "col": 2,
+          "col": 3,
           "color": "G"
         },
         {
           "row": 6,
-          "col": 4,
-          "color": "G"
-        },
-        {
-          "row": 6,
-          "col": 5,
+          "col": 6,
           "color": "R"
         }
       ],
@@ -6026,90 +5991,95 @@
         {
           "row": 1,
           "col": 2,
-          "value": 2
+          "value": 1
         },
         {
           "row": 1,
           "col": 3,
-          "value": 3
+          "value": 1
         },
         {
           "row": 1,
-          "col": 5,
-          "value": 2
-        },
-        {
-          "row": 1,
-          "col": 6,
+          "col": 4,
           "value": 0
         },
         {
           "row": 2,
+          "col": 1,
+          "value": 2
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "value": 2
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "value": 3
+        },
+        {
+          "row": 2,
           "col": 4,
           "value": 3
         },
         {
           "row": 2,
           "col": 6,
-          "value": 2
-        },
-        {
-          "row": 3,
-          "col": 2,
           "value": 1
         },
         {
           "row": 3,
-          "col": 3,
-          "value": 3
-        },
-        {
-          "row": 4,
-          "col": 1,
-          "value": 2
-        },
-        {
-          "row": 4,
-          "col": 2,
-          "value": 2
-        },
-        {
-          "row": 4,
-          "col": 5,
-          "value": 2
-        },
-        {
-          "row": 5,
-          "col": 2,
-          "value": 2
-        },
-        {
-          "row": 5,
-          "col": 3,
-          "value": 3
-        },
-        {
-          "row": 5,
           "col": 4,
-          "value": 2
+          "value": 3
+        },
+        {
+          "row": 3,
+          "col": 6,
+          "value": 0
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "value": 3
+        },
+        {
+          "row": 4,
+          "col": 5,
+          "value": 3
         },
         {
           "row": 5,
-          "col": 5,
+          "col": 1,
           "value": 1
         },
         {
           "row": 5,
-          "col": 6,
+          "col": 2,
+          "value": 3
+        },
+        {
+          "row": 5,
+          "col": 3,
           "value": 1
         },
         {
           "row": 6,
-          "col": 2,
+          "col": 1,
+          "value": 0
+        },
+        {
+          "row": 6,
+          "col": 4,
+          "value": 1
+        },
+        {
+          "row": 6,
+          "col": 6,
           "value": 1
         }
       ],
-      "first_hint": "行6で未登場の青を置けるのは(6,1)だけです。"
+      "first_hint": "列3で未登場の青を置けるのは(5,3)だけです。"
     },
     {
       "id": "EXTRA-ROWCOL-3C-6X6-INTERMEDIATE-01",
@@ -6420,18 +6390,8 @@
       "fixed": [
         {
           "row": 1,
-          "col": 1,
-          "color": "R"
-        },
-        {
-          "row": 1,
-          "col": 3,
-          "color": "G"
-        },
-        {
-          "row": 1,
-          "col": 7,
-          "color": "R"
+          "col": 2,
+          "color": "B"
         },
         {
           "row": 1,
@@ -6440,103 +6400,28 @@
         },
         {
           "row": 2,
-          "col": 1,
-          "color": "R"
-        },
-        {
-          "row": 2,
-          "col": 2,
-          "color": "G"
-        },
-        {
-          "row": 2,
-          "col": 4,
-          "color": "G"
-        },
-        {
-          "row": 2,
-          "col": 5,
-          "color": "R"
-        },
-        {
-          "row": 2,
           "col": 7,
-          "color": "B"
-        },
-        {
-          "row": 2,
-          "col": 8,
-          "color": "G"
-        },
-        {
-          "row": 3,
-          "col": 2,
           "color": "R"
         },
         {
           "row": 3,
           "col": 3,
-          "color": "R"
-        },
-        {
-          "row": 3,
-          "col": 7,
           "color": "G"
-        },
-        {
-          "row": 3,
-          "col": 8,
-          "color": "B"
         },
         {
           "row": 4,
           "col": 1,
-          "color": "G"
-        },
-        {
-          "row": 4,
-          "col": 2,
           "color": "R"
         },
         {
-          "row": 4,
-          "col": 4,
-          "color": "G"
-        },
-        {
-          "row": 4,
+          "row": 5,
           "col": 6,
           "color": "R"
         },
         {
-          "row": 4,
-          "col": 7,
-          "color": "B"
-        },
-        {
-          "row": 4,
-          "col": 8,
-          "color": "G"
-        },
-        {
-          "row": 5,
-          "col": 1,
-          "color": "G"
-        },
-        {
-          "row": 5,
-          "col": 2,
-          "color": "G"
-        },
-        {
-          "row": 5,
-          "col": 5,
-          "color": "R"
-        },
-        {
           "row": 5,
           "col": 7,
-          "color": "R"
+          "color": "G"
         },
         {
           "row": 5,
@@ -6545,58 +6430,13 @@
         },
         {
           "row": 6,
-          "col": 4,
+          "col": 1,
           "color": "G"
         },
         {
           "row": 6,
           "col": 5,
-          "color": "R"
-        },
-        {
-          "row": 6,
-          "col": 7,
-          "color": "G"
-        },
-        {
-          "row": 6,
-          "col": 8,
-          "color": "R"
-        },
-        {
-          "row": 7,
-          "col": 1,
-          "color": "R"
-        },
-        {
-          "row": 7,
-          "col": 3,
-          "color": "R"
-        },
-        {
-          "row": 7,
-          "col": 6,
           "color": "B"
-        },
-        {
-          "row": 7,
-          "col": 7,
-          "color": "R"
-        },
-        {
-          "row": 8,
-          "col": 1,
-          "color": "R"
-        },
-        {
-          "row": 8,
-          "col": 3,
-          "color": "G"
-        },
-        {
-          "row": 8,
-          "col": 4,
-          "color": "G"
         },
         {
           "row": 8,
@@ -6611,14 +6451,14 @@
         {
           "row": 8,
           "col": 8,
-          "color": "G"
+          "color": "R"
         }
       ],
       "clues": [
         {
           "row": 1,
-          "col": 4,
-          "value": 2
+          "col": 2,
+          "value": 0
         },
         {
           "row": 1,
@@ -6626,29 +6466,64 @@
           "value": 2
         },
         {
-          "row": 2,
-          "col": 1,
-          "value": 3
+          "row": 1,
+          "col": 7,
+          "value": 2
+        },
+        {
+          "row": 1,
+          "col": 8,
+          "value": 0
         },
         {
           "row": 2,
-          "col": 3,
+          "col": 1,
           "value": 1
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "value": 0
         },
         {
           "row": 2,
           "col": 4,
+          "value": 2
+        },
+        {
+          "row": 2,
+          "col": 6,
+          "value": 2
+        },
+        {
+          "row": 3,
+          "col": 1,
           "value": 1
         },
         {
           "row": 3,
-          "col": 3,
+          "col": 6,
           "value": 3
         },
         {
           "row": 3,
-          "col": 5,
+          "col": 7,
           "value": 1
+        },
+        {
+          "row": 3,
+          "col": 8,
+          "value": 1
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "value": 0
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "value": 2
         },
         {
           "row": 4,
@@ -6657,8 +6532,8 @@
         },
         {
           "row": 4,
-          "col": 5,
-          "value": 3
+          "col": 8,
+          "value": 0
         },
         {
           "row": 5,
@@ -6667,43 +6542,63 @@
         },
         {
           "row": 5,
-          "col": 3,
-          "value": 5
+          "col": 4,
+          "value": 4
         },
         {
           "row": 5,
-          "col": 6,
-          "value": 1
-        },
-        {
-          "row": 6,
-          "col": 3,
-          "value": 2
-        },
-        {
-          "row": 6,
           "col": 6,
           "value": 4
         },
         {
           "row": 6,
-          "col": 8,
-          "value": 2
+          "col": 1,
+          "value": 4
         },
         {
-          "row": 7,
+          "row": 6,
+          "col": 2,
+          "value": 4
+        },
+        {
+          "row": 6,
+          "col": 3,
+          "value": 3
+        },
+        {
+          "row": 6,
           "col": 4,
-          "value": 2
+          "value": 3
+        },
+        {
+          "row": 6,
+          "col": 5,
+          "value": 3
         },
         {
           "row": 7,
-          "col": 6,
+          "col": 2,
+          "value": 4
+        },
+        {
+          "row": 7,
+          "col": 3,
           "value": 1
         },
         {
           "row": 7,
+          "col": 4,
+          "value": 4
+        },
+        {
+          "row": 7,
           "col": 8,
           "value": 2
+        },
+        {
+          "row": 8,
+          "col": 1,
+          "value": 1
         },
         {
           "row": 8,
@@ -6712,16 +6607,21 @@
         },
         {
           "row": 8,
-          "col": 3,
-          "value": 1
+          "col": 4,
+          "value": 0
         },
         {
           "row": 8,
-          "col": 5,
-          "value": 2
+          "col": 7,
+          "value": 0
+        },
+        {
+          "row": 8,
+          "col": 8,
+          "value": 0
         }
       ],
-      "first_hint": "列1で未登場の青を置けるのは(3,1)だけです。"
+      "first_hint": "行7で未登場の赤を置けるのは(7,6)だけです。"
     },
     {
       "id": "EXTRA-ROWCOL-3C-8X8-INTERMEDIATE-01",
@@ -7268,60 +7168,50 @@
       "fixed": [
         {
           "row": 1,
-          "col": 6,
-          "color": "R"
-        },
-        {
-          "row": 2,
-          "col": 1,
-          "color": "R"
+          "col": 2,
+          "color": "G"
         },
         {
           "row": 2,
           "col": 6,
-          "color": "Y"
+          "color": "B"
         },
         {
           "row": 3,
           "col": 6,
-          "color": "B"
+          "color": "R"
         },
         {
           "row": 4,
-          "col": 2,
-          "color": "B"
+          "col": 1,
+          "color": "R"
         },
         {
           "row": 4,
+          "col": 5,
+          "color": "G"
+        },
+        {
+          "row": 5,
           "col": 3,
-          "color": "Y"
+          "color": "G"
         },
         {
           "row": 5,
           "col": 4,
-          "color": "B"
-        },
-        {
-          "row": 5,
-          "col": 5,
-          "color": "R"
-        },
-        {
-          "row": 6,
-          "col": 5,
-          "color": "G"
-        },
-        {
-          "row": 6,
-          "col": 6,
-          "color": "G"
+          "color": "Y"
         }
       ],
       "clues": [
         {
           "row": 1,
+          "col": 1,
+          "value": 0
+        },
+        {
+          "row": 1,
           "col": 2,
-          "value": 2
+          "value": 0
         },
         {
           "row": 1,
@@ -7329,77 +7219,77 @@
           "value": 2
         },
         {
-          "row": 2,
-          "col": 2,
-          "value": 2
-        },
-        {
-          "row": 2,
-          "col": 4,
+          "row": 1,
+          "col": 5,
           "value": 0
         },
         {
           "row": 2,
-          "col": 5,
-          "value": 5
+          "col": 3,
+          "value": 2
         },
         {
           "row": 2,
-          "col": 6,
-          "value": 3
-        },
-        {
-          "row": 3,
-          "col": 1,
+          "col": 5,
           "value": 1
         },
         {
           "row": 3,
-          "col": 2,
+          "col": 4,
+          "value": 2
+        },
+        {
+          "row": 3,
+          "col": 5,
           "value": 0
         },
         {
-          "row": 4,
-          "col": 2,
-          "value": 2
-        },
-        {
-          "row": 4,
-          "col": 3,
-          "value": 1
-        },
-        {
-          "row": 4,
-          "col": 4,
-          "value": 1
-        },
-        {
-          "row": 5,
-          "col": 5,
-          "value": 2
-        },
-        {
-          "row": 5,
+          "row": 3,
           "col": 6,
           "value": 1
         },
         {
-          "row": 6,
-          "col": 1,
+          "row": 4,
+          "col": 2,
           "value": 0
         },
         {
-          "row": 6,
+          "row": 4,
           "col": 3,
-          "value": 0
+          "value": 2
         },
         {
-          "row": 6,
+          "row": 4,
           "col": 5,
           "value": 2
+        },
+        {
+          "row": 4,
+          "col": 6,
+          "value": 0
+        },
+        {
+          "row": 5,
+          "col": 5,
+          "value": 1
+        },
+        {
+          "row": 5,
+          "col": 6,
+          "value": 0
+        },
+        {
+          "row": 6,
+          "col": 4,
+          "value": 2
+        },
+        {
+          "row": 6,
+          "col": 6,
+          "value": 1
         }
       ],
-      "first_hint": "列5で未登場の青を置けるのは(4,5)だけです。"
+      "first_hint": "行2で未登場の緑を置けるのは(2,4)だけです。"
     },
     {
       "id": "EXTRA-ROWCOL-6X6-INTERMEDIATE-01",
@@ -7804,37 +7694,27 @@
         {
           "row": 1,
           "col": 2,
-          "color": "B"
+          "color": "Y"
         },
         {
           "row": 1,
-          "col": 7,
+          "col": 3,
           "color": "G"
         },
         {
           "row": 1,
-          "col": 8,
-          "color": "Y"
+          "col": 4,
+          "color": "B"
         },
         {
-          "row": 2,
-          "col": 1,
-          "color": "R"
-        },
-        {
-          "row": 2,
-          "col": 3,
-          "color": "Y"
-        },
-        {
-          "row": 2,
+          "row": 1,
           "col": 5,
-          "color": "R"
+          "color": "G"
         },
         {
-          "row": 2,
-          "col": 8,
-          "color": "R"
+          "row": 3,
+          "col": 5,
+          "color": "B"
         },
         {
           "row": 3,
@@ -7842,29 +7722,34 @@
           "color": "R"
         },
         {
-          "row": 3,
-          "col": 8,
-          "color": "G"
+          "row": 4,
+          "col": 1,
+          "color": "R"
         },
         {
           "row": 4,
+          "col": 7,
+          "color": "Y"
+        },
+        {
+          "row": 5,
           "col": 1,
           "color": "Y"
         },
         {
-          "row": 4,
+          "row": 5,
           "col": 2,
-          "color": "B"
-        },
-        {
-          "row": 4,
-          "col": 5,
-          "color": "B"
+          "color": "G"
         },
         {
           "row": 5,
-          "col": 5,
-          "color": "Y"
+          "col": 3,
+          "color": "R"
+        },
+        {
+          "row": 5,
+          "col": 4,
+          "color": "G"
         },
         {
           "row": 5,
@@ -7873,165 +7758,135 @@
         },
         {
           "row": 6,
-          "col": 5,
+          "col": 1,
+          "color": "G"
+        },
+        {
+          "row": 6,
+          "col": 7,
           "color": "Y"
         },
         {
           "row": 7,
           "col": 1,
-          "color": "R"
+          "color": "Y"
         },
         {
-          "row": 7,
+          "row": 8,
           "col": 4,
-          "color": "R"
-        },
-        {
-          "row": 7,
-          "col": 6,
-          "color": "B"
-        },
-        {
-          "row": 8,
-          "col": 3,
-          "color": "R"
-        },
-        {
-          "row": 8,
-          "col": 6,
           "color": "Y"
         }
       ],
       "clues": [
         {
           "row": 1,
-          "col": 5,
-          "value": 2
+          "col": 4,
+          "value": 0
         },
         {
           "row": 1,
-          "col": 6,
-          "value": 3
-        },
-        {
-          "row": 2,
-          "col": 1,
-          "value": 3
-        },
-        {
-          "row": 2,
-          "col": 3,
-          "value": 2
-        },
-        {
-          "row": 2,
-          "col": 4,
-          "value": 2
-        },
-        {
-          "row": 2,
           "col": 5,
           "value": 1
         },
         {
+          "row": 1,
+          "col": 8,
+          "value": 0
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "value": 5
+        },
+        {
           "row": 2,
           "col": 7,
+          "value": 2
+        },
+        {
+          "row": 2,
+          "col": 8,
+          "value": 2
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "value": 2
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "value": 2
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "value": 3
+        },
+        {
+          "row": 3,
+          "col": 7,
+          "value": 1
+        },
+        {
+          "row": 3,
+          "col": 8,
+          "value": 1
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "value": 2
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "value": 2
+        },
+        {
+          "row": 4,
+          "col": 6,
+          "value": 2
+        },
+        {
+          "row": 4,
+          "col": 7,
+          "value": 1
+        },
+        {
+          "row": 5,
+          "col": 1,
+          "value": 0
+        },
+        {
+          "row": 5,
+          "col": 2,
+          "value": 1
+        },
+        {
+          "row": 5,
+          "col": 4,
+          "value": 3
+        },
+        {
+          "row": 5,
+          "col": 7,
+          "value": 3
+        },
+        {
+          "row": 5,
+          "col": 8,
+          "value": 2
+        },
+        {
+          "row": 6,
+          "col": 3,
           "value": 4
         },
         {
-          "row": 3,
-          "col": 2,
-          "value": 2
-        },
-        {
-          "row": 3,
-          "col": 4,
-          "value": 1
-        },
-        {
-          "row": 3,
-          "col": 5,
-          "value": 2
-        },
-        {
-          "row": 3,
-          "col": 6,
-          "value": 2
-        },
-        {
-          "row": 3,
-          "col": 8,
-          "value": 0
-        },
-        {
-          "row": 4,
-          "col": 2,
-          "value": 2
-        },
-        {
-          "row": 4,
-          "col": 3,
-          "value": 1
-        },
-        {
-          "row": 4,
-          "col": 4,
-          "value": 2
-        },
-        {
-          "row": 4,
-          "col": 6,
-          "value": 3
-        },
-        {
-          "row": 4,
-          "col": 8,
-          "value": 1
-        },
-        {
-          "row": 5,
-          "col": 1,
-          "value": 1
-        },
-        {
-          "row": 5,
-          "col": 2,
-          "value": 1
-        },
-        {
-          "row": 5,
-          "col": 4,
-          "value": 2
-        },
-        {
-          "row": 5,
-          "col": 5,
-          "value": 2
-        },
-        {
-          "row": 5,
-          "col": 7,
-          "value": 1
-        },
-        {
-          "row": 6,
-          "col": 3,
-          "value": 3
-        },
-        {
-          "row": 6,
-          "col": 4,
-          "value": 1
-        },
-        {
           "row": 6,
           "col": 5,
-          "value": 2
-        },
-        {
-          "row": 6,
-          "col": 6,
-          "value": 1
+          "value": 4
         },
         {
           "row": 6,
@@ -8045,66 +7900,46 @@
         },
         {
           "row": 7,
-          "col": 1,
-          "value": 0
+          "col": 2,
+          "value": 2
         },
         {
           "row": 7,
-          "col": 3,
+          "col": 4,
           "value": 3
         },
         {
           "row": 7,
-          "col": 4,
-          "value": 2
-        },
-        {
-          "row": 7,
           "col": 5,
           "value": 1
         },
         {
           "row": 7,
           "col": 6,
-          "value": 0
-        },
-        {
-          "row": 7,
-          "col": 8,
-          "value": 1
+          "value": 3
         },
         {
           "row": 8,
           "col": 1,
-          "value": 1
-        },
-        {
-          "row": 8,
-          "col": 2,
-          "value": 1
+          "value": 2
         },
         {
           "row": 8,
           "col": 3,
-          "value": 1
-        },
-        {
-          "row": 8,
-          "col": 4,
-          "value": 1
-        },
-        {
-          "row": 8,
-          "col": 5,
           "value": 0
         },
         {
           "row": 8,
-          "col": 6,
-          "value": 2
+          "col": 4,
+          "value": 0
+        },
+        {
+          "row": 8,
+          "col": 8,
+          "value": 1
         }
       ],
-      "first_hint": "行6で未登場の赤を置けるのは(6,7)だけです。"
+      "first_hint": "行4で未登場の緑を置けるのは(4,6)だけです。"
     },
     {
       "id": "EXTRA-ROWCOL-8X8-INTERMEDIATE-01",
