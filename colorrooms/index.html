@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#183a47">
   <title>ColorRooms | GamePlay</title>
-  <link rel="stylesheet" href="styles.css?v=20260722-5">
+  <link rel="stylesheet" href="styles.css?v=20260823-1">
 </head>
 <body data-mode="color" data-color-tool="paint">
   <header class="site-header">
@@ -22,6 +22,20 @@
 
   <main class="app-shell">
     <aside class="control-panel" aria-label="ゲーム操作">
+      <section class="panel-section setup-section">
+        <div class="puzzle-browser-header">
+          <label class="field-label" for="puzzle-select">問題</label>
+          <span id="puzzle-count" class="puzzle-count" aria-live="polite"></span>
+        </div>
+        <div class="puzzle-select-row">
+          <button id="previous-puzzle" class="puzzle-nav-button" type="button" aria-label="前の問題">‹</button>
+          <select id="puzzle-select" aria-label="遊ぶ問題"></select>
+          <button id="next-puzzle" class="puzzle-nav-button" type="button" aria-label="次の問題">›</button>
+        </div>
+        <p id="puzzle-title" class="puzzle-title"></p>
+        <div id="puzzle-meta" class="puzzle-meta"></div>
+      </section>
+
       <section class="panel-section mode-section">
         <p class="field-label">モード</p>
         <div class="mode-switch" role="radiogroup" aria-label="操作モード">
@@ -82,18 +96,14 @@
             <li>部屋モードでは数字部屋を選ぶか、空きマスから数字なしの仮部屋を作ります。</li>
             <li>数字部屋が完成すると外周に自動壁が付き、壁モードでは手動の壁も置けます。</li>
             <li>壁と同室メモは自分用です。入力しなくても、色盤面が正しければ完成です。</li>
+            <li><kbd>C</kbd>・<kbd>M</kbd>・<kbd>W</kbd>でモード、<kbd>1</kbd>〜<kbd>4</kbd>で色、<kbd>E</kbd>で消しゴムを選べます。</li>
+            <li><kbd>Ctrl</kbd>＋<kbd>Z</kbd>でUndo、<kbd>Ctrl</kbd>＋<kbd>Shift</kbd>＋<kbd>Z</kbd>でRedoできます。</li>
           </ul>
         </div>
       </details>
     </aside>
 
     <section class="play-area" aria-label="ColorRooms盤面">
-      <div class="puzzle-bar">
-        <label for="puzzle-select">問題</label>
-        <select id="puzzle-select"></select>
-        <div id="puzzle-meta" class="puzzle-meta"></div>
-      </div>
-
       <div class="board-toolbar">
         <div id="status" class="status-card" aria-live="polite"></div>
         <div class="legend" aria-label="盤面記号">
@@ -153,8 +163,8 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-  <script src="puzzles.js?v=20260722-5"></script>
-  <script src="model.js?v=20260722-5"></script>
-  <script src="app.js?v=20260722-5"></script>
+  <script src="puzzles.js?v=20260823-1"></script>
+  <script src="model.js?v=20260823-1"></script>
+  <script src="app.js?v=20260823-1"></script>
 </body>
 </html>

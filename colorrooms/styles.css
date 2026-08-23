@@ -104,6 +104,7 @@ h1 {
 
 .control-panel { align-self: start; overflow: hidden; }
 .panel-section { padding: 17px 19px; border-bottom: 1px solid #e2e8e8; }
+.setup-section { background: #f8fbfa; }
 .mode-section { background: #edf5f3; }
 
 .field-label {
@@ -180,27 +181,61 @@ h1 {
 .help-box summary, .mobile-help summary { cursor: pointer; color: var(--deep); font-size: .84rem; font-weight: 800; }
 .help-content { color: var(--muted); font-size: .79rem; line-height: 1.7; }
 .help-content ul { margin: 6px 0 0; padding-left: 18px; }
+kbd { padding: 1px 5px; border: 1px solid #c1ccce; border-bottom-width: 2px; border-radius: 4px; background: white; font-size: .72rem; }
 
-.play-area { min-height: 660px; padding: 19px; }
-.puzzle-bar {
-  display: grid;
-  grid-template-columns: auto minmax(180px, 1fr) auto;
+.puzzle-browser-header {
+  display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
-  padding: 10px 12px;
-  border-radius: 13px;
-  background: #edf5f3;
 }
-.puzzle-bar label { font-size: .78rem; font-weight: 850; }
+.puzzle-browser-header .field-label { margin-bottom: 8px; }
+.puzzle-count {
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: .7rem;
+  font-weight: 800;
+}
+.puzzle-select-row {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) 42px;
+  align-items: center;
+  gap: 7px;
+}
 select {
+  width: 100%;
   min-width: 0;
+  min-height: 42px;
   padding: 9px 34px 9px 10px;
   border: 1px solid #b9c9cb;
   border-radius: 9px;
   background: white;
 }
-.puzzle-meta { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 5px; }
+.puzzle-nav-button {
+  min-width: 0;
+  min-height: 42px;
+  padding: 0;
+  border: 1px solid #b9c9cb;
+  border-radius: 9px;
+  background: white;
+  cursor: pointer;
+  font-size: 1.45rem;
+  font-weight: 800;
+  line-height: 1;
+}
+.puzzle-nav-button:hover:not(:disabled) { border-color: var(--teal); background: #eef6f4; }
+.puzzle-nav-button:disabled { cursor: not-allowed; opacity: .35; }
+.puzzle-title {
+  margin: 10px 0 0;
+  color: var(--deep);
+  font-size: .86rem;
+  font-weight: 850;
+  line-height: 1.5;
+}
+.puzzle-meta { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
 .meta-chip { padding: 3px 7px; border: 1px solid #c5d6d7; border-radius: 999px; color: var(--muted); background: rgb(255 255 255 / 70%); font-size: .7rem; }
+
+.play-area { min-height: 660px; padding: 19px; }
 
 .board-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 52px; }
 .status-card { display: flex; align-items: center; gap: 10px; font-size: .86rem; font-weight: 750; }
@@ -417,6 +452,14 @@ select {
 }
 .toast.is-visible { opacity: 1; transform: translateY(0); }
 
+button:focus-visible,
+select:focus-visible,
+input:focus-visible,
+summary:focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: 2px;
+}
+
 body:not([data-mode="color"]) [data-color-controls],
 body:not([data-mode="room"]) [data-room-controls],
 body:not([data-mode="wall"]) [data-wall-controls] { display: none; }
@@ -430,12 +473,22 @@ body:not([data-mode="wall"]) [data-wall-controls] { display: none; }
   h1 { font-size: 2.45rem; }
   .header-mark { grid-template-columns: repeat(2, 18px); }
   .app-shell { display: block; width: calc(100% - 16px); max-width: 720px; min-width: 0; margin-bottom: 12px; }
-  .control-panel { display: none; }
+  .control-panel { display: block; margin-bottom: 10px; border-radius: 16px; }
+  .control-panel .mode-section,
+  .control-panel .color-controls,
+  .control-panel .room-controls,
+  .control-panel .wall-controls,
+  .control-panel .history-row,
+  .control-panel .help-box { display: none; }
+  .control-panel .panel-section { padding: 12px; }
+  .control-panel .option-section { border-bottom: 0; }
+  .puzzle-select-row { grid-template-columns: 46px minmax(0, 1fr) 46px; }
+  .puzzle-select-row select,
+  .puzzle-nav-button { min-height: 46px; }
+  .puzzle-title { font-size: .82rem; }
   .play-area { width: 100%; min-width: 0; min-height: auto; padding: 11px; border-radius: 16px; overflow: hidden; }
-  .puzzle-bar { width: 100%; min-width: 0; grid-template-columns: auto minmax(0, 1fr); gap: 7px; padding: 8px 9px; }
-  .puzzle-bar select { width: 100%; min-width: 0; }
-  .puzzle-meta { grid-column: 1 / -1; justify-content: flex-start; }
-  .board-toolbar { min-height: 46px; }
+  .board-toolbar { min-width: 0; min-height: 46px; }
+  .status-card { min-width: 0; line-height: 1.45; }
   .board-frame { width: 100%; min-width: 0; min-height: 0; padding: 11px 6px; overflow: hidden; }
   .legend { display: none; }
   .hint-card { margin-top: 9px; }

@@ -18,6 +18,10 @@
 
   const elements = {
     puzzleSelect: document.querySelector("#puzzle-select"),
+    puzzleCount: document.querySelector("#puzzle-count"),
+    puzzleTitle: document.querySelector("#puzzle-title"),
+    previousPuzzle: document.querySelector("#previous-puzzle"),
+    nextPuzzle: document.querySelector("#next-puzzle"),
     puzzleMeta: document.querySelector("#puzzle-meta"),
     modeButtons: [...document.querySelectorAll("[data-mode-button]")],
     palettes: [...document.querySelectorAll("[data-palette]")],
@@ -58,6 +62,51 @@
 
   function storageKey(id) {
     return `${STORAGE_PREFIX}${id}`;
+  }
+
+  function puzzleOption(puzzle) {
+    const option = document.createElement("option");
+    option.value = puzzle.id;
+    option.textContent = puzzle.title;
+    option.title = puzzle.id;
+    return option;
+  }
+
+  function renderPuzzleOptions() {
+    elements.puzzleSelect.replaceChildren();
+    puzzleData.puzzles.forEach((puzzle) => elements.puzzleSelect.append(puzzleOption(puzzle)));
+    elements.puzzleCount.textContent = `全${puzzleData.puzzles.length}問`;
+    const disabled = puzzleData.puzzles.length <= 1;
+    elements.previousPuzzle.disabled = disabled;
+    elements.nextPuzzle.disabled = disabled;
+  }
+
+  function movePuzzle(offset) {
+    if (puzzleData.puzzles.length <= 1) return;
+    const currentIndex = Math.max(
+      0,
+      puzzleData.puzzles.findIndex((puzzle) => puzzle.id === game?.puzzle.id),
+    );
+    const nextIndex = (currentIndex + offset + puzzleData.puzzles.length) % puzzleData.puzzles.length;
+    loadPuzzle(puzzleData.puzzles[nextIndex].id);
+  }
+
+  function requestedPuzzle() {
+    try {
+      const id = new URL(window.location.href).searchParams.get("puzzle");
+      return puzzleData.puzzles.find((puzzle) => puzzle.id === id) || null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function rememberedPuzzle() {
+    try {
+      const id = window.localStorage.getItem(`${STORAGE_PREFIX}last-puzzle`);
+      return puzzleData.puzzles.find((puzzle) => puzzle.id === id) || null;
+    } catch (_) {
+      return null;
+    }
   }
 
   function readProgress(id) {
@@ -220,24 +269,28 @@
     }
   }
 
+  function fitBoardToFrame() {
+    if (!game || !window.matchMedia("(max-width: 820px)").matches) {
+      elements.board.style.removeProperty("--cell-size");
+      return;
+    }
+
+    const frameStyle = window.getComputedStyle(elements.boardFrame);
+    const boardStyle = window.getComputedStyle(elements.board);
+    const frameInnerWidth = elements.boardFrame.clientWidth
+      - Number.parseFloat(frameStyle.paddingLeft)
+      - Number.parseFloat(frameStyle.paddingRight);
+    const boardBorderWidth = Number.parseFloat(boardStyle.borderLeftWidth)
+      + Number.parseFloat(boardStyle.borderRightWidth);
+    const availableForCells = frameInnerWidth - boardBorderWidth;
+    const fittedSize = Math.floor((availableForCells / game.puzzle.cols) * 100) / 100;
+    elements.board.style.setProperty("--cell-size", `${Math.max(1, Math.min(74, fittedSize))}px`);
+  }
+
   function renderBoard(evaluation) {
     const clues = clueMap(game.puzzle);
     elements.board.style.setProperty("--rows", game.puzzle.rows);
     elements.board.style.setProperty("--cols", game.puzzle.cols);
-    if (window.innerWidth <= 820) {
-      const frameStyle = window.getComputedStyle(elements.boardFrame);
-      const boardStyle = window.getComputedStyle(elements.board);
-      const horizontalPadding = parseFloat(frameStyle.paddingLeft) + parseFloat(frameStyle.paddingRight);
-      const horizontalBorder = parseFloat(boardStyle.borderLeftWidth) + parseFloat(boardStyle.borderRightWidth);
-      const fallbackWidth = window.innerWidth - 60;
-      const availableWidth = elements.boardFrame.clientWidth > 0
-        ? elements.boardFrame.clientWidth - horizontalPadding - horizontalBorder
-        : fallbackWidth;
-      const cellSize = Math.max(42, Math.min(74, Math.floor(availableWidth / game.puzzle.cols)));
-      elements.board.style.setProperty("--cell-size", `${cellSize}px`);
-    } else {
-      elements.board.style.removeProperty("--cell-size");
-    }
     elements.board.classList.toggle("is-room-mode", mode === "room");
     elements.board.classList.toggle("is-wall-mode", mode === "wall");
     elements.board.classList.toggle("has-focus", Boolean(game.focusedRoomId));
@@ -313,6 +366,7 @@
       elements.board.append(button);
     });
     renderWallEdges();
+    fitBoardToFrame();
   }
 
   function renderStatus(evaluation) {
@@ -356,10 +410,15 @@
 
   function renderMeta() {
     const puzzle = game.puzzle;
+    const puzzleIndex = puzzleData.puzzles.findIndex((item) => item.id === puzzle.id);
+    elements.puzzleCount.textContent = `${puzzleIndex + 1} / 全${puzzleData.puzzles.length}問`;
+    elements.puzzleTitle.textContent = puzzle.title;
+    elements.puzzleTitle.title = puzzle.id;
     elements.puzzleMeta.innerHTML = [
       `${puzzle.rows}×${puzzle.cols}`,
       `${puzzle.colors.length}色`,
       `数字${puzzle.clues.length}`,
+      `固定色${puzzle.fixed.length}`,
     ].map((value) => `<span class="meta-chip">${value}</span>`).join("");
     elements.hint.innerHTML = `<strong>${puzzle.description}</strong><br>${puzzle.first_hint}`;
   }
@@ -495,14 +554,11 @@
   }
 
   function initialize() {
-    for (const puzzle of puzzleData.puzzles) {
-      const option = document.createElement("option");
-      option.value = puzzle.id;
-      option.textContent = `${puzzle.id}　${puzzle.title}`;
-      elements.puzzleSelect.append(option);
-    }
+    renderPuzzleOptions();
 
     elements.puzzleSelect.addEventListener("change", () => loadPuzzle(elements.puzzleSelect.value));
+    elements.previousPuzzle.addEventListener("click", () => movePuzzle(-1));
+    elements.nextPuzzle.addEventListener("click", () => movePuzzle(1));
     elements.modeButtons.forEach((button) => {
       button.addEventListener("click", () => selectMode(button.dataset.modeButton));
     });
@@ -579,19 +635,10 @@
       }
     });
 
-    let resizeFrame = null;
-    window.addEventListener("resize", () => {
-      window.cancelAnimationFrame(resizeFrame);
-      resizeFrame = window.requestAnimationFrame(() => {
-        if (game) renderBoard(Model.evaluateGame(game));
-      });
-    });
+    window.addEventListener("resize", fitBoardToFrame, { passive: true });
 
-    let lastPuzzle = null;
-    try { lastPuzzle = window.localStorage.getItem(`${STORAGE_PREFIX}last-puzzle`); } catch (_) { /* noop */ }
-    loadPuzzle(puzzleData.puzzles.some((puzzle) => puzzle.id === lastPuzzle)
-      ? lastPuzzle
-      : puzzleData.puzzles[0].id);
+    const initialPuzzle = requestedPuzzle() || rememberedPuzzle() || puzzleData.puzzles[0];
+    loadPuzzle(initialPuzzle.id);
   }
 
   initialize();
