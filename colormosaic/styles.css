@@ -203,6 +203,15 @@ select {
   line-height: 1.4;
 }
 
+.m2-playtest-link {
+  display: inline-block;
+  margin-bottom: 12px;
+  color: var(--teal);
+  font-size: 0.8rem;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
 .puzzle-meta {
   display: flex;
   flex-wrap: wrap;

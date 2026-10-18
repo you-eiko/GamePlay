@@ -8,7 +8,8 @@
     return;
   }
 
-  const visiblePuzzles = puzzleData.puzzles.filter((puzzle) => (
+  const m2Puzzles = window.COLOR_MOSAIC_M2_PLAYTEST?.puzzles || [];
+  const visiblePuzzles = [...m2Puzzles, ...puzzleData.puzzles].filter((puzzle) => (
     puzzle.playtest !== false
     && !/^P[1-5]$/.test(puzzle.id)
     && !/^PLAY-6X6-(?:BEGINNER|INTERMEDIATE|ADVANCED)-/.test(puzzle.id)
@@ -49,6 +50,7 @@
     puzzleDifficultyFilter: document.querySelector("#puzzle-difficulty-filter"),
     puzzleCount: document.querySelector("#puzzle-count"),
     puzzleTitle: document.querySelector("#puzzle-title"),
+    playtestNote: document.querySelector("#playtest-note"),
     previousPuzzle: document.querySelector("#previous-puzzle"),
     nextPuzzle: document.querySelector("#next-puzzle"),
     puzzleMeta: document.querySelector("#puzzle-meta"),
@@ -82,6 +84,9 @@
   const DIFFICULTY_ORDER = ["初級", "中級", "上級", "人間解答範囲外"];
 
   function puzzleGroup(puzzle) {
+    if (puzzle.collection === "m2-20261018") {
+      return { key: "m2-playtest", label: "M2テストプレイ｜7×7・4色", rank: -30_000 };
+    }
     if (puzzle.rows <= 3 && puzzle.cols <= 3) {
       return { key: "calibration", label: "短いルール確認", rank: 9_999 };
     }
@@ -229,6 +234,10 @@
     } catch (_) {
       return null;
     }
+  }
+
+  function requestedM2Collection() {
+    return new URL(window.location.href).searchParams.get("collection") === "m2";
   }
 
   function rememberedPuzzle() {
@@ -771,7 +780,10 @@
     const puzzle = game.puzzle;
     elements.puzzleTitle.textContent = puzzle.title;
     elements.puzzleTitle.title = puzzle.id;
+    elements.playtestNote.textContent = puzzle.playtest_note || "";
+    elements.playtestNote.hidden = !puzzle.playtest_note;
     elements.puzzleMeta.innerHTML = [
+      puzzle.collection === "m2-20261018" ? "M2テストプレイ" : null,
       puzzle.extra ? "Extra" : null,
       puzzle.extra_rule_label || null,
       puzzle.difficulty ? `難易度 ${puzzle.difficulty}` : null,
@@ -881,10 +893,13 @@
     });
 
     setColorSymbolVisibility(false);
-    const initialPuzzle = requestedPuzzle() || rememberedPuzzle();
+    const explicitPuzzle = requestedPuzzle();
+    const openM2 = !explicitPuzzle && requestedM2Collection() && m2Puzzles.length > 0;
+    const initialPuzzle = explicitPuzzle || (openM2 ? m2Puzzles[0] : rememberedPuzzle()) || m2Puzzles[0];
     if (initialPuzzle) {
       elements.puzzleGroupFilter.value = puzzleGroup(initialPuzzle).key;
-      elements.puzzleDifficultyFilter.value = initialPuzzle.difficulty || "all";
+      elements.puzzleDifficultyFilter.value = initialPuzzle.collection === "m2-20261018"
+        ? "all" : initialPuzzle.difficulty || "all";
       updateDifficultyOptions();
       renderPuzzleOptions();
     }
